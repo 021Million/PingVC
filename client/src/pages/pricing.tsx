@@ -240,7 +240,7 @@ export default function Pricing() {
               <CardHeader>
                 <Badge variant="outline" className="mx-auto mb-2">Seed Stage</Badge>
                 <CardTitle>Early Stage Partners</CardTitle>
-                <div className="text-2xl font-bold text-primary">$25 - $75</div>
+                <div className="text-2xl font-bold text-primary">$250 - $750</div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
