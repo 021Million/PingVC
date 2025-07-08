@@ -21,7 +21,7 @@ export default function HowItWorks() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">VCs</a></Link>
+              <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">Home</a></Link>
               <Link href="/scout"><a className="text-gray-700 hover:text-primary transition-colors">Scout</a></Link>
               <span className="text-primary font-medium">For Founders</span>
               <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For VCs</a></Link>
