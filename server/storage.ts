@@ -21,6 +21,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
+  updateUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
   
   // VC operations
   createVC(vc: InsertVC): Promise<VC>;
@@ -75,6 +76,19 @@ export class DatabaseStorage implements IStorage {
         firstName: profileData.firstName,
         lastName: profileData.lastName,
         profileCompleted: true,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+
+  async updateUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
         updatedAt: new Date(),
       })
       .where(eq(users.id, id))

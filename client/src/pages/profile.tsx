@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,11 @@ export default function Profile() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  // Profile form state
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+
   // Project/Founder form state
   const [projectName, setProjectName] = useState("");
   const [pitchDeckUrl, setPitchDeckUrl] = useState("");
@@ -31,6 +36,35 @@ export default function Profile() {
   const { data: founder } = useQuery({
     queryKey: ["/api/founder/me"],
     enabled: !!user,
+  });
+
+  // Initialize form fields when user data loads
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName || "");
+      setLastName(user.lastName || "");
+    }
+  }, [user]);
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data: { firstName: string; lastName: string }) => {
+      await apiRequest("POST", "/api/auth/update-profile", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      setIsEditingProfile(false);
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const updateProjectMutation = useMutation({
@@ -52,6 +86,11 @@ export default function Profile() {
       });
     },
   });
+
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateProfileMutation.mutate({ firstName, lastName });
+  };
 
   const handleProjectSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,7 +146,7 @@ export default function Profile() {
               <Link href="/">
                 <a className="flex items-center text-gray-600 hover:text-primary transition-colors">
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to VCs
+                  Home
                 </a>
               </Link>
               <Button 
@@ -126,28 +165,73 @@ export default function Profile() {
         <div className="mb-8">
           <Card>
             <CardHeader>
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-primary">
-                    {user.firstName?.[0] || user.email?.[0] || 'U'}
-                  </span>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {user.firstName && user.lastName 
-                      ? `${user.firstName} ${user.lastName}` 
-                      : user.email
-                    }
-                  </h1>
-                  <p className="text-gray-600">{user.email}</p>
-                  <div className="flex items-center space-x-2 mt-2">
-                    <Badge variant="outline">Founder</Badge>
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm text-gray-600">Profile Score: 75%</span>
-                    </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span className="text-2xl font-bold text-primary">
+                      {user.firstName?.[0] || user.email?.[0] || 'U'}
+                    </span>
+                  </div>
+                  <div>
+                    {isEditingProfile ? (
+                      <form onSubmit={handleProfileSubmit} className="space-y-2">
+                        <div className="flex space-x-2">
+                          <Input
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            placeholder="First name"
+                            required
+                          />
+                          <Input
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            placeholder="Last name"
+                            required
+                          />
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button type="submit" size="sm" disabled={updateProfileMutation.isPending}>
+                            Save
+                          </Button>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingProfile(false);
+                              setFirstName(user.firstName || "");
+                              setLastName(user.lastName || "");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          {user.firstName && user.lastName 
+                            ? `${user.firstName} ${user.lastName}` 
+                            : user.email
+                          }
+                        </h1>
+                        <p className="text-gray-600">{user.email}</p>
+                        <div className="flex items-center space-x-2 mt-2">
+                          <Badge variant="outline">Founder</Badge>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
+                {!isEditingProfile && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsEditingProfile(true)}
+                  >
+                    Edit Profile
+                  </Button>
+                )}
               </div>
             </CardHeader>
           </Card>
@@ -161,7 +245,7 @@ export default function Profile() {
               Project Information
             </CardTitle>
             <p className="text-gray-600">
-              Complete your project details to appear in the Scout marketplace and improve your profile score.
+              Complete your project details to appear in the Scout marketplace.
             </p>
           </CardHeader>
           <CardContent>
