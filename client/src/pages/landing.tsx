@@ -40,7 +40,7 @@ export default function Landing() {
             
             <nav className="hidden md:flex items-center space-x-8">
               <a href="/scout" className="text-gray-700 hover:text-primary transition-colors">Scout</a>
-              <a href="/how-it-works" className="text-gray-700 hover:text-primary transition-colors">How it Works</a>
+              <a href="/how-it-works" className="text-gray-700 hover:text-primary transition-colors">For Founders</a>
               <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For VCs</a>
               <a href="/pricing" className="text-gray-700 hover:text-primary transition-colors">Pricing</a>
             </nav>
