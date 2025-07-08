@@ -39,6 +39,7 @@ export default function Landing() {
             </a>
             
             <nav className="hidden md:flex items-center space-x-8">
+              <a href="/" className="text-primary font-medium">Home</a>
               <a href="/scout" className="text-gray-700 hover:text-primary transition-colors">Scout</a>
               <a href="/how-it-works" className="text-gray-700 hover:text-primary transition-colors">For Founders</a>
               <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For VCs</a>
