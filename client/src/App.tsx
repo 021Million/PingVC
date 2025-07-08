@@ -18,6 +18,7 @@ import HowItWorks from "@/pages/how-it-works";
 import ForVCs from "@/pages/for-vcs";
 import Pricing from "@/pages/pricing";
 import Join from "@/pages/join";
+import SignupType from "@/pages/signup-type";
 
 function Router() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -38,6 +39,7 @@ function Router() {
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
+          <Route path="/signup" component={SignupType} />
         </>
       ) : (
         <>
@@ -52,6 +54,7 @@ function Router() {
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
+          <Route path="/signup" component={SignupType} />
         </>
       )}
       <Route component={NotFound} />

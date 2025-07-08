@@ -63,19 +63,25 @@ export const founders = pgTable("founders", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").references(() => users.id).notNull().unique(),
   companyName: varchar("company_name"),
+  founderName: varchar("founder_name"),
+  profileImageUrl: varchar("profile_image_url"),
   pitchDeckUrl: varchar("pitch_deck_url"),
   amountRaising: integer("amount_raising"), // Amount in USD
   traction: text("traction"),
+  description: text("description"),
   ecosystem: varchar("ecosystem"), // e.g., "Ethereum", "Solana", "Polygon"
   vertical: varchar("vertical"), // e.g., "DeFi", "Gaming", "NFTs"
   dataRoomUrl: varchar("data_room_url"),
   linkedinUrl: varchar("linkedin_url"),
   twitterUrl: varchar("twitter_url"),
   websiteUrl: varchar("website_url"),
+  githubUrl: varchar("github_url"),
   isFeatured: boolean("is_featured").default(false),
   featuredUntil: timestamp("featured_until"),
   upvotes: integer("upvotes").default(0),
+  votes: integer("votes").default(0),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const payments = pgTable("payments", {

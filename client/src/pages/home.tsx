@@ -108,7 +108,7 @@ export default function Home() {
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
               The marketplace connecting web3 founders with verified venture capitalists. 
-              Pay once, get warm introductions with customized AI-powered intro templates.
+              Pay once, get warm introductions.
             </p>
             
             {/* Email Capture */}
@@ -128,14 +128,14 @@ export default function Home() {
                 </Button>
               </form>
               <p className="text-sm text-gray-500 mt-2">
-                Instant access to 500+ verified VCs and trending projects
+                Instant access to verified VCs and trending projects
               </p>
             </div>
             
             {/* Quick Stats */}
             <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">500+</div>
+                <div className="text-3xl font-bold text-primary">Active</div>
                 <div className="text-gray-600">Verified VCs</div>
               </div>
               <div className="text-center">
@@ -203,7 +203,7 @@ export default function Home() {
             <div className="text-center">
               <Link href="/join">
                 <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
-                  View All 500+ VCs <ArrowRight className="ml-2 h-4 w-4" />
+                  View All VCs <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>

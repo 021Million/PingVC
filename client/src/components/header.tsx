@@ -66,10 +66,10 @@ export function Header() {
           <div className="flex items-center space-x-4">
             {!isAuthenticated ? (
               <Button 
-                onClick={() => window.location.href = '/api/login'}
+                onClick={() => window.location.href = '/signup'}
                 className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
               >
-                Sign In
+                Get Started
               </Button>
             ) : (
               <>
