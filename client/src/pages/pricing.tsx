@@ -238,7 +238,7 @@ export default function Pricing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center">
               <CardHeader>
-                <Badge variant="outline" className="mx-auto mb-2">Seed Stage</Badge>
+                <Badge variant="outline" className="mx-auto mb-2">🌱 Funding Feedback</Badge>
                 <CardTitle>Early Stage Partners</CardTitle>
                 <div className="text-2xl font-bold text-primary">$250 - $750</div>
               </CardHeader>
