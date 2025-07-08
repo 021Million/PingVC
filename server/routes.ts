@@ -261,6 +261,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile completion route
+  app.post('/api/complete-profile', isAuthenticated, async (req: any, res) => {
+    try {
+      const { firstName, lastName } = req.body;
+      const userId = req.user.claims.sub;
+      
+      const user = await storage.completeUserProfile(userId, { firstName, lastName });
+      res.json(user);
+    } catch (error) {
+      console.error("Error completing profile:", error);
+      res.status(500).json({ message: "Failed to complete profile" });
+    }
+  });
+
+  // Founder project routes
+  app.post('/api/founder/project', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      const updatedFounder = await storage.updateFounderProject(founder.id, req.body);
+      res.json(updatedFounder);
+    } catch (error) {
+      console.error("Error updating founder project:", error);
+      res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
+  // Scout page routes
+  app.get('/api/scout/featured', async (req, res) => {
+    try {
+      const featuredFounders = await storage.getFeaturedFounders();
+      res.json(featuredFounders);
+    } catch (error) {
+      console.error("Error fetching featured founders:", error);
+      res.status(500).json({ message: "Failed to fetch featured projects" });
+    }
+  });
+
+  app.get('/api/scout/projects', async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const founders = await storage.getFoundersByRanking();
+      
+      // Add voting status for authenticated users
+      const foundersWithVotes = await Promise.all(
+        founders.map(async (founder) => ({
+          ...founder,
+          hasVoted: userId ? await storage.hasUserVotedForProject(founder.id, userId) : false,
+        }))
+      );
+      
+      res.json(foundersWithVotes);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      res.status(500).json({ message: "Failed to fetch projects" });
+    }
+  });
+
+  app.post('/api/scout/projects/:founderId/vote', isAuthenticated, async (req: any, res) => {
+    try {
+      const founderId = parseInt(req.params.founderId);
+      const userId = req.user.claims.sub;
+      
+      await storage.voteForProject(founderId, userId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error voting for project:", error);
+      res.status(500).json({ message: "Failed to vote for project" });
+    }
+  });
+
+  app.post('/api/scout/projects/:founderId/unvote', isAuthenticated, async (req: any, res) => {
+    try {
+      const founderId = parseInt(req.params.founderId);
+      const userId = req.user.claims.sub;
+      
+      await storage.unvoteForProject(founderId, userId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error removing vote:", error);
+      res.status(500).json({ message: "Failed to remove vote" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

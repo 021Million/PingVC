@@ -36,6 +36,7 @@ export const users = pgTable("users", {
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
   isAdmin: boolean("is_admin").default(false),
+  profileCompleted: boolean("profile_completed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -60,8 +61,20 @@ export const vcs = pgTable("vcs", {
 
 export const founders = pgTable("founders", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id").references(() => users.id),
+  userId: varchar("user_id").references(() => users.id).notNull().unique(),
   companyName: varchar("company_name"),
+  pitchDeckUrl: varchar("pitch_deck_url"),
+  amountRaising: integer("amount_raising"), // Amount in USD
+  traction: text("traction"),
+  ecosystem: varchar("ecosystem"), // e.g., "Ethereum", "Solana", "Polygon"
+  vertical: varchar("vertical"), // e.g., "DeFi", "Gaming", "NFTs"
+  dataRoomUrl: varchar("data_room_url"),
+  linkedinUrl: varchar("linkedin_url"),
+  twitterUrl: varchar("twitter_url"),
+  websiteUrl: varchar("website_url"),
+  isFeatured: boolean("is_featured").default(false),
+  featuredUntil: timestamp("featured_until"),
+  upvotes: integer("upvotes").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -73,6 +86,15 @@ export const payments = pgTable("payments", {
   stripePaymentIntentId: varchar("stripe_payment_intent_id"),
   status: varchar("status").notNull().default("pending"), // pending, completed, failed
   introTemplate: text("intro_template"),
+  rating: integer("rating"), // 1-5 star rating for the VC
+  feedback: text("feedback"), // Optional feedback text
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const projectVotes = pgTable("project_votes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  founderId: integer("founder_id").references(() => founders.id).notNull(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

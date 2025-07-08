@@ -1,0 +1,321 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowUp, ExternalLink, Users, DollarSign, TrendingUp, Globe, Linkedin, Twitter } from "lucide-react";
+import { Link } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+
+export default function Scout() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedEcosystem, setSelectedEcosystem] = useState("All");
+  const [selectedVertical, setSelectedVertical] = useState("All");
+  
+  const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: featuredProjects = [], isLoading: loadingFeatured } = useQuery({
+    queryKey: ["/api/scout/featured"],
+  });
+
+  const { data: allProjects = [], isLoading: loadingAll } = useQuery({
+    queryKey: ["/api/scout/projects", { ecosystem: selectedEcosystem, vertical: selectedVertical }],
+  });
+
+  const voteMutation = useMutation({
+    mutationFn: async ({ founderId, action }: { founderId: number; action: 'vote' | 'unvote' }) => {
+      await apiRequest("POST", `/api/scout/projects/${founderId}/${action}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/scout/featured"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/scout/projects"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update vote. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleVote = (founderId: number, hasVoted: boolean) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to vote for projects",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    voteMutation.mutate({
+      founderId,
+      action: hasVoted ? 'unvote' : 'vote'
+    });
+  };
+
+  const ProjectCard = ({ project, featured = false }: { project: any; featured?: boolean }) => (
+    <Card className={`${featured ? 'border-2 border-primary' : ''} hover:shadow-lg transition-shadow`}>
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-lg">{project.companyName || "Stealth Startup"}</CardTitle>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <Badge variant="secondary">{project.ecosystem || "Multi-chain"}</Badge>
+              <Badge variant="outline">{project.vertical || "General"}</Badge>
+              {featured && <Badge className="bg-primary">Featured</Badge>}
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              size="sm"
+              variant={project.hasVoted ? "default" : "outline"}
+              onClick={() => handleVote(project.id, project.hasVoted)}
+              disabled={voteMutation.isPending}
+              className="flex items-center space-x-1"
+            >
+              <ArrowUp className="h-4 w-4" />
+              <span>{project.upvotes || 0}</span>
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {project.traction && (
+            <div>
+              <h4 className="font-semibold text-sm text-gray-700 mb-1">Traction</h4>
+              <p className="text-sm text-gray-600">{project.traction}</p>
+            </div>
+          )}
+          
+          {project.amountRaising && (
+            <div className="flex items-center space-x-2 text-sm">
+              <DollarSign className="h-4 w-4 text-green-600" />
+              <span className="text-gray-600">
+                Raising ${(project.amountRaising / 1000000).toFixed(1)}M
+              </span>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-2">
+            {project.websiteUrl && (
+              <Button size="sm" variant="ghost" asChild>
+                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
+                  <Globe className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {project.linkedinUrl && (
+              <Button size="sm" variant="ghost" asChild>
+                <a href={project.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {project.twitterUrl && (
+              <Button size="sm" variant="ghost" asChild>
+                <a href={project.twitterUrl} target="_blank" rel="noopener noreferrer">
+                  <Twitter className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            {project.dataRoomUrl && (
+              <Button size="sm" variant="ghost" asChild>
+                <a href={project.dataRoomUrl} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-4 w-4" />
+                  Data Room
+                </a>
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const filteredProjects = allProjects.filter((project: any) =>
+    project.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.traction?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/">
+              <a className="flex items-center space-x-2">
+                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">P</span>
+                </div>
+                <span className="text-xl font-bold text-gray-900">Ping Me</span>
+              </a>
+            </Link>
+            
+            <nav className="hidden md:flex items-center space-x-8">
+              <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">VCs</a></Link>
+              <Link href="/scout"><a className="text-primary font-medium">Scout</a></Link>
+              <Link href="/how-it-works"><a className="text-gray-700 hover:text-primary transition-colors">How it Works</a></Link>
+              <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For VCs</a></Link>
+              <Link href="/pricing"><a className="text-gray-700 hover:text-primary transition-colors">Pricing</a></Link>
+            </nav>
+            
+            <div className="flex items-center space-x-4">
+              {isAuthenticated ? (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => window.location.href = '/api/logout'}
+                >
+                  Sign Out
+                </Button>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Sign In
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Scout Emerging Projects</h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Discover and vote for the most promising web3 startups. Featured projects get premium visibility to our network of VCs.
+          </p>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
+            <Input
+              placeholder="Search projects..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="max-w-md"
+            />
+            <div className="flex gap-4">
+              <select
+                value={selectedEcosystem}
+                onChange={(e) => setSelectedEcosystem(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="All">All Ecosystems</option>
+                <option value="Ethereum">Ethereum</option>
+                <option value="Solana">Solana</option>
+                <option value="Polygon">Polygon</option>
+                <option value="Arbitrum">Arbitrum</option>
+                <option value="Base">Base</option>
+              </select>
+              <select
+                value={selectedVertical}
+                onChange={(e) => setSelectedVertical(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="All">All Verticals</option>
+                <option value="DeFi">DeFi</option>
+                <option value="Gaming">Gaming</option>
+                <option value="NFTs">NFTs</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="AI/ML">AI/ML</option>
+                <option value="Social">Social</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <Tabs defaultValue="featured" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-8">
+            <TabsTrigger value="featured">Featured Projects</TabsTrigger>
+            <TabsTrigger value="all">All Projects</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="featured">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Featured Projects</h2>
+              <p className="text-gray-600">Premium projects that have paid for enhanced visibility</p>
+            </div>
+            
+            {loadingFeatured ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="bg-gray-200 h-48 rounded-lg"></div>
+                  </div>
+                ))}
+              </div>
+            ) : featuredProjects.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredProjects.map((project: any) => (
+                  <ProjectCard key={project.id} project={project} featured={true} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No featured projects yet</p>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="all">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">All Projects</h2>
+              <p className="text-gray-600">Browse all projects ranked by community votes</p>
+            </div>
+            
+            {loadingAll ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(9)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="bg-gray-200 h-48 rounded-lg"></div>
+                  </div>
+                ))}
+              </div>
+            ) : filteredProjects.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProjects.map((project: any) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No projects found matching your filters</p>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Footer CTA */}
+      {isAuthenticated && (
+        <div className="bg-primary text-white py-12">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Want to feature your project?</h2>
+            <p className="text-primary-100 mb-6">
+              Get premium visibility and reach our network of verified VCs
+            </p>
+            <Button size="lg" variant="secondary">
+              Feature My Project
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

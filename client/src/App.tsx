@@ -10,9 +10,20 @@ import Home from "@/pages/home";
 import VCSignup from "@/pages/vc-signup";
 import Admin from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
+import ProfileSetup from "@/pages/profile-setup";
+import ProjectSetup from "@/pages/project-setup";
+import Scout from "@/pages/scout";
+import HowItWorks from "@/pages/how-it-works";
+import ForVCs from "@/pages/for-vcs";
+import Pricing from "@/pages/pricing";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
+
+  // Show profile setup if user is authenticated but hasn't completed profile
+  if (isAuthenticated && user && !(user as any).profileCompleted) {
+    return <ProfileSetup />;
+  }
 
   return (
     <Switch>
@@ -20,6 +31,10 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/vc-signup" component={VCSignup} />
+          <Route path="/scout" component={Scout} />
+          <Route path="/how-it-works" component={HowItWorks} />
+          <Route path="/for-vcs" component={ForVCs} />
+          <Route path="/pricing" component={Pricing} />
         </>
       ) : (
         <>
@@ -27,6 +42,11 @@ function Router() {
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/admin" component={Admin} />
           <Route path="/payment-success/:paymentIntentId" component={PaymentSuccess} />
+          <Route path="/project-setup" component={ProjectSetup} />
+          <Route path="/scout" component={Scout} />
+          <Route path="/how-it-works" component={HowItWorks} />
+          <Route path="/for-vcs" component={ForVCs} />
+          <Route path="/pricing" component={Pricing} />
         </>
       )}
       <Route component={NotFound} />

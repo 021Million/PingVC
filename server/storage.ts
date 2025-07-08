@@ -3,6 +3,7 @@ import {
   vcs,
   founders,
   payments,
+  projectVotes,
   type User,
   type UpsertUser,
   type VC,
@@ -19,6 +20,7 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
   
   // VC operations
   createVC(vc: InsertVC): Promise<VC>;
@@ -29,6 +31,12 @@ export interface IStorage {
   
   // Founder operations
   getOrCreateFounder(userId: string): Promise<Founder>;
+  updateFounderProject(founderId: number, projectData: Partial<Founder>): Promise<Founder>;
+  getFeaturedFounders(): Promise<Founder[]>;
+  getFoundersByRanking(): Promise<Founder[]>;
+  voteForProject(founderId: number, userId: string): Promise<void>;
+  unvoteForProject(founderId: number, userId: string): Promise<void>;
+  hasUserVotedForProject(founderId: number, userId: string): Promise<boolean>;
   
   // Payment operations
   createPayment(payment: InsertPayment): Promise<Payment>;
@@ -56,6 +64,20 @@ export class DatabaseStorage implements IStorage {
           updatedAt: new Date(),
         },
       })
+      .returning();
+    return user;
+  }
+
+  async completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        profileCompleted: true,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
       .returning();
     return user;
   }
@@ -169,6 +191,86 @@ export class DatabaseStorage implements IStorage {
         )
       );
     return !!payment;
+  }
+
+  async updateFounderProject(founderId: number, projectData: Partial<Founder>): Promise<Founder> {
+    const [founder] = await db
+      .update(founders)
+      .set({
+        ...projectData,
+        createdAt: sql`${founders.createdAt}`, // Keep original created date
+      })
+      .where(eq(founders.id, founderId))
+      .returning();
+    return founder;
+  }
+
+  async getFeaturedFounders(): Promise<Founder[]> {
+    return await db
+      .select()
+      .from(founders)
+      .where(and(
+        eq(founders.isFeatured, true),
+        sql`${founders.featuredUntil} > NOW()`
+      ))
+      .orderBy(desc(founders.upvotes));
+  }
+
+  async getFoundersByRanking(): Promise<Founder[]> {
+    return await db
+      .select()
+      .from(founders)
+      .orderBy(desc(founders.upvotes), desc(founders.createdAt));
+  }
+
+  async voteForProject(founderId: number, userId: string): Promise<void> {
+    await db.transaction(async (tx) => {
+      // Insert vote
+      await tx.insert(projectVotes).values({
+        founderId,
+        userId,
+      });
+      
+      // Increment upvote count
+      await tx
+        .update(founders)
+        .set({
+          upvotes: sql`${founders.upvotes} + 1`,
+        })
+        .where(eq(founders.id, founderId));
+    });
+  }
+
+  async unvoteForProject(founderId: number, userId: string): Promise<void> {
+    await db.transaction(async (tx) => {
+      // Remove vote
+      await tx
+        .delete(projectVotes)
+        .where(and(
+          eq(projectVotes.founderId, founderId),
+          eq(projectVotes.userId, userId)
+        ));
+      
+      // Decrement upvote count
+      await tx
+        .update(founders)
+        .set({
+          upvotes: sql`${founders.upvotes} - 1`,
+        })
+        .where(eq(founders.id, founderId));
+    });
+  }
+
+  async hasUserVotedForProject(founderId: number, userId: string): Promise<boolean> {
+    const [vote] = await db
+      .select()
+      .from(projectVotes)
+      .where(and(
+        eq(projectVotes.founderId, founderId),
+        eq(projectVotes.userId, userId)
+      ))
+      .limit(1);
+    return !!vote;
   }
 }
 
