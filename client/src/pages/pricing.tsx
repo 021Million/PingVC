@@ -243,9 +243,7 @@ export default function Pricing() {
                 <div className="text-2xl font-bold text-primary">$250 - $750</div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  Partners at seed-focused funds who are actively looking for new deals in their thesis areas.
-                </p>
+                <p className="text-gray-600">Founders at early stage fundraising who are actively looking to polish deck, practice pitch and get feedback. </p>
               </CardContent>
             </Card>
 
