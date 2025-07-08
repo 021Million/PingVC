@@ -112,9 +112,7 @@ export default function Landing() {
               onClick={handleScrollToVCs}
               className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
             >Unlock Intros Now</Button>
-            <div className="text-sm text-gray-500">
-              ✓ Instant access • ✓ Copy-paste templates • ✓ Money-back guarantee
-            </div>
+            <div className="text-sm text-gray-500">✓ Instant access • ✓ Verified VCs • ✓ Money-back guarantee</div>
           </div>
           
           {/* Trust indicators */}
