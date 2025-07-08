@@ -39,7 +39,6 @@ export default function Pricing() {
           </div>
         </div>
       </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -202,7 +201,7 @@ export default function Pricing() {
                     <ul className="space-y-3">
                       <li className="flex items-center">
                         <Check className="h-4 w-4 text-green-500 mr-3" />
-                        <span>Weekly payouts (95% of intro fees)</span>
+                        <span>Weekly payouts (85% of intro fees)</span>
                       </li>
                       <li className="flex items-center">
                         <Check className="h-4 w-4 text-green-500 mr-3" />
@@ -350,7 +349,6 @@ export default function Pricing() {
           </div>
         </div>
       </div>
-
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
