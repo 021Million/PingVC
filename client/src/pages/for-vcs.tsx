@@ -23,7 +23,7 @@ export default function ForVCs() {
             <nav className="hidden md:flex items-center space-x-8">
               <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">VCs</a></Link>
               <Link href="/scout"><a className="text-gray-700 hover:text-primary transition-colors">Scout</a></Link>
-              <Link href="/how-it-works"><a className="text-gray-700 hover:text-primary transition-colors">How it Works</a></Link>
+              <Link href="/how-it-works"><a className="text-gray-700 hover:text-primary transition-colors">For Founders</a></Link>
               <span className="text-primary font-medium">For VCs</span>
               <Link href="/pricing"><a className="text-gray-700 hover:text-primary transition-colors">Pricing</a></Link>
             </nav>

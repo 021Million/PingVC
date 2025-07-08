@@ -210,7 +210,7 @@ export default function Landing() {
               <h3 className="text-lg font-semibold mb-4">For Founders</h3>
               <ul className="space-y-2 text-gray-300">
                 <li><a href="#" className="hover:text-white transition-colors">Browse VCs</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">How it Works</a></li>
+                <li><a href="/how-it-works" className="hover:text-white transition-colors">For Founders</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Success Stories</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
               </ul>
