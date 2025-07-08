@@ -111,9 +111,7 @@ export default function Landing() {
               size="lg"
               onClick={handleScrollToVCs}
               className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
-            >
-              Unlock Intros for $49
-            </Button>
+            >Unlock Intros Now</Button>
             <div className="text-sm text-gray-500">
               ✓ Instant access • ✓ Copy-paste templates • ✓ Money-back guarantee
             </div>
