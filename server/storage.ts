@@ -209,11 +209,9 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(founders)
-      .where(and(
-        eq(founders.isFeatured, true),
-        sql`${founders.featuredUntil} > NOW()`
-      ))
-      .orderBy(desc(founders.upvotes));
+      .where(eq(founders.isFeatured, true))
+      .orderBy(desc(founders.upvotes))
+      .limit(10);
   }
 
   async getFoundersByRanking(): Promise<Founder[]> {

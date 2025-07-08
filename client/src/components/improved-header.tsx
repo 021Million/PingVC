@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User, Settings, LogOut, ChevronDown } from "lucide-react";
 
-export function Header() {
+export function ImprovedHeader() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [location] = useLocation();
 
