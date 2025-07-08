@@ -162,7 +162,22 @@ export class DatabaseStorage implements IStorage {
 
   // Payment operations
   async createPayment(paymentData: InsertPayment): Promise<Payment> {
-    const [payment] = await db.insert(payments).values(paymentData).returning();
+    const [payment] = await db
+      .insert(payments)
+      .values({
+        id: paymentData.id || crypto.randomUUID(),
+        amount: paymentData.amount,
+        paymentType: paymentData.paymentType,
+        founderId: paymentData.founderId,
+        vcId: paymentData.vcId,
+        currency: paymentData.currency,
+        stripePaymentIntentId: paymentData.stripePaymentIntentId,
+        status: paymentData.status,
+        introTemplate: paymentData.introTemplate,
+        rating: paymentData.rating,
+        feedback: paymentData.feedback
+      })
+      .returning();
     return payment;
   }
 

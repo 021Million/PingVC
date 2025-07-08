@@ -19,6 +19,10 @@ import ForVCs from "@/pages/for-vcs";
 import Pricing from "@/pages/pricing";
 import Join from "@/pages/join";
 import SignupType from "@/pages/signup-type";
+import PrivacyPolicy from "@/pages/privacy-policy";
+import TermsOfService from "@/pages/terms-of-service";
+import Support from "@/pages/support";
+
 
 function Router() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -40,6 +44,9 @@ function Router() {
           <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/terms-of-service" component={TermsOfService} />
+          <Route path="/support" component={Support} />
         </>
       ) : (
         <>
@@ -55,6 +62,9 @@ function Router() {
           <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/terms-of-service" component={TermsOfService} />
+          <Route path="/support" component={Support} />
         </>
       )}
       <Route component={NotFound} />

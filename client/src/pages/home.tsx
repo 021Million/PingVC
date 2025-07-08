@@ -28,7 +28,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -40,9 +39,7 @@ export default function Home() {
           </p>
           
           <div className="text-center mb-12">
-            <div className="text-sm text-gray-500">
-              ✓ Instant access • ✓ Copy-paste templates • ✓ Money-back guarantee
-            </div>
+            <div className="text-sm text-gray-500">✓ Instant Access • ✓ Unlock Alpha • ✓ Money-back Guarantee</div>
           </div>
           
           {/* Trust indicators */}
@@ -62,10 +59,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
       {/* Marketplace Section */}
       <MarketplaceLanding vcs={vcs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
-      
       {/* Filter Section */}
       <FilterSection 
         stageFilter={stageFilter}
@@ -73,7 +68,6 @@ export default function Home() {
         onStageChange={setStageFilter}
         onSectorChange={setSectorFilter}
       />
-      
       {/* VC Grid */}
       <section className="py-16 bg-gray-50" id="vc-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,7 +105,6 @@ export default function Home() {
           )}
         </div>
       </section>
-      
       {/* VC Signup Section */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white" id="vc-signup">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -147,7 +140,6 @@ export default function Home() {
           </Button>
         </div>
       </section>
-      
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

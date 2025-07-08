@@ -201,9 +201,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create pending payment record
       await storage.createPayment({
+        id: paymentIntent.id,
         founderId: founder.id,
         vcId,
         amount: vc.price,
+        paymentType: "vc_unlock",
         stripePaymentIntentId: paymentIntent.id,
         status: "pending",
       });
@@ -404,6 +406,160 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating founder project:", error);
       res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
+  // Support form submission
+  app.post('/api/support', async (req, res) => {
+    try {
+      const { name, email, subject, category, message } = req.body;
+      
+      // In a real application, you'd save this to database and/or send email
+      console.log('Support request received:', {
+        name,
+        email,
+        subject,
+        category,
+        message,
+        timestamp: new Date().toISOString()
+      });
+      
+      res.json({ success: true, message: "Support request submitted successfully" });
+    } catch (error) {
+      console.error("Error submitting support request:", error);
+      res.status(500).json({ message: "Failed to submit support request" });
+    }
+  });
+
+  // Create payment intent for project visibility
+  app.post('/api/create-project-payment', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      // Project visibility costs $49
+      const amount = 4900; // $49 in cents
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: 'usd',
+        metadata: {
+          type: 'project_visibility',
+          founderId: founder.id.toString(),
+          userId: userId
+        }
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        amount: amount / 100 
+      });
+    } catch (error: any) {
+      console.error("Error creating project payment:", error);
+      res.status(500).json({ message: "Error creating payment intent: " + error.message });
+    }
+  });
+
+  // Create payment intent for VC contact unlock
+  app.post('/api/create-vc-payment', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { vcId } = req.body;
+      
+      if (!vcId) {
+        return res.status(400).json({ message: "VC ID is required" });
+      }
+
+      const vc = await storage.getVC(vcId);
+      if (!vc) {
+        return res.status(404).json({ message: "VC not found" });
+      }
+
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      // Check if founder has already unlocked this VC
+      const hasUnlocked = await storage.hasFounderUnlockedVC(founder.id, vcId);
+      if (hasUnlocked) {
+        return res.status(400).json({ message: "You have already unlocked this VC" });
+      }
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: vc.price,
+        currency: 'usd',
+        metadata: {
+          type: 'vc_unlock',
+          founderId: founder.id.toString(),
+          vcId: vcId.toString(),
+          userId: userId
+        }
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        amount: vc.price / 100,
+        vcName: vc.fundName 
+      });
+    } catch (error: any) {
+      console.error("Error creating VC payment:", error);
+      res.status(500).json({ message: "Error creating payment intent: " + error.message });
+    }
+  });
+
+  // Confirm payment and handle success
+  app.post('/api/confirm-payment', isAuthenticated, async (req: any, res) => {
+    try {
+      const { paymentIntentId } = req.body;
+      
+      if (!paymentIntentId) {
+        return res.status(400).json({ message: "Payment intent ID is required" });
+      }
+
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status !== 'succeeded') {
+        return res.status(400).json({ message: "Payment not successful" });
+      }
+
+      const metadata = paymentIntent.metadata;
+      const userId = req.user.claims.sub;
+
+      // Create payment record
+      const payment = await storage.createPayment({
+        id: paymentIntent.id,
+        founderId: parseInt(metadata.founderId),
+        vcId: metadata.vcId ? parseInt(metadata.vcId) : null,
+        amount: paymentIntent.amount,
+        currency: paymentIntent.currency,
+        status: paymentIntent.status,
+        paymentType: metadata.type,
+        stripePaymentIntentId: paymentIntent.id
+      });
+
+      let introTemplate = null;
+
+      // Handle different payment types
+      if (metadata.type === 'vc_unlock' && metadata.vcId) {
+        // Generate AI intro template for VC unlock
+        const vc = await storage.getVC(parseInt(metadata.vcId));
+        const founder = await storage.getOrCreateFounder(userId);
+        
+        if (vc && founder) {
+          introTemplate = await generateIntroTemplate(vc);
+          await storage.updatePaymentStatus(payment.id, 'completed', introTemplate);
+        }
+      } else if (metadata.type === 'project_visibility') {
+        // Update founder project visibility
+        await storage.updatePaymentStatus(payment.id, 'completed');
+      }
+
+      res.json({ 
+        success: true, 
+        payment,
+        introTemplate 
+      });
+    } catch (error: any) {
+      console.error("Error confirming payment:", error);
+      res.status(500).json({ message: "Error confirming payment: " + error.message });
     }
   });
 

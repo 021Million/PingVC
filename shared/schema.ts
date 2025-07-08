@@ -78,6 +78,7 @@ export const founders = pgTable("founders", {
   linkedinUrl: varchar("linkedin_url"),
   twitterUrl: varchar("twitter_url"),
   websiteUrl: varchar("website_url"),
+  isVisible: boolean("is_visible").default(false), // Paid visibility
   githubUrl: varchar("github_url"),
   isFeatured: boolean("is_featured").default(false),
   featuredUntil: timestamp("featured_until"),
@@ -88,10 +89,12 @@ export const founders = pgTable("founders", {
 });
 
 export const payments = pgTable("payments", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: varchar("id").primaryKey(), // Stripe payment intent ID
   founderId: integer("founder_id").references(() => founders.id),
   vcId: integer("vc_id").references(() => vcs.id),
   amount: integer("amount").notNull(), // Amount in cents
+  currency: varchar("currency").default("usd"),
+  paymentType: varchar("payment_type").notNull(), // 'project_visibility' or 'vc_unlock'
   stripePaymentIntentId: varchar("stripe_payment_intent_id"),
   status: varchar("status").notNull().default("pending"), // pending, completed, failed
   introTemplate: text("intro_template"),
@@ -153,7 +156,6 @@ export const insertFounderSchema = createInsertSchema(founders).omit({
 });
 
 export const insertPaymentSchema = createInsertSchema(payments).omit({
-  id: true,
   createdAt: true,
 });
 
