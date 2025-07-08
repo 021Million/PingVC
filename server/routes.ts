@@ -1,0 +1,300 @@
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { setupAuth, isAuthenticated } from "./replitAuth";
+import { insertVCSchema, insertPaymentSchema } from "@shared/schema";
+import Stripe from "stripe";
+import OpenAI from "openai";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('Missing required OpenAI secret: OPENAI_API_KEY');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-06-30.basil",
+});
+
+const openai = new OpenAI({ 
+  apiKey: process.env.OPENAI_API_KEY 
+});
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth middleware
+  await setupAuth(app);
+
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // VC routes
+  app.get('/api/vcs', async (req, res) => {
+    try {
+      const { stage, sector, verified } = req.query;
+      const filters: any = {};
+      
+      if (stage && stage !== 'All') filters.stage = stage as string;
+      if (sector) filters.sector = sector as string;
+      if (verified !== undefined) filters.verified = verified === 'true';
+      
+      const vcs = await storage.getVCs(filters);
+      
+      // Remove sensitive contact info for non-authenticated users
+      const sanitizedVCs = vcs.map(vc => ({
+        ...vc,
+        contactHandle: vc.isVerified ? '[BLURRED]' : '[PENDING_VERIFICATION]'
+      }));
+      
+      res.json(sanitizedVCs);
+    } catch (error) {
+      console.error("Error fetching VCs:", error);
+      res.status(500).json({ message: "Failed to fetch VCs" });
+    }
+  });
+
+  app.get('/api/vcs/:id', async (req, res) => {
+    try {
+      const vcId = parseInt(req.params.id);
+      const vc = await storage.getVC(vcId);
+      
+      if (!vc) {
+        return res.status(404).json({ message: "VC not found" });
+      }
+      
+      // Check if user has unlocked this VC
+      let contactHandle = '[BLURRED]';
+      if (req.isAuthenticated && req.isAuthenticated()) {
+        const userId = (req.user as any)?.claims?.sub;
+        if (userId) {
+          const founder = await storage.getOrCreateFounder(userId);
+          const hasUnlocked = await storage.hasFounderUnlockedVC(founder.id, vcId);
+          if (hasUnlocked) {
+            contactHandle = vc.contactHandle;
+          }
+        }
+      }
+      
+      res.json({
+        ...vc,
+        contactHandle: vc.isVerified ? contactHandle : '[PENDING_VERIFICATION]'
+      });
+    } catch (error) {
+      console.error("Error fetching VC:", error);
+      res.status(500).json({ message: "Failed to fetch VC" });
+    }
+  });
+
+  app.post('/api/vcs', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const vcData = insertVCSchema.parse({
+        ...req.body,
+        userId
+      });
+      
+      const vc = await storage.createVC(vcData);
+      res.status(201).json(vc);
+    } catch (error) {
+      console.error("Error creating VC:", error);
+      res.status(400).json({ message: "Failed to create VC profile" });
+    }
+  });
+
+  // Admin routes
+  app.get('/api/admin/vcs', isAuthenticated, async (req: any, res) => {
+    try {
+      const user = await storage.getUser(req.user.claims.sub);
+      if (!user?.isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      const vcs = await storage.getVCs();
+      res.json(vcs);
+    } catch (error) {
+      console.error("Error fetching VCs for admin:", error);
+      res.status(500).json({ message: "Failed to fetch VCs" });
+    }
+  });
+
+  app.patch('/api/admin/vcs/:id/verify', isAuthenticated, async (req: any, res) => {
+    try {
+      const user = await storage.getUser(req.user.claims.sub);
+      if (!user?.isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      const vcId = parseInt(req.params.id);
+      const { isVerified } = req.body;
+      
+      const vc = await storage.updateVCVerification(vcId, isVerified);
+      res.json(vc);
+    } catch (error) {
+      console.error("Error updating VC verification:", error);
+      res.status(500).json({ message: "Failed to update VC verification" });
+    }
+  });
+
+  // Payment routes
+  app.post("/api/create-payment-intent", isAuthenticated, async (req: any, res) => {
+    try {
+      const { vcId } = req.body;
+      const userId = req.user.claims.sub;
+      
+      const vc = await storage.getVC(vcId);
+      if (!vc || !vc.isVerified) {
+        return res.status(400).json({ message: "VC not found or not verified" });
+      }
+      
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      // Check if already unlocked
+      const hasUnlocked = await storage.hasFounderUnlockedVC(founder.id, vcId);
+      if (hasUnlocked) {
+        return res.status(400).json({ message: "VC already unlocked" });
+      }
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: vc.price,
+        currency: "usd",
+        metadata: {
+          vcId: vcId.toString(),
+          founderId: founder.id.toString(),
+        },
+      });
+      
+      // Create pending payment record
+      await storage.createPayment({
+        founderId: founder.id,
+        vcId,
+        amount: vc.price,
+        stripePaymentIntentId: paymentIntent.id,
+        status: "pending",
+      });
+      
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error) {
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ message: "Error creating payment intent" });
+    }
+  });
+
+  app.post("/api/confirm-payment", isAuthenticated, async (req: any, res) => {
+    try {
+      const { paymentIntentId } = req.body;
+      
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status === 'succeeded') {
+        const vcId = parseInt(paymentIntent.metadata.vcId);
+        const founderId = parseInt(paymentIntent.metadata.founderId);
+        
+        const vc = await storage.getVC(vcId);
+        if (!vc) {
+          return res.status(400).json({ message: "VC not found" });
+        }
+        
+        // Generate AI intro template
+        const introTemplate = await generateIntroTemplate(vc);
+        
+        // Update payment status
+        const payment = await storage.updatePaymentStatus(
+          paymentIntentId, 
+          "completed", 
+          introTemplate
+        );
+        
+        res.json({
+          success: true,
+          vc: {
+            ...vc,
+            contactHandle: vc.contactHandle // Reveal actual contact
+          },
+          introTemplate,
+          payment
+        });
+      } else {
+        res.status(400).json({ message: "Payment not completed" });
+      }
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+      res.status(500).json({ message: "Error confirming payment" });
+    }
+  });
+
+  // User's payments and unlocked VCs
+  app.get('/api/my-unlocks', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      const payments = await storage.getPaymentsByFounder(founder.id);
+      
+      const unlockedVCs = [];
+      for (const payment of payments.filter(p => p.status === 'completed')) {
+        const vc = await storage.getVC(payment.vcId!);
+        if (vc) {
+          unlockedVCs.push({
+            ...vc,
+            payment,
+            introTemplate: payment.introTemplate
+          });
+        }
+      }
+      
+      res.json(unlockedVCs);
+    } catch (error) {
+      console.error("Error fetching user unlocks:", error);
+      res.status(500).json({ message: "Failed to fetch unlocked VCs" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
+
+async function generateIntroTemplate(vc: any): Promise<string> {
+  try {
+    const prompt = `Generate a professional, personalized intro message template for a founder reaching out to ${vc.fundName} (${vc.partnerName}). 
+
+VC Details:
+- Stage: ${vc.stage}
+- Sectors: ${vc.sectors.join(', ')}
+- Investment Thesis: ${vc.investmentThesis}
+- Contact Type: ${vc.contactType}
+
+Create a concise, compelling intro message that:
+1. Shows the founder researched the VC
+2. Clearly states the ask
+3. Highlights key metrics placeholders
+4. Matches the VC's investment focus
+5. Is appropriate for ${vc.contactType === 'telegram' ? 'Telegram messaging' : 'scheduling a meeting'}
+
+Keep it under 150 words and include placeholders like [Your Company], [Amount], [Key Metric], etc.
+
+Respond with just the message template, no additional text.`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 300,
+    });
+
+    return response.choices[0].message.content || "Hi! I'm reaching out because I'm building [Your Company] in the [sector] space. We're raising [amount] and would love to share our vision with your team. [Brief value prop]. Would you be open to a conversation?";
+  } catch (error) {
+    console.error("Error generating intro template:", error);
+    return "Hi! I'm reaching out because I'm building [Your Company] in the [sector] space. We're raising [amount] and would love to share our vision with your team. [Brief value prop]. Would you be open to a conversation?";
+  }
+}

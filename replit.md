@@ -1,0 +1,113 @@
+# Ping Me - VC Contact Marketplace
+
+## Overview
+
+Ping Me is a web application that connects startup founders with venture capitalists through a paid contact marketplace. Founders can browse verified VC profiles, pay to unlock contact information, and receive AI-generated intro templates. VCs can list their profiles with custom pricing and contact preferences (Telegram or meeting links). The platform includes a verification system where VCs must be approved by admins before appearing publicly.
+
+## System Architecture
+
+The application follows a full-stack monolithic architecture with clear separation between client and server code:
+
+### Frontend Architecture
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite for fast development and optimized builds
+- **UI Library**: Shadcn/ui components built on Radix UI primitives
+- **Styling**: Tailwind CSS with CSS variables for theming
+- **State Management**: TanStack Query for server state management
+- **Routing**: Wouter for client-side routing
+- **Form Handling**: React Hook Form with Zod validation
+
+### Backend Architecture
+- **Runtime**: Node.js with Express.js framework
+- **Database**: PostgreSQL with Drizzle ORM
+- **Database Provider**: Neon serverless PostgreSQL
+- **Authentication**: Replit Auth with OpenID Connect
+- **Session Management**: Express sessions with PostgreSQL store
+
+## Key Components
+
+### Database Schema
+- **Users**: Core user profiles (required for Replit Auth) with admin role support
+- **VCs**: Venture capitalist profiles with fund details, sectors, custom pricing, and verification status
+- **Founders**: Founder-specific profiles linked to users
+- **Payments**: Transaction records for unlocked VC contacts with intro templates
+- **Sessions**: Session storage (required for Replit Auth)
+
+### Key Features
+- **VC Self-Signup with Verification**: VCs can sign up and create their profiles, which are then reviewed by admins before going live
+- **Custom Pricing**: Each VC sets their own price for intros (not fixed at $49)
+- **Contact Type Options**: VCs can choose between Telegram handles or meeting links  
+- **Admin Verification System**: Admin panel to approve/reject VC applications with verified checkmarks
+- **AI-Generated Templates**: Personalized intro messages created by OpenAI based on VC investment focus
+- **Payment Integration**: Full Stripe integration for secure payment processing
+- **User Authentication**: Replit Auth integration with session management
+- **Responsive Design**: Mobile-friendly interface with Tailwind CSS and shadcn/ui components
+
+### Authentication System
+- Replit Auth integration with OAuth/OpenID Connect
+- Session-based authentication with PostgreSQL persistence
+- Admin role support for platform management
+- Protected routes and API endpoints
+
+### Payment Integration
+- Stripe integration for payment processing
+- Support for both one-time payments and subscription models
+- Payment confirmation flow with intro template generation
+
+### AI Integration
+- OpenAI API integration for generating personalized intro templates
+- Custom prompt engineering for VC introduction messages
+
+## Data Flow
+
+1. **User Registration**: Users sign in via Replit Auth, creating user records
+2. **VC Onboarding**: VCs complete profile setup with fund details and contact preferences
+3. **Browse & Filter**: Founders browse verified VC profiles with stage/sector filters
+4. **Payment Flow**: Founders initiate payment via Stripe checkout for VC contact access
+5. **Contact Unlock**: Successful payment unlocks VC contact info and generates AI intro template
+6. **Admin Management**: Admins verify VC profiles and manage platform content
+
+## External Dependencies
+
+### Required Services
+- **Neon Database**: PostgreSQL hosting with connection pooling
+- **Stripe**: Payment processing and checkout sessions
+- **OpenAI**: AI-powered intro template generation
+- **Replit Auth**: Authentication and user management
+
+### Environment Variables
+- `DATABASE_URL`: Neon PostgreSQL connection string
+- `STRIPE_SECRET_KEY`: Stripe API secret key
+- `VITE_STRIPE_PUBLIC_KEY`: Stripe publishable key (client-side)
+- `OPENAI_API_KEY`: OpenAI API key for GPT integration
+- `SESSION_SECRET`: Express session encryption secret
+- `REPL_ID`: Replit environment identifier
+- `ISSUER_URL`: OAuth issuer URL (defaults to Replit)
+
+## Deployment Strategy
+
+### Development
+- Vite dev server with HMR for frontend development
+- Express server with tsx for TypeScript execution
+- Database migrations managed via Drizzle Kit
+
+### Production
+- Frontend built to static assets via Vite
+- Backend bundled via esbuild for Node.js execution
+- Single-server deployment serving both frontend and API
+- Database schema managed through migration files
+
+### Build Commands
+- `npm run dev`: Development mode with hot reload
+- `npm run build`: Production build (frontend + backend)
+- `npm run start`: Start production server
+- `npm run db:push`: Apply database schema changes
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## Changelog
+
+Changelog:
+- July 08, 2025. Initial setup
