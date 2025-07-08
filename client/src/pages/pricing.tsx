@@ -259,15 +259,13 @@ export default function Pricing() {
             </Card>
 
             <Card className="text-center">
-              <CardHeader>
+              <CardContent className="pt-6">
                 <Badge variant="outline" className="mx-auto mb-2">
                   <Star className="h-3 w-3 mr-1" />
                   Premium
                 </Badge>
-                <CardTitle>Top Tier Partners</CardTitle>
-                <div className="text-2xl font-bold text-primary">Premium Pricing</div>
-              </CardHeader>
-              <CardContent>
+                <h3 className="text-xl font-semibold mb-2">Top Tier Partners</h3>
+                <div className="text-2xl font-bold text-primary mb-4">Premium Pricing</div>
                 <p className="text-gray-600">
                   Leading partners at flagship funds with limited availability and high-value connections.
                 </p>

@@ -161,13 +161,7 @@ export default function HowItWorks() {
               <p className="text-gray-600 text-sm">Get contact details immediately after payment</p>
             </div>
 
-            <div className="text-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-orange-600 font-bold text-lg">🤖</span>
-              </div>
-              <h3 className="font-semibold mb-2">Customised Intro (AI-Powered)</h3>
-              <p className="text-gray-600 text-sm">Personalized intro templates for each VC</p>
-            </div>
+
           </div>
         </div>
 
