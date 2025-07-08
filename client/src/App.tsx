@@ -12,6 +12,7 @@ import Admin from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
 import ProfileSetup from "@/pages/profile-setup";
 import ProjectSetup from "@/pages/project-setup";
+import Profile from "@/pages/profile";
 import Scout from "@/pages/scout";
 import HowItWorks from "@/pages/how-it-works";
 import ForVCs from "@/pages/for-vcs";
@@ -43,6 +44,7 @@ function Router() {
           <Route path="/admin" component={Admin} />
           <Route path="/payment-success/:paymentIntentId" component={PaymentSuccess} />
           <Route path="/project-setup" component={ProjectSetup} />
+          <Route path="/profile" component={Profile} />
           <Route path="/scout" component={Scout} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />

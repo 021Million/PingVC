@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
+import { MarketplaceLanding } from "@/components/marketplace-landing";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -13,6 +14,10 @@ export default function Landing() {
 
   const { data: vcs = [], isLoading } = useQuery({
     queryKey: ["/api/vcs", { stage: stageFilter, sector: sectorFilter, verified: true }],
+  });
+
+  const { data: featuredProjects = [] } = useQuery({
+    queryKey: ["/api/scout/featured"],
   });
 
   const handleScrollToVCs = () => {
@@ -35,7 +40,7 @@ export default function Landing() {
             <nav className="hidden md:flex items-center space-x-8">
               <a href="/scout" className="text-gray-700 hover:text-primary transition-colors">Scout</a>
               <a href="/how-it-works" className="text-gray-700 hover:text-primary transition-colors">How it Works</a>
-              <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For VCs</a>
+              <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For Founders</a>
               <a href="/pricing" className="text-gray-700 hover:text-primary transition-colors">Pricing</a>
             </nav>
             
@@ -98,6 +103,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* Marketplace Section */}
+      <MarketplaceLanding vcs={vcs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
 
       {/* Filter Section */}
       <FilterSection 

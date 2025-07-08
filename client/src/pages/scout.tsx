@@ -216,10 +216,12 @@ export default function Scout() {
               >
                 <option value="All">All Ecosystems</option>
                 <option value="Ethereum">Ethereum</option>
+                <option value="Arbitrum">Arbitrum</option>
+                <option value="Sui">Sui</option>
+                <option value="Bitcoin">Bitcoin</option>
                 <option value="Solana">Solana</option>
                 <option value="Polygon">Polygon</option>
-                <option value="Arbitrum">Arbitrum</option>
-                <option value="Base">Base</option>
+                <option value="Other">Other</option>
               </select>
               <select
                 value={selectedVertical}
@@ -231,6 +233,9 @@ export default function Scout() {
                 <option value="Gaming">Gaming</option>
                 <option value="NFTs">NFTs</option>
                 <option value="Infrastructure">Infrastructure</option>
+                <option value="Stablecoins">Stablecoins</option>
+                <option value="RWA">RWA</option>
+                <option value="Other">Other</option>
                 <option value="AI/ML">AI/ML</option>
                 <option value="Social">Social</option>
               </select>
@@ -310,8 +315,8 @@ export default function Scout() {
             <p className="text-primary-100 mb-6">
               Get premium visibility and reach our network of verified VCs
             </p>
-            <Button size="lg" variant="secondary">
-              Feature My Project
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="/profile">Feature My Project</Link>
             </Button>
           </div>
         </div>

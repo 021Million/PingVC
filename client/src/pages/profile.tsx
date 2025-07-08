@@ -1,0 +1,284 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { Link } from "wouter";
+import { ArrowLeft, Upload, Star, TrendingUp } from "lucide-react";
+
+export default function Profile() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Project/Founder form state
+  const [projectName, setProjectName] = useState("");
+  const [pitchDeckUrl, setPitchDeckUrl] = useState("");
+  const [amountRaising, setAmountRaising] = useState("");
+  const [traction, setTraction] = useState("");
+  const [ecosystem, setEcosystem] = useState("");
+  const [vertical, setVertical] = useState("");
+  const [description, setDescription] = useState("");
+
+  // Fetch founder data if exists
+  const { data: founder } = useQuery({
+    queryKey: ["/api/founder/me"],
+    enabled: !!user,
+  });
+
+  const updateProjectMutation = useMutation({
+    mutationFn: async (data: any) => {
+      await apiRequest("POST", "/api/founder/project", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/founder/me"] });
+      toast({
+        title: "Project Updated",
+        description: "Your project information has been saved successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update project. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleProjectSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    updateProjectMutation.mutate({
+      companyName: projectName,
+      pitchDeckUrl,
+      amountRaising: amountRaising ? parseInt(amountRaising) : null,
+      traction,
+      ecosystem,
+      vertical,
+      description,
+    });
+  };
+
+  const ecosystems = ["Ethereum", "Arbitrum", "Sui", "Bitcoin", "Solana", "Polygon", "Other"];
+  const verticals = ["DeFi", "Gaming", "Infrastructure", "NFTs", "Stablecoins", "RWA", "Other"];
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Access Denied</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">Please sign in to access your profile.</p>
+            <Button onClick={() => window.location.href = '/api/login'} className="w-full">
+              Sign In
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/">
+              <a className="flex items-center space-x-2">
+                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">P</span>
+                </div>
+                <span className="text-xl font-bold text-gray-900">Ping Me</span>
+              </a>
+            </Link>
+            
+            <div className="flex items-center space-x-4">
+              <Link href="/">
+                <a className="flex items-center text-gray-600 hover:text-primary transition-colors">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to VCs
+                </a>
+              </Link>
+              <Button 
+                variant="ghost" 
+                onClick={() => window.location.href = '/api/logout'}
+              >
+                Sign Out
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Profile Header */}
+        <div className="mb-8">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-bold text-primary">
+                    {user.firstName?.[0] || user.email?.[0] || 'U'}
+                  </span>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {user.firstName && user.lastName 
+                      ? `${user.firstName} ${user.lastName}` 
+                      : user.email
+                    }
+                  </h1>
+                  <p className="text-gray-600">{user.email}</p>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <Badge variant="outline">Founder</Badge>
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-4 w-4 text-yellow-500" />
+                      <span className="text-sm text-gray-600">Profile Score: 75%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Project Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <TrendingUp className="h-5 w-5 mr-2" />
+              Project Information
+            </CardTitle>
+            <p className="text-gray-600">
+              Complete your project details to appear in the Scout marketplace and improve your profile score.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleProjectSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="projectName">Project/Company Name *</Label>
+                  <Input
+                    id="projectName"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    placeholder="Enter your project name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="amountRaising">Amount Raising (USD)</Label>
+                  <Input
+                    id="amountRaising"
+                    type="number"
+                    value={amountRaising}
+                    onChange={(e) => setAmountRaising(e.target.value)}
+                    placeholder="e.g., 500000"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="ecosystem">Ecosystem</Label>
+                  <Select value={ecosystem} onValueChange={setEcosystem}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select ecosystem" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ecosystems.map((eco) => (
+                        <SelectItem key={eco} value={eco.toLowerCase()}>
+                          {eco}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="vertical">Vertical</Label>
+                  <Select value={vertical} onValueChange={setVertical}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select vertical" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {verticals.map((vert) => (
+                        <SelectItem key={vert} value={vert.toLowerCase()}>
+                          {vert}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="pitchDeckUrl">Pitch Deck URL</Label>
+                <Input
+                  id="pitchDeckUrl"
+                  type="url"
+                  value={pitchDeckUrl}
+                  onChange={(e) => setPitchDeckUrl(e.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="description">Project Description *</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Describe your project, what problem it solves, and your current traction..."
+                  rows={4}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="traction">Traction & Metrics</Label>
+                <Textarea
+                  id="traction"
+                  value={traction}
+                  onChange={(e) => setTraction(e.target.value)}
+                  placeholder="Share key metrics: users, revenue, partnerships, etc."
+                  rows={3}
+                />
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Scout Marketplace</h4>
+                <p className="text-blue-800 text-sm">
+                  Complete your project details to appear in our Scout marketplace where VCs discover new opportunities. 
+                  Projects with complete profiles get 3x more visibility.
+                </p>
+              </div>
+
+              <div className="flex justify-between">
+                <Button type="button" variant="outline" asChild>
+                  <Link href="/scout">View Scout Marketplace</Link>
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={updateProjectMutation.isPending}
+                >
+                  {updateProjectMutation.isPending ? "Saving..." : "Save Project"}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

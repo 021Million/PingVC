@@ -346,6 +346,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Founder profile management
+  app.get('/api/founder/me', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      res.json(founder);
+    } catch (error) {
+      console.error("Error fetching founder:", error);
+      res.status(500).json({ message: "Failed to fetch founder profile" });
+    }
+  });
+
+  app.post('/api/founder/project', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      const projectData = {
+        companyName: req.body.companyName,
+        pitchDeckUrl: req.body.pitchDeckUrl,
+        amountRaising: req.body.amountRaising,
+        traction: req.body.traction,
+        ecosystem: req.body.ecosystem,
+        vertical: req.body.vertical,
+        description: req.body.description,
+      };
+
+      const updatedFounder = await storage.updateFounderProject(founder.id, projectData);
+      res.json(updatedFounder);
+    } catch (error) {
+      console.error("Error updating founder project:", error);
+      res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

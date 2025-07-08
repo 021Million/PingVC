@@ -139,7 +139,7 @@ export default function VCSignup() {
             <Card className="p-6">
               <DollarSign className="w-8 h-8 text-success mx-auto mb-4" />
               <h3 className="font-semibold text-gray-900 mb-2">Earn Revenue</h3>
-              <p className="text-sm text-gray-600">70% of each unlock fee goes to you</p>
+              <p className="text-sm text-gray-600">85% of each unlock fee goes to you</p>
             </Card>
             <Card className="p-6">
               <CheckCircle className="w-8 h-8 text-success mx-auto mb-4" />
@@ -288,24 +288,27 @@ export default function VCSignup() {
 
                 <div>
                   <Label htmlFor="weeklyIntroLimit">Weekly Intro Limit</Label>
-                  <Select onValueChange={(value) => setValue("weeklyIntroLimit", parseInt(value))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select limit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">5 intros per week</SelectItem>
-                      <SelectItem value="10">10 intros per week</SelectItem>
-                      <SelectItem value="20">20 intros per week</SelectItem>
-                      <SelectItem value="100">Unlimited</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="weeklyIntroLimit"
+                    type="number"
+                    {...register("weeklyIntroLimit", { valueAsNumber: true })}
+                    min={1}
+                    placeholder="10"
+                    className={errors.weeklyIntroLimit ? "border-red-500" : ""}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Maximum intros you'll accept per week
+                  </p>
+                  {errors.weeklyIntroLimit && (
+                    <p className="text-sm text-red-500 mt-1">{errors.weeklyIntroLimit.message}</p>
+                  )}
                 </div>
 
                 {/* Revenue Share Info */}
                 <Card className="bg-gray-50 p-4">
                   <h4 className="font-semibold text-gray-900 mb-2">Revenue Share</h4>
                   <p className="text-sm text-gray-600 mb-2">
-                    You keep 70% of each unlock fee. We handle payments, verification, and platform maintenance.
+                    You keep 85% of each unlock fee. We handle payments, verification, and platform maintenance.
                   </p>
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">Your earnings:</span> ${price ? calculateEarnings(price) : '34.30'} per intro

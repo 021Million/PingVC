@@ -24,7 +24,7 @@ export default function HowItWorks() {
               <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">VCs</a></Link>
               <Link href="/scout"><a className="text-gray-700 hover:text-primary transition-colors">Scout</a></Link>
               <span className="text-primary font-medium">How it Works</span>
-              <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For VCs</a></Link>
+              <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For Founders</a></Link>
               <Link href="/pricing"><a className="text-gray-700 hover:text-primary transition-colors">Pricing</a></Link>
             </nav>
             
@@ -45,7 +45,7 @@ export default function HowItWorks() {
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">How Ping Me Works</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            The simplest way for web3 founders to connect with the right VCs. No cold outreach, no waiting—just direct access to decision makers.
+            The simplest way for web3 founders to connect with the right VCs. No cold outreach, no waiting, just direct access to decision makers.
           </p>
         </div>
 
@@ -165,7 +165,7 @@ export default function HowItWorks() {
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-orange-600 font-bold text-lg">🤖</span>
               </div>
-              <h3 className="font-semibold mb-2">AI-Powered Intros</h3>
+              <h3 className="font-semibold mb-2">Customised Intro (AI-Powered)</h3>
               <p className="text-gray-600 text-sm">Personalized intro templates for each VC</p>
             </div>
           </div>

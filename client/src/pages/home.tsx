@@ -47,7 +47,7 @@ export default function Home() {
             
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                Welcome, {user?.firstName || user?.email}
+                Welcome, <Link href="/profile" className="text-primary hover:underline">{user?.firstName || user?.email}</Link>
               </div>
               <Button 
                 variant="ghost" 
