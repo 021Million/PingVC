@@ -49,7 +49,7 @@ export default function Home() {
               <div className="text-sm text-gray-600">Active VCs</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">1,420</div>
+              <div className="text-2xl font-bold text-gray-900">120</div>
               <div className="text-sm text-gray-600">Intros Made</div>
             </div>
             <div>
