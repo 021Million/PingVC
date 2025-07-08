@@ -39,14 +39,7 @@ export default function Home() {
             Pay once. Chat with the partner who writes the checks. No middlemen, no spam, pure signal.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button 
-              size="lg"
-              onClick={handleScrollToVCs}
-              className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
-            >
-              Unlock Intros for $49
-            </Button>
+          <div className="text-center mb-12">
             <div className="text-sm text-gray-500">
               ✓ Instant access • ✓ Copy-paste templates • ✓ Money-back guarantee
             </div>
