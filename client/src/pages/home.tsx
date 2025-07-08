@@ -54,7 +54,7 @@ export default function Home() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">98%</div>
-              <div className="text-sm text-gray-600">Response Rate</div>
+              <div className="text-sm text-gray-600"><24 h reply</div>
             </div>
           </div>
         </div>
