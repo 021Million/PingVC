@@ -1,0 +1,194 @@
+**Ping Me — Product Requirements Document (PRD)**
+*(Copy-paste straight into Replit agent/Notion/Jira and build.)*
+
+---
+
+### 1. One-Line Pitch
+
+“Founders pay \$XX to instantly unlock a VC’s warm-intro handle — no middlemen, no spam, pure signal.”
+
+---
+
+### 2. Problem & Opportunity
+
+* **Founders** grind DMs → gatekeepers → silence.
+* **VCs** drown in cold pitches → zero filtering.
+* You sit on both demand streams. People already ask you for intros; you’re leaving cash + data on the table.
+
+---
+
+### 3. Solution (MVP Scope)
+
+A single-page web app that lists curated VC cards. Each card’s Telegram/Calendly is blurred until the founder:
+
+1. Signs in (Google or WalletConnect)
+2. Pays \$25–\$100 (Stripe fiat **or** USDC/ETH via Unlock Protocol)
+3. Gets:
+
+   * Unblurred handle + clickable link
+   * Copy-paste intro template (AI-generated)
+   * Optional \$29 “Pro Warm-Up” add-on → a custom DM crafted by ChatGPT & sent via your Telegram relay bot
+
+---
+
+### 4. Core Value Props
+
+| User     | Hook                               | Value                                            | CTA Copy                   |
+| -------- | ---------------------------------- | ------------------------------------------------ | -------------------------- |
+| Founders | “Warm intros in 60 sec.”           | Save 10+ hours & reach decision-makers directly. | **Unlock Intro →**         |
+| VCs      | “Only serious founders reach you.” | Earn dealflow, zero spam                         | **Join Ping Me VC List →** |
+
+---
+
+### 5. Primary User Stories
+
+1. **Founder-Browse**: “As a founder, I can filter VCs by sector/stage so I only pay for relevant intros.”
+2. **Founder-Pay-Unlock**: “As a founder, I can pay and instantly reveal the handle + intro template.”
+3. **VC-Opt-In**: “As a VC, I can submit my profile and set max weekly intros.”
+4. **Admin**: “As the marketplace owner, I can CRUD VC cards, set prices, and view payments.”
+
+---
+
+### 6. Functional Requirements (MVP)
+
+| ID   | Description                                                     |
+| ---- | --------------------------------------------------------------- |
+| F-01 | VC Card Grid (logo, fund, stage, tags, 1-liner, blurred handle) |
+| F-02 | Search / filter chips (AI, Infra, Gaming, etc.)                 |
+| F-03 | Auth: Google OAuth + WalletConnect (web3 cred)                  |
+| F-04 | Payment modal: Stripe Checkout **or** Unlock Protocol paywall   |
+| F-05 | Post-payment reveal state + copy intro template                 |
+| F-06 | Optional add-on toggle (“Pro Warm-Up +\$29”)                    |
+| F-07 | Admin dashboard (Replit DB UI)                                  |
+| F-08 | VC self-onboarding form (Typeform → Zapier → DB)                |
+
+---
+
+### 7. Non-Functional Requirements
+
+* **Speed:** ≤ 2 s TTFB (static hosting on Replit + Cloudflare).
+* **Privacy:** Never store full pitch decks; only contact handles.
+* **Compliance:** Stripe KYC, Unlock Protocol smart-contract on-chain logs.
+* **Scalability:** Replit Postgres → supabase when >1 k daily users.
+
+---
+
+### 8. Tech Stack (Replit-Friendly)
+
+* **Frontend:** React + Tailwind (vite-template)
+* **Backend:** FastAPI (Python) or Express (Node) — one file, simple routes
+* **DB:** Replit built-in Postgres (key tables: `vcs`, `founders`, `payments`)
+* **Payments:** Stripe Checkout (fiat) + Unlock Protocol (ETH/USDC)
+* **Auth:** Clerk.dev (Google) + RainbowKit (WalletConnect)
+* **AI:** OpenAI function call to generate DM template
+* **Infra:** Deploy on Replit’s free web server, add Cloudflare Proxy for SSL
+
+---
+
+### 9. Wireframe Flow (text)
+
+```
+/home
+ ├─ Hero: “Warm Intros, No Cold DMs”
+ ├─ VC Grid (12 cards)  ← filter bar
+ └─ Footer: “VC? List Yourself” link
+
+/payment
+ ├─ Intro details summary
+ └─ Stripe/Unlock widget
+
+/success
+ ├─ Handle revealed + Copy button
+ ├─ DM template textarea
+ └─ Upsell: “Pro Warm-Up” checkbox
+```
+
+---
+
+### 10. Direct-Response Copy Snippets
+
+* **Hero H1:** “Stop pitching into the void.”
+* **Sub-H1:** “Pay once. Chat with the partner who writes the checks.”
+* **Founder CTA Button:** “Unlock Intro for \$49”
+* **VC Landing Tagline:** “Curated dealflow without the noise. List in 2 clicks.”
+
+---
+
+### 11. Data Model (simplified)
+
+```sql
+TABLE vcs (
+  id SERIAL PK,
+  name TEXT,
+  stage TEXT,
+  sectors TEXT[],
+  handle TEXT,
+  blur_url TEXT,
+  price INT,
+  active BOOL
+)
+
+TABLE founders (
+  id SERIAL PK,
+  email TEXT,
+  wallet TEXT,
+  created_at TIMESTAMP
+)
+
+TABLE payments (
+  id SERIAL PK,
+  founder_id INT FK,
+  vc_id INT FK,
+  amount INT,
+  currency TEXT,
+  tx_hash TEXT,
+  created_at TIMESTAMP
+)
+```
+
+---
+
+### 12. Monetization Matrix
+
+| Tier         | Price    | Limits        | Economics             |
+| ------------ | -------- | ------------- | --------------------- |
+| Single Intro | \$49     | 1 handle      | \~\$46 net after fees |
+| Pro Warm-Up  | +\$29    | AI DM + relay | \~90% margin          |
+| Sub (5/mo)   | \$199/mo | Any 5 handles | MRR, predictability   |
+| VC Promo     | \$299/mo | Featured slot | Non-dilutive rev      |
+
+---
+
+### 13. Build Roadmap (fast)
+
+| Day                 | Task                                                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **0** (today, 1 hr) | Fork vite-react template on Replit; hard-code 3 VC cards; add Stripe payment link → redirect to `/success` with dummy reveal. |
+| 1                   | Plug in Clerk OAuth; move VC list to Replit Postgres.                                                                         |
+| 2                   | Integrate Unlock Protocol & RainbowKit.                                                                                       |
+| 3                   | Add AI DM template call + Pro Warm-Up upsell toggle.                                                                          |
+| 4                   | Build admin CRUD page (protected route).                                                                                      |
+| 5                   | Launch on .xyz, tweet to founders + DM 20 VCs to list.                                                                        |
+
+---
+
+### 14. Success Metrics (30-day target)
+
+* **≥ 100 paid unlocks**
+* **≥ 25 VCs listed**
+* **≤ 5% refund rate**
+* **> 40% unlock-to-DM sent** (measured via optional relay bot)
+
+---
+
+### 15. Next-Phase Ideas (post-MVP)
+
+* Telegram bot that auto-forwards founder pitch after payment (opt-in)
+* Reputation score per founder (VC feedback loop)
+* NFT “Intro Pass” with on-chain provenance of who met whom
+* Referral bonuses: 10% of friend’s first unlock (on-chain or Stripe coupons)
+
+---
+
+Ship the skeleton now, charge money tomorrow, iterate next week.
+**Ping Me**: warm intros that respect everyone’s time — and your P\&L.
