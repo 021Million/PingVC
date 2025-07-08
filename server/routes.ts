@@ -104,6 +104,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const vc = await storage.createVC(vcData);
+      
+      // Send thank you email
+      try {
+        await sendVCThankYouEmail(vc);
+      } catch (emailError) {
+        console.error("Error sending thank you email:", emailError);
+        // Don't fail the VC creation if email fails
+      }
+      
       res.status(201).json(vc);
     } catch (error) {
       console.error("Error creating VC:", error);
@@ -383,6 +392,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   return httpServer;
+}
+
+async function sendVCThankYouEmail(vc: any): Promise<void> {
+  // Note: This is a placeholder for email functionality
+  // In a real implementation, you would integrate with an email service like:
+  // - SendGrid, Mailgun, AWS SES, etc.
+  console.log(`Thank you email would be sent to: ${vc.email}`);
+  console.log(`VC Name: ${vc.partnerName}, Fund: ${vc.fundName}`);
+  console.log(`Email content: Thank you for applying to join Ping Me as a VC. A team member will be in touch with you soon to complete verification.`);
+  
+  // Example implementation (uncomment when you have an email service):
+  /*
+  const emailContent = {
+    to: vc.email,
+    from: 'team@pingme.com',
+    subject: 'Thank you for your VC application - Ping Me',
+    html: `
+      <h2>Thank you for applying, ${vc.partnerName}!</h2>
+      <p>We've received your application to join Ping Me as a VC partner from ${vc.fundName}.</p>
+      <p>Our team will review your application and be in touch with you soon to complete the verification process.</p>
+      <p>In the meantime, feel free to reach out if you have any questions.</p>
+      <p>Best regards,<br>The Ping Me Team</p>
+    `
+  };
+  
+  await emailService.send(emailContent);
+  */
 }
 
 async function generateIntroTemplate(vc: any): Promise<string> {

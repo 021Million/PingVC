@@ -187,6 +187,48 @@ export default function VCSignup() {
                   </div>
                 </div>
 
+                <div>
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register("email")}
+                    placeholder="john@exampleventures.com"
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="twitterUrl">Twitter/X Profile (Optional)</Label>
+                    <Input
+                      id="twitterUrl"
+                      {...register("twitterUrl")}
+                      placeholder="https://twitter.com/yourhandle"
+                      className={errors.twitterUrl ? "border-red-500" : ""}
+                    />
+                    {errors.twitterUrl && (
+                      <p className="text-sm text-red-500 mt-1">{errors.twitterUrl.message}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="linkedinUrl">LinkedIn Profile (Optional)</Label>
+                    <Input
+                      id="linkedinUrl"
+                      {...register("linkedinUrl")}
+                      placeholder="https://linkedin.com/in/yourprofile"
+                      className={errors.linkedinUrl ? "border-red-500" : ""}
+                    />
+                    {errors.linkedinUrl && (
+                      <p className="text-sm text-red-500 mt-1">{errors.linkedinUrl.message}</p>
+                    )}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="stage">Investment Stage</Label>

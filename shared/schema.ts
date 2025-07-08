@@ -46,6 +46,9 @@ export const vcs = pgTable("vcs", {
   userId: varchar("user_id").references(() => users.id),
   fundName: varchar("fund_name").notNull(),
   partnerName: varchar("partner_name").notNull(),
+  email: varchar("email").notNull(),
+  twitterUrl: varchar("twitter_url"),
+  linkedinUrl: varchar("linkedin_url"),
   stage: varchar("stage").notNull(), // Pre-Seed, Seed, Series A, etc.
   sectors: text("sectors").array().notNull(), // DeFi, Gaming, Infrastructure, etc.
   investmentThesis: text("investment_thesis").notNull(),

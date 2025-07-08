@@ -23,7 +23,7 @@ export default function Pricing() {
             <nav className="hidden md:flex items-center space-x-8">
               <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">VCs</a></Link>
               <Link href="/scout"><a className="text-gray-700 hover:text-primary transition-colors">Scout</a></Link>
-              <Link href="/how-it-works"><a className="text-gray-700 hover:text-primary transition-colors">How it Works</a></Link>
+              <Link href="/how-it-works"><a className="text-gray-700 hover:text-primary transition-colors">For Founders</a></Link>
               <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For VCs</a></Link>
               <span className="text-primary font-medium">Pricing</span>
             </nav>
@@ -96,7 +96,7 @@ export default function Pricing() {
                   <CardTitle className="text-xl">VC Introductions</CardTitle>
                   <Badge className="bg-primary">Popular</Badge>
                 </div>
-                <div className="text-3xl font-bold text-gray-900">$25 - $500+</div>
+                <div className="text-3xl font-bold text-gray-900">Custom Pricing</div>
                 <p className="text-gray-600">Per VC intro (price set by each VC)</p>
               </CardHeader>
               <CardContent>
@@ -181,7 +181,7 @@ export default function Pricing() {
                     <ul className="space-y-3">
                       <li className="flex items-center">
                         <Check className="h-4 w-4 text-green-500 mr-3" />
-                        <span>Your intro price ($25 - $500+)</span>
+                        <span>Set your own intro price</span>
                       </li>
                       <li className="flex items-center">
                         <Check className="h-4 w-4 text-green-500 mr-3" />
@@ -270,7 +270,7 @@ export default function Pricing() {
                   Premium
                 </Badge>
                 <CardTitle>Top Tier Partners</CardTitle>
-                <div className="text-2xl font-bold text-primary">$300 - $500+</div>
+                <div className="text-2xl font-bold text-primary">Premium Pricing</div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">

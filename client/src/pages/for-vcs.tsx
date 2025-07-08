@@ -168,7 +168,7 @@ export default function ForVCs() {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                 <div className="text-center">
-                  <div className="text-2xl font-bold mb-2">$25 - $500+</div>
+                  <div className="text-2xl font-bold mb-2">Custom Pricing</div>
                   <p className="text-primary-100">Set your own intro price based on your time value</p>
                 </div>
                 <div className="text-center">
