@@ -17,6 +17,7 @@ import Scout from "@/pages/scout";
 import HowItWorks from "@/pages/how-it-works";
 import ForVCs from "@/pages/for-vcs";
 import Pricing from "@/pages/pricing";
+import Join from "@/pages/join";
 
 function Router() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -36,6 +37,7 @@ function Router() {
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/join" component={Join} />
         </>
       ) : (
         <>
@@ -49,6 +51,7 @@ function Router() {
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/join" component={Join} />
         </>
       )}
       <Route component={NotFound} />

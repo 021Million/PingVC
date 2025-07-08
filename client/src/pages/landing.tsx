@@ -5,6 +5,7 @@ import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
+import { Header } from "@/components/header";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
