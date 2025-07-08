@@ -101,9 +101,7 @@ export default function Landing() {
                 Unlock
               </Button>
             </form>
-            <p className="text-sm text-gray-500 mt-2">
-              Instant access to verified VCs and trending projects
-            </p>
+            <p className="text-sm text-gray-500 mt-2">Get access to that alpha today</p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
