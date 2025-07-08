@@ -251,7 +251,7 @@ export default function Pricing() {
 
             <Card className="text-center border-primary/50">
               <CardContent className="pt-6">
-                <Badge className="mx-auto mb-2">Series A+</Badge>
+                <Badge className="mx-auto mb-2">🎯 Sector Specialists</Badge>
                 <h3 className="font-semibold mb-2 text-[24px]">Growth Stage VCs</h3>
                 <div className="text-2xl font-bold text-primary mb-4">$1000 - $2500</div>
                 <p className="text-gray-600">
