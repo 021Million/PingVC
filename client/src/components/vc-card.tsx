@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Lock, Calendar, MessageCircle, Clock } from "lucide-react";
-import { PaymentModal } from "@/components/payment-modal";
+import PaymentCheckout from "@/components/payment-checkout";
 import { useState } from "react";
 
 interface VCCardProps {
@@ -128,11 +128,20 @@ export function VCCard({ vc, isAuthenticated }: VCCardProps) {
       </Card>
 
       {showPaymentModal && (
-        <PaymentModal
-          vc={vc}
-          isOpen={showPaymentModal}
-          onClose={() => setShowPaymentModal(false)}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="max-w-md w-full">
+            <PaymentCheckout 
+              type="vc"
+              vcId={vc.id}
+              vcName={vc.fundName}
+              onSuccess={() => {
+                setShowPaymentModal(false);
+                window.location.reload(); // Refresh to show unlocked content
+              }}
+              onCancel={() => setShowPaymentModal(false)}
+            />
+          </div>
+        </div>
       )}
     </>
   );
