@@ -122,7 +122,7 @@ export default function Home() {
             <Card className="p-6">
               <Badge className="w-8 h-8 text-success mx-auto mb-4" />
               <h3 className="font-semibold text-gray-900 mb-2">Earn Revenue</h3>
-              <p className="text-sm text-gray-600">70% of each unlock fee goes to you</p>
+              <p className="text-sm text-gray-600">85% of each unlock fee goes to you</p>
             </Card>
             <Card className="p-6">
               <Lock className="w-8 h-8 text-success mx-auto mb-4" />
@@ -161,7 +161,6 @@ export default function Home() {
               <ul className="space-y-2 text-gray-300">
                 <li><a href="#" className="hover:text-white transition-colors">Browse VCs</a></li>
                 <li><a href="/how-it-works" className="hover:text-white transition-colors">For Founders</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Success Stories</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
               </ul>
             </div>
@@ -170,9 +169,6 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-4">For VCs</h3>
               <ul className="space-y-2 text-gray-300">
                 <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Revenue Share</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Quality Control</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Dashboard</a></li>
               </ul>
             </div>
           </div>
