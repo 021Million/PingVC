@@ -292,7 +292,7 @@ export default function Pricing() {
                 <CardTitle className="text-lg">How do VCs get paid?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">VCs receive 85% of their intro fee weekly via verified payment methods. We retain 5% as a platform fee to cover operations and verification costs.</p>
+                <p className="text-gray-600">VCs receive 85% of their intro fee weekly via verified payment methods. We retain 15% as a platform fee to cover operations and verification costs.</p>
               </CardContent>
             </Card>
 
