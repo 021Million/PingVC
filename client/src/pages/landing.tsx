@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { CheckCircle, Lock, Calendar, MessageCircle, Mail } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
@@ -12,6 +13,7 @@ import { useState } from "react";
 export default function Landing() {
   const [stageFilter, setStageFilter] = useState("All");
   const [sectorFilter, setSectorFilter] = useState("");
+  const [email, setEmail] = useState("");
 
   const { data: vcs = [], isLoading } = useQuery({
     queryKey: ["/api/vcs", { stage: stageFilter, sector: sectorFilter, verified: true }],
@@ -23,6 +25,15 @@ export default function Landing() {
 
   const handleScrollToVCs = () => {
     document.getElementById('vc-grid')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      // Store email and redirect to sign up
+      localStorage.setItem('signup_email', email);
+      window.location.href = '/api/login';
+    }
   };
 
   return (
@@ -68,11 +79,32 @@ export default function Landing() {
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Founders meet the <span className="text-primary">VC</span>
+            Where <span className="text-green-600">Founders</span> meet the <span className="text-primary">VC</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Pay once. Chat with the partner who writes the checks. No middlemen, no spam, pure signal.
           </p>
+          
+          {/* Email Capture */}
+          <div className="max-w-md mx-auto mb-8">
+            <form onSubmit={handleEmailSubmit} className="flex gap-3">
+              <Input
+                type="email"
+                placeholder="Enter your email to unlock browsing"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1"
+                required
+              />
+              <Button type="submit" className="bg-primary text-white px-6">
+                <Mail className="mr-2 h-4 w-4" />
+                Unlock
+              </Button>
+            </form>
+            <p className="text-sm text-gray-500 mt-2">
+              Instant access to verified VCs and trending projects
+            </p>
+          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Button 

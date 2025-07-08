@@ -33,7 +33,7 @@ export default function Home() {
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Founders meet the <span className="text-primary">VC</span>
+            Where <span className="text-green-600">Founders</span> meet the <span className="text-primary">VC</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Pay once. Chat with the partner who writes the checks. No middlemen, no spam, pure signal.
