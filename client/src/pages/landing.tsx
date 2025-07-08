@@ -41,7 +41,7 @@ export default function Landing() {
             <nav className="hidden md:flex items-center space-x-8">
               <a href="/scout" className="text-gray-700 hover:text-primary transition-colors">Scout</a>
               <a href="/how-it-works" className="text-gray-700 hover:text-primary transition-colors">How it Works</a>
-              <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For Founders</a>
+              <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For VCs</a>
               <a href="/pricing" className="text-gray-700 hover:text-primary transition-colors">Pricing</a>
             </nav>
             
@@ -63,7 +63,6 @@ export default function Landing() {
           </div>
         </div>
       </header>
-
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -104,10 +103,8 @@ export default function Landing() {
           </div>
         </div>
       </section>
-
       {/* Marketplace Section */}
       <MarketplaceLanding vcs={vcs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
-
       {/* Filter Section */}
       <FilterSection 
         stageFilter={stageFilter}
@@ -115,7 +112,6 @@ export default function Landing() {
         onStageChange={setStageFilter}
         onSectorChange={setSectorFilter}
       />
-
       {/* VC Grid */}
       <section className="py-16 bg-gray-50" id="vc-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -153,7 +149,6 @@ export default function Landing() {
           )}
         </div>
       </section>
-
       {/* VC Signup Section */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white" id="vc-signup">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -189,7 +184,6 @@ export default function Landing() {
           </Button>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
