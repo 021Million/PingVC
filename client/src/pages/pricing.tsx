@@ -252,7 +252,7 @@ export default function Pricing() {
             <Card className="text-center border-primary/50">
               <CardContent className="pt-6">
                 <Badge className="mx-auto mb-2">Series A+</Badge>
-                <h3 className="text-xl font-semibold mb-2">Growth Stage VCs</h3>
+                <h3 className="font-semibold mb-2 text-[24px]">Growth Stage VCs</h3>
                 <div className="text-2xl font-bold text-primary mb-4">$1000 - $2500</div>
                 <p className="text-gray-600">
                   Established partners at top-tier funds with specific sector expertise and track records.
