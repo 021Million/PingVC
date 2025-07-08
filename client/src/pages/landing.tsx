@@ -104,14 +104,7 @@ export default function Landing() {
             <p className="text-sm text-gray-500 mt-2">Get access to that alpha today</p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button 
-              size="lg"
-              onClick={handleScrollToVCs}
-              className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
-            >Unlock Intros Now</Button>
-            <div className="text-sm text-gray-500">✓ Instant access • ✓ Verified VCs • ✓ Money-back guarantee</div>
-          </div>
+          
           
           {/* Trust indicators */}
           <div className="grid grid-cols-3 gap-8 max-w-md mx-auto text-center">
