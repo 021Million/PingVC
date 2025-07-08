@@ -220,6 +220,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Project visibility payment endpoint
+  app.post("/api/create-project-visibility-payment", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      // Create payment intent for $9 project visibility
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 900, // $9 in cents
+        currency: 'usd',
+        metadata: {
+          founderId: founder.id.toString(),
+          paymentType: 'project_visibility'
+        },
+      });
+      
+      // Create pending payment record
+      await storage.createPayment({
+        id: paymentIntent.id,
+        founderId: founder.id,
+        amount: 900,
+        paymentType: "project_visibility",
+        stripePaymentIntentId: paymentIntent.id,
+        status: "pending",
+      });
+      
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error) {
+      console.error("Error creating project visibility payment intent:", error);
+      res.status(500).json({ message: "Error creating payment intent" });
+    }
+  });
+
   app.post("/api/confirm-payment", isAuthenticated, async (req: any, res) => {
     try {
       const { paymentIntentId } = req.body;
@@ -227,33 +263,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
       
       if (paymentIntent.status === 'succeeded') {
-        const vcId = parseInt(paymentIntent.metadata.vcId);
         const founderId = parseInt(paymentIntent.metadata.founderId);
+        const paymentType = paymentIntent.metadata.paymentType;
         
-        const vc = await storage.getVC(vcId);
-        if (!vc) {
-          return res.status(400).json({ message: "VC not found" });
+        if (paymentType === 'project_visibility') {
+          // Update founder visibility status
+          await storage.updateFounderProject(founderId, { isVisible: true });
+          
+          // Update payment status
+          await storage.updatePaymentStatus(paymentIntentId, "completed");
+          
+          res.json({
+            success: true,
+            type: 'project_visibility',
+            message: 'Project is now visible in the Scout marketplace!'
+          });
+        } else if (paymentType === 'vc_unlock') {
+          const vcId = parseInt(paymentIntent.metadata.vcId);
+          
+          const vc = await storage.getVC(vcId);
+          if (!vc) {
+            return res.status(400).json({ message: "VC not found" });
+          }
+          
+          // Generate AI intro template
+          const introTemplate = await generateIntroTemplate(vc);
+          
+          // Update payment status
+          const payment = await storage.updatePaymentStatus(
+            paymentIntentId, 
+            "completed", 
+            introTemplate
+          );
+        
+          res.json({
+            success: true,
+            type: 'vc_unlock',
+            vc: {
+              ...vc,
+              contactHandle: vc.contactHandle // Reveal actual contact
+            },
+            introTemplate,
+            payment
+          });
         }
-        
-        // Generate AI intro template
-        const introTemplate = await generateIntroTemplate(vc);
-        
-        // Update payment status
-        const payment = await storage.updatePaymentStatus(
-          paymentIntentId, 
-          "completed", 
-          introTemplate
-        );
-        
-        res.json({
-          success: true,
-          vc: {
-            ...vc,
-            contactHandle: vc.contactHandle // Reveal actual contact
-          },
-          introTemplate,
-          payment
-        });
       } else {
         res.status(400).json({ message: "Payment not completed" });
       }

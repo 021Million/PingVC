@@ -40,6 +40,8 @@ The application follows a full-stack monolithic architecture with clear separati
 - **Admin Verification System**: Admin panel to approve/reject VC applications with verified checkmarks
 - **AI-Generated Templates**: Personalized intro messages created by OpenAI based on VC investment focus
 - **Payment Integration**: Full Stripe integration for secure payment processing
+- **Founder Project Publishing**: Founders can save project details as drafts or pay $9 to publish and make them visible in Scout marketplace
+- **Draft/Publish Workflow**: Two-tier system where founders can save privately or pay to go public
 - **User Authentication**: Replit Auth integration with session management
 - **Responsive Design**: Mobile-friendly interface with Tailwind CSS and shadcn/ui components
 
@@ -62,10 +64,12 @@ The application follows a full-stack monolithic architecture with clear separati
 
 1. **User Registration**: Users sign in via Replit Auth, creating user records
 2. **VC Onboarding**: VCs complete profile setup with fund details and contact preferences
-3. **Browse & Filter**: Founders browse verified VC profiles with stage/sector filters
-4. **Payment Flow**: Founders initiate payment via Stripe checkout for VC contact access
-5. **Contact Unlock**: Successful payment unlocks VC contact info and generates AI intro template
-6. **Admin Management**: Admins verify VC profiles and manage platform content
+3. **Founder Project Setup**: Founders can create and save project details as drafts in their profile
+4. **Project Publishing**: Founders pay $9 to make their projects visible in Scout marketplace
+5. **Browse & Filter**: Founders browse verified VC profiles with stage/sector filters
+6. **Payment Flow**: Founders initiate payment via Stripe checkout for VC contact access
+7. **Contact Unlock**: Successful payment unlocks VC contact info and generates AI intro template
+8. **Admin Management**: Admins verify VC profiles and manage platform content
 
 ## External Dependencies
 
@@ -111,3 +115,4 @@ Preferred communication style: Simple, everyday language.
 
 Changelog:
 - July 08, 2025. Initial setup
+- July 08, 2025. Added founder project publishing system with $9 payment for marketplace visibility

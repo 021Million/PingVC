@@ -11,7 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
-import { ArrowLeft, Upload, Star, TrendingUp } from "lucide-react";
+import { ArrowLeft, Upload, Star, TrendingUp, Eye, Lock, Save } from "lucide-react";
+import ProjectVisibilityPayment from "@/components/project-visibility-payment";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -31,6 +32,9 @@ export default function Profile() {
   const [ecosystem, setEcosystem] = useState("");
   const [vertical, setVertical] = useState("");
   const [description, setDescription] = useState("");
+  
+  // Payment modal state
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   // Fetch founder data if exists
   const { data: founder } = useQuery({
@@ -45,6 +49,19 @@ export default function Profile() {
       setLastName(user.lastName || "");
     }
   }, [user]);
+
+  // Initialize project fields when founder data loads
+  useEffect(() => {
+    if (founder) {
+      setProjectName(founder.companyName || "");
+      setPitchDeckUrl(founder.pitchDeckUrl || "");
+      setAmountRaising(founder.amountRaising?.toString() || "");
+      setTraction(founder.traction || "");
+      setEcosystem(founder.ecosystem || "");
+      setVertical(founder.vertical || "");
+      setDescription(founder.description || "");
+    }
+  }, [founder]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: { firstName: string; lastName: string }) => {
@@ -92,9 +109,7 @@ export default function Profile() {
     updateProfileMutation.mutate({ firstName, lastName });
   };
 
-  const handleProjectSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSaveProject = () => {
     updateProjectMutation.mutate({
       companyName: projectName,
       pitchDeckUrl,
@@ -105,6 +120,22 @@ export default function Profile() {
       description,
     });
   };
+
+  const handlePublishProject = () => {
+    // First save the project, then open payment modal
+    handleSaveProject();
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = (result: any) => {
+    queryClient.invalidateQueries({ queryKey: ["/api/founder/me"] });
+    toast({
+      title: "Project Published!",
+      description: "Your project is now visible in the Scout marketplace.",
+    });
+  };
+
+  const isProjectComplete = projectName && description;
 
   const ecosystems = ["Ethereum", "Arbitrum", "Sui", "Bitcoin", "Solana", "Polygon", "Other"];
   const verticals = ["DeFi", "Gaming", "Infrastructure", "NFTs", "Stablecoins", "RWA", "Other"];
@@ -133,21 +164,17 @@ export default function Profile() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/">
-              <a className="flex items-center space-x-2">
-                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">P</span>
-                </div>
-                <span className="text-xl font-bold text-gray-900">Ping Me</span>
-              </a>
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">P</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">Ping Me</span>
             </Link>
             
             <div className="flex items-center space-x-4">
-              <Link href="/">
-                <a className="flex items-center text-gray-600 hover:text-primary transition-colors">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Home
-                </a>
+              <Link href="/" className="flex items-center text-gray-600 hover:text-primary transition-colors">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Home
               </Link>
               <Button 
                 variant="ghost" 
@@ -249,7 +276,7 @@ export default function Profile() {
             </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleProjectSubmit} className="space-y-6">
+            <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="projectName">Project/Company Name *</Label>
@@ -340,11 +367,27 @@ export default function Profile() {
                 />
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-900 mb-2">Scout Marketplace</h4>
-                <p className="text-blue-800 text-sm">
-                  Complete your project details to appear in our Scout marketplace where VCs discover new opportunities. 
-                  Projects with complete profiles get 3x more visibility.
+              {/* Project Status */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-gray-900">Project Status</h4>
+                  {founder?.isVisible ? (
+                    <div className="flex items-center text-green-600">
+                      <Eye className="h-4 w-4 mr-1" />
+                      <span className="text-sm font-medium">Published</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-gray-500">
+                      <Lock className="h-4 w-4 mr-1" />
+                      <span className="text-sm font-medium">Draft</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-gray-600 text-sm">
+                  {founder?.isVisible 
+                    ? "Your project is visible in the Scout marketplace where VCs can discover and vote for it."
+                    : "Save your project as a draft or publish it for $9 to make it visible to VCs in the Scout marketplace."
+                  }
                 </p>
               </div>
 
@@ -352,17 +395,42 @@ export default function Profile() {
                 <Button type="button" variant="outline" asChild>
                   <Link href="/scout">View Scout Marketplace</Link>
                 </Button>
-                <Button 
-                  type="submit" 
-                  disabled={updateProjectMutation.isPending}
-                >
-                  {updateProjectMutation.isPending ? "Saving..." : "Save Project"}
-                </Button>
+                
+                <div className="flex space-x-3">
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    onClick={handleSaveProject}
+                    disabled={updateProjectMutation.isPending || !isProjectComplete}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {updateProjectMutation.isPending ? "Saving..." : "Save Draft"}
+                  </Button>
+                  
+                  {!founder?.isVisible && (
+                    <Button 
+                      type="button"
+                      onClick={handlePublishProject}
+                      disabled={updateProjectMutation.isPending || !isProjectComplete}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Publish for $9
+                    </Button>
+                  )}
+                </div>
               </div>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Payment Modal */}
+      <ProjectVisibilityPayment
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onSuccess={handlePaymentSuccess}
+      />
     </div>
   );
 }
