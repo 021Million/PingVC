@@ -214,7 +214,6 @@ export default function Scout() {
           </div>
         </div>
       </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -300,7 +299,7 @@ export default function Scout() {
           <TabsContent value="featured">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Featured Projects</h2>
-              <p className="text-gray-600">Premium projects that have paid for enhanced visibility</p>
+              <p className="text-gray-600">Premium projects this week</p>
             </div>
             
             {loadingFeatured ? (
@@ -354,7 +353,6 @@ export default function Scout() {
           </TabsContent>
         </Tabs>
       </div>
-
       {/* Footer CTA */}
       {isAuthenticated && (
         <div className="bg-primary text-white py-12">
