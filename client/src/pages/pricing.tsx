@@ -136,7 +136,7 @@ export default function Pricing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-sm">Priority in VC feeds</span>
+                    <span className="text-sm">Email newsletter to VC & Angels</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
