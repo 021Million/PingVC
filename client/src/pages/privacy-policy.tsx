@@ -1,85 +1,72 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
+import { Header } from "@/components/header";
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8">
-          <Link href="/">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
-          <p className="text-gray-600">Last updated: January 8, 2025</p>
-        </div>
-
-        <div className="prose prose-gray max-w-none">
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Information We Collect</h2>
-            <p className="text-gray-700 mb-4">
-              We collect information you provide directly to us, such as when you create an account, make a payment, or contact us for support. This includes:
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Privacy Policy</h1>
+          
+          <div className="prose prose-gray max-w-none">
+            <p className="text-gray-600 mb-6">
+              Your privacy is important to us. This policy outlines how we collect, use, and protect your information.
             </p>
-            <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-              <li>Name and email address</li>
-              <li>Profile information (for VCs: fund details, investment focus)</li>
-              <li>Payment information (processed securely through Stripe)</li>
-              <li>Communication preferences and contact details</li>
-            </ul>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. How We Use Your Information</h2>
-            <p className="text-gray-700 mb-4">We use the information we collect to:</p>
-            <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-              <li>Provide and maintain our marketplace platform</li>
-              <li>Process payments and facilitate introductions</li>
-              <li>Send you important updates about your account</li>
-              <li>Improve our services and user experience</li>
-              <li>Ensure platform security and prevent fraud</li>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Information We Collect</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>Email addresses for login, product updates, and communication</li>
+              <li>Payment data (handled securely via Stripe or other third-party processors)</li>
+              <li>Project details submitted by users for platform listings</li>
             </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Information Sharing</h2>
-            <p className="text-gray-700 mb-4">
-              We do not sell, trade, or otherwise transfer your personal information to third parties except:
+            <p className="text-gray-600 mb-6">
+              We do not sell your data to third parties.
             </p>
-            <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-              <li>When you explicitly consent to share your contact information through our platform</li>
-              <li>With service providers who help us operate our platform (like payment processors)</li>
-              <li>If required by law or to protect our rights and safety</li>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. How We Use Your Data</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>To enable introductions, listings, and communications</li>
+              <li>To process payments and maintain platform functionality</li>
+              <li>To provide relevant updates, feature improvements, and customer support</li>
             </ul>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Data Security</h2>
-            <p className="text-gray-700 mb-4">
-              We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. This includes encryption, secure servers, and regular security audits.
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Data Sharing</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>We only share your data when required to complete services you've opted into (e.g., sending your profile to a VC)</li>
+              <li>All payments are processed securely by trusted third parties; Ping Me does not store payment credentials</li>
+            </ul>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Cookies</h2>
+            <p className="text-gray-600 mb-6">
+              We use essential cookies for login sessions and anonymous analytics to improve platform experience.
             </p>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Your Rights</h2>
-            <p className="text-gray-700 mb-4">You have the right to:</p>
-            <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-              <li>Access and update your personal information</li>
-              <li>Request deletion of your account and data</li>
-              <li>Opt out of non-essential communications</li>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Data Retention</h2>
+            <p className="text-gray-600 mb-6">
+              We retain user data only as long as necessary to fulfill our service obligations or comply with applicable laws.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">6. Your Rights</h2>
+            <p className="text-gray-600 mb-4">You may:</p>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
               <li>Request a copy of your data</li>
+              <li>Ask for your data to be deleted or corrected</li>
+              <li>Unsubscribe from communications at any time</li>
+              <li>Contact us at support@pingme.app for any privacy-related request</li>
             </ul>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Contact Us</h2>
-            <p className="text-gray-700">
-              If you have any questions about this Privacy Policy, please contact us through our{" "}
-              <Link href="/support" className="text-blue-600 hover:text-blue-800">support page</Link>.
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">7. Policy Updates</h2>
+            <p className="text-gray-600 mb-6">
+              This privacy policy may be updated occasionally. We will notify users of major changes. Continued use implies agreement.
             </p>
-          </section>
+
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              <p className="text-sm text-gray-500">
+                Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,104 +1,82 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
+import { Header } from "@/components/header";
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8">
-          <Link href="/">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Terms of Service</h1>
-          <p className="text-gray-600">Last updated: January 8, 2025</p>
-        </div>
-
-        <div className="prose prose-gray max-w-none">
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
-            <p className="text-gray-700 mb-4">
-              By accessing and using Ping Me, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our service.
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Terms of Service</h1>
+          
+          <div className="prose prose-gray max-w-none">
+            <p className="text-gray-600 mb-6">
+              Welcome to Ping Me. By accessing or using our website and services, you agree to be bound by the following Terms of Service. If you do not agree with these terms, please do not use Ping Me.
             </p>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Description of Service</h2>
-            <p className="text-gray-700 mb-4">
-              Ping Me is a marketplace platform that connects startup founders with venture capitalists. We facilitate introductions through a paid system where founders can access VC contact information and receive personalized introduction templates.
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Overview</h2>
+            <p className="text-gray-600 mb-6">
+              Ping Me is a platform that facilitates paid introductions between founders and venture capitalists or angels. Ping Me acts solely as an intermediary and does not guarantee investment outcomes or business success as a result of any introduction.
             </p>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. User Responsibilities</h2>
-            <p className="text-gray-700 mb-4">As a user of our platform, you agree to:</p>
-            <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-              <li>Provide accurate and truthful information</li>
-              <li>Use the platform for legitimate business purposes only</li>
-              <li>Respect the privacy and preferences of other users</li>
-              <li>Not spam or abuse the contact information provided</li>
-              <li>Comply with all applicable laws and regulations</li>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Eligibility</h2>
+            <p className="text-gray-600 mb-6">
+              You must be at least 18 years old to use Ping Me. By using the platform, you confirm you meet this requirement and have the legal capacity to enter into this agreement.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Services and Payments</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>All payments made to Ping Me are non-refundable, unless explicitly stated under specific conditions.</li>
+              <li>Ping Me charges a fee for access to introductions and/or for listing services on the platform.</li>
+              <li>Venture Capitalists (VCs) and Angels listed on the platform are not employees or agents of Ping Me.</li>
             </ul>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Payment Terms</h2>
-            <p className="text-gray-700 mb-4">
-              Payment is required to access VC contact information. All payments are processed securely through Stripe. By making a payment, you agree to:
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Refund Policy</h2>
+            <p className="text-gray-600 mb-4">
+              If a VC or Angel does not show up to a scheduled call or fails to respond to a paid introduction request within 5 business days:
             </p>
-            <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-              <li>Pay the full amount due at the time of purchase</li>
-              <li>Provide accurate payment information</li>
-              <li>Understand that payments are generally non-refundable</li>
-              <li>Contact us immediately if there are any billing issues</li>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>The founder must submit a written complaint to Ping Me at support@pingme.app within 7 calendar days of the missed appointment or non-response.</li>
+              <li>Ping Me will conduct an internal review and may contact both parties for verification.</li>
+              <li>If Ping Me confirms the VC did not respond or attend, the founder will be issued a full 100% refund within 10 business days.</li>
             </ul>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Refund Policy</h2>
-            <p className="text-gray-700 mb-4">
-              We offer a money-back guarantee if you are not satisfied with the quality of the VC contact information or introduction template. Refund requests must be submitted within 7 days of purchase through our support system.
-            </p>
-          </section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. User Responsibilities</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>You agree to use Ping Me lawfully and professionally.</li>
+              <li>You will not misrepresent your identity, company, or intentions.</li>
+              <li>Spam, harassment, or platform manipulation will result in immediate account removal and potential legal consequences.</li>
+            </ul>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. VC Verification</h2>
-            <p className="text-gray-700 mb-4">
-              All VCs on our platform undergo a verification process. However, we cannot guarantee the accuracy of all information or the success of any introductions. Users should conduct their own due diligence.
-            </p>
-          </section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">6. No Guarantees</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>Ping Me makes no warranties regarding investment outcomes or responses.</li>
+              <li>We do not guarantee the success or quality of any introduction or interaction.</li>
+            </ul>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Limitation of Liability</h2>
-            <p className="text-gray-700 mb-4">
-              Ping Me shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from the use or inability to use our service. Our liability is limited to the amount paid for the specific transaction.
-            </p>
-          </section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">7. Platform Rights</h2>
+            <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
+              <li>We reserve the right to modify pricing, features, or access at any time without prior notice.</li>
+              <li>Ping Me may suspend or terminate accounts at its discretion for violations of these Terms.</li>
+              <li>We may update these terms periodically; continued use indicates acceptance.</li>
+            </ul>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Termination</h2>
-            <p className="text-gray-700 mb-4">
-              We reserve the right to terminate or suspend access to our service immediately, without prior notice, for any reason, including breach of these terms.
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">8. Limitation of Liability</h2>
+            <p className="text-gray-600 mb-6">
+              Ping Me shall not be liable for indirect, incidental, or consequential damages resulting from use of the platform. Total liability shall not exceed the amount you paid to Ping Me in the preceding 3 months.
             </p>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Changes to Terms</h2>
-            <p className="text-gray-700 mb-4">
-              We reserve the right to modify these terms at any time. Changes will be posted on this page with an updated date. Continued use of the service after changes constitutes acceptance of the new terms.
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">9. Governing Law</h2>
+            <p className="text-gray-600 mb-6">
+              These terms are governed by the laws of the United Kingdom, unless otherwise specified.
             </p>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Contact Information</h2>
-            <p className="text-gray-700">
-              For questions about these Terms of Service, please contact us through our{" "}
-              <Link href="/support" className="text-blue-600 hover:text-blue-800">support page</Link>.
-            </p>
-          </section>
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              <p className="text-sm text-gray-500">
+                Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -120,7 +120,7 @@ export function VCCard({ vc, isAuthenticated }: VCCardProps) {
             }`}
           >
             {vc.isVerified 
-              ? `${vc.contactType === 'telegram' ? 'Unlock for' : 'Book Meeting for'} ${formatPrice(vc.price)}`
+              ? `Unlock for ${formatPrice(vc.price)}`
               : `Pending Verification`
             }
           </Button>
