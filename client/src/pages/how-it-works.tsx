@@ -62,9 +62,7 @@ export default function HowItWorks() {
                 <CardTitle>1. Browse VCs & Angels</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  Filter through our verified network of web3 VCs by stage, sector, and investment focus. Each VC sets their own intro price.
-                </p>
+                <p className="text-gray-600">Filter through our verified network of Web3 VCs & Angels by stage, sector, and investment focus. Each individual sets their own intro price.</p>
               </CardContent>
             </Card>
 
