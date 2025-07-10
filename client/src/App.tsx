@@ -14,6 +14,7 @@ import ProfileSetup from "@/pages/profile-setup";
 import ProjectSetup from "@/pages/project-setup";
 import Profile from "@/pages/profile";
 import Scout from "@/pages/scout";
+import Ping from "@/pages/ping";
 import HowItWorks from "@/pages/how-it-works";
 import ForVCs from "@/pages/for-vcs";
 import Pricing from "@/pages/pricing";
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/" component={Landing} />
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/scout" component={Scout} />
+          <Route path="/ping" component={Ping} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
@@ -58,6 +60,7 @@ function Router() {
           <Route path="/project-setup" component={ProjectSetup} />
           <Route path="/profile" component={Profile} />
           <Route path="/scout" component={Scout} />
+          <Route path="/ping" component={Ping} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />

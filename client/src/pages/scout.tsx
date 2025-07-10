@@ -155,7 +155,7 @@ export default function Scout() {
         <div className="flex justify-between items-start">
           <div className="flex items-start space-x-3">
             {project.logoUrl && (
-              <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative group">
                 <img 
                   src={project.logoUrl} 
                   alt={`${project.companyName} logo`}
@@ -165,6 +165,27 @@ export default function Scout() {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
+                {/* Social media overlay icons */}
+                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center space-x-1">
+                  {project.websiteUrl && (
+                    <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" 
+                       className="text-white hover:text-gray-300 transition-colors">
+                      <Globe className="h-3 w-3" />
+                    </a>
+                  )}
+                  {project.linkedinUrl && (
+                    <a href={project.linkedinUrl} target="_blank" rel="noopener noreferrer" 
+                       className="text-white hover:text-gray-300 transition-colors">
+                      <Linkedin className="h-3 w-3" />
+                    </a>
+                  )}
+                  {project.twitterUrl && (
+                    <a href={project.twitterUrl} target="_blank" rel="noopener noreferrer" 
+                       className="text-white hover:text-gray-300 transition-colors">
+                      <Twitter className="h-3 w-3" />
+                    </a>
+                  )}
+                </div>
               </div>
             )}
             <div>
