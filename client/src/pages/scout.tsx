@@ -35,7 +35,7 @@ export default function Scout() {
     return (
       <EmailGate
         title="Access Scout"
-        description="To discover and vote for emerging web3 projects, please provide your email address. This helps us maintain a quality community of founders and investors."
+        description="To unlock instant access to the Scout page and discover emerging web3 projects, please provide your email address. This helps us maintain a quality community of founders and investors."
         source="scout"
         onSuccess={() => setHasEmailAccess(true)}
       />
