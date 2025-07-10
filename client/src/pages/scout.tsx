@@ -296,9 +296,7 @@ export default function Scout() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Scout Emerging Projects</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover and vote for the most promising web3 startups. Featured projects get premium visibility to our network of VCs.
-          </p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Discover and vote for the most promising Web3 startups. Featured projects get premium visibility to our network of VCs.</p>
         </div>
 
         {/* Search and Filters */}
