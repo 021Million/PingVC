@@ -14,6 +14,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckCircle, DollarSign, Shield } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const vcSignupSchema = insertVCSchema.extend({
   sectors: z.string().min(1, "Please specify your investment sectors"),
@@ -53,6 +54,13 @@ export default function VCSignup() {
       });
     },
     onSuccess: () => {
+      // Trigger confetti animation
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
       toast({
         title: "Application Submitted!",
         description: "Your VC profile has been submitted for review. You'll hear back within 24 hours.",

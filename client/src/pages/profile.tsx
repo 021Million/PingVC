@@ -13,6 +13,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { ArrowLeft, Upload, Star, TrendingUp, Eye, Lock, Save } from "lucide-react";
 import ProjectVisibilityPayment from "@/components/project-visibility-payment";
+import confetti from "canvas-confetti";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -91,6 +92,13 @@ export default function Profile() {
       await apiRequest("POST", "/api/founder/project", data);
     },
     onSuccess: () => {
+      // Trigger confetti animation
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
       queryClient.invalidateQueries({ queryKey: ["/api/founder/me"] });
       toast({
         title: "Project Updated",
@@ -131,6 +139,13 @@ export default function Profile() {
   };
 
   const handlePaymentSuccess = (result: any) => {
+    // Trigger confetti animation
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    
     queryClient.invalidateQueries({ queryKey: ["/api/founder/me"] });
     toast({
       title: "Project Published!",

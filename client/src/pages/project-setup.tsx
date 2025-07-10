@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
+import confetti from "canvas-confetti";
 
 export default function ProjectSetup() {
   const [formData, setFormData] = useState({
@@ -32,6 +33,13 @@ export default function ProjectSetup() {
       await apiRequest("POST", "/api/founder/project", data);
     },
     onSuccess: () => {
+      // Trigger confetti animation
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
       toast({
         title: "Project Updated",
         description: "Your project information has been saved successfully!",

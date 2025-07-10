@@ -326,7 +326,7 @@ export default function Scout() {
           <TabsContent value="featured">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Featured Projects</h2>
-              <p className="text-gray-600">Premium projects this week</p>
+              <p className="text-gray-600">Premium projects this week. Click to vote for your favourite. One vote every 24 hours. </p>
             </div>
             
             {loadingFeatured ? (
