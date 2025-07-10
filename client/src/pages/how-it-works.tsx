@@ -59,7 +59,7 @@ export default function HowItWorks() {
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="h-8 w-8 text-primary" />
                 </div>
-                <CardTitle>1. Browse VCs</CardTitle>
+                <CardTitle>1. Browse VCs & Angels</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
