@@ -4,6 +4,7 @@ import {
   founders,
   payments,
   projectVotes,
+  emailSubmissions,
   type User,
   type UpsertUser,
   type VC,
@@ -12,6 +13,8 @@ import {
   type InsertFounder,
   type Payment,
   type InsertPayment,
+  type EmailSubmission,
+  type InsertEmailSubmission,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, sql } from "drizzle-orm";
@@ -45,6 +48,10 @@ export interface IStorage {
   updatePaymentStatus(id: string, status: string, introTemplate?: string): Promise<Payment>;
   getPaymentsByFounder(founderId: number): Promise<Payment[]>;
   hasFounderUnlockedVC(founderId: number, vcId: number): Promise<boolean>;
+  
+  // Email submission operations
+  submitEmail(email: InsertEmailSubmission): Promise<EmailSubmission>;
+  hasEmailAccess(email: string, source: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {

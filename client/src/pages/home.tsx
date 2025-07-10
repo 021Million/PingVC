@@ -108,7 +108,7 @@ export default function Home() {
       {/* VC Signup Section */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white" id="vc-signup">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">It's FREE to Join as a VC Partner</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">It's FREE to Join as a VC or Angel</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Curated dealflow without the noise. Get quality founder intros and earn from each connection.
           </p>

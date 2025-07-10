@@ -110,6 +110,13 @@ export const projectVotes = pgTable("project_votes", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const emailSubmissions = pgTable("email_submissions", {
+  id: serial("id").primaryKey(),
+  email: varchar("email").unique().notNull(),
+  source: varchar("source").notNull(), // 'scout', 'landing', etc.
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   vcs: many(vcs),
@@ -164,6 +171,11 @@ export const upsertUserSchema = createInsertSchema(users).omit({
   updatedAt: true,
 });
 
+export const insertEmailSubmissionSchema = createInsertSchema(emailSubmissions).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type UpsertUser = z.infer<typeof upsertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -173,3 +185,5 @@ export type Founder = typeof founders.$inferSelect;
 export type InsertFounder = z.infer<typeof insertFounderSchema>;
 export type Payment = typeof payments.$inferSelect;
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
+export type EmailSubmission = typeof emailSubmissions.$inferSelect;
+export type InsertEmailSubmission = z.infer<typeof insertEmailSubmissionSchema>;
