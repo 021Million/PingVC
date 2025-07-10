@@ -127,7 +127,7 @@ export default function HowItWorks() {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Founders Choose Ping Me</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
             <div className="text-center">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-green-600 font-bold text-lg">✓</span>
