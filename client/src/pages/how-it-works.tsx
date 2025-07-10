@@ -159,9 +159,7 @@ export default function HowItWorks() {
         {/* CTA Section */}
         <div className="text-center bg-white rounded-2xl p-12 shadow-lg">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Connect with VCs?</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Join hundreds of web3 founders who have successfully raised funding through Ping Me
-          </p>
+          <p className="text-xl text-gray-600 mb-8">Join hundreds of Web3 founders who have successfully raised funding through Ping Me</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
               <Link href="/">Browse VCs <ArrowRight className="ml-2 h-4 w-4" /></Link>
