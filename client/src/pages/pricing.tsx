@@ -140,7 +140,7 @@ export default function Pricing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-sm">Analytics dashboard</span>
+                    <span className="text-sm">Increase organic discoverability</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
