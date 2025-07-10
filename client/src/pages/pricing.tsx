@@ -59,7 +59,7 @@ export default function Pricing() {
               <CardHeader>
                 <CardTitle className="text-xl">Browse VCs</CardTitle>
                 <div className="text-3xl font-bold text-gray-900">Free</div>
-                <p className="text-gray-600">Browse our verified VC database</p>
+                <p className="text-gray-600">Sign up with email to start browsing</p>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
