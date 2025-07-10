@@ -118,7 +118,7 @@ export default function Landing() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">100%</div>
-              <div className="text-sm text-gray-600">Response Rate</div>
+              <div className="text-sm text-gray-600">Pay-to-Ping</div>
             </div>
           </div>
         </div>
