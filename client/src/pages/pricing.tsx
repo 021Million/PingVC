@@ -126,7 +126,7 @@ export default function Pricing() {
               <CardHeader>
                 <CardTitle className="text-xl">Scout Feature</CardTitle>
                 <div className="text-3xl font-bold text-gray-900">$9</div>
-                <p className="text-gray-600">Per featured project (1-4 weeks)</p>
+                <p className="text-gray-600">Per featured project</p>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
