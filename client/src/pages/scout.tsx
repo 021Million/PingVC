@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,15 +10,37 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { EmailGate } from "@/components/email-gate";
 
 export default function Scout() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEcosystem, setSelectedEcosystem] = useState("All");
   const [selectedVertical, setSelectedVertical] = useState("All");
+  const [hasEmailAccess, setHasEmailAccess] = useState(false);
   
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Check if user already has email access on component mount
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('email_access_scout');
+    if (storedEmail) {
+      setHasEmailAccess(true);
+    }
+  }, []);
+
+  // Show email gate if user doesn't have access
+  if (!hasEmailAccess) {
+    return (
+      <EmailGate
+        title="Access Scout"
+        description="To discover and vote for emerging web3 projects, please provide your email address. This helps us maintain a quality community of founders and investors."
+        source="scout"
+        onSuccess={() => setHasEmailAccess(true)}
+      />
+    );
+  }
 
   const { data: featuredProjects = [], isLoading: loadingFeatured } = useQuery({
     queryKey: ["/api/scout/featured"],

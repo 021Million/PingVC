@@ -306,6 +306,29 @@ export class DatabaseStorage implements IStorage {
       .limit(1);
     return !!vote;
   }
+
+  // Email submission operations
+  async submitEmail(emailData: InsertEmailSubmission): Promise<EmailSubmission> {
+    const [submission] = await db
+      .insert(emailSubmissions)
+      .values(emailData)
+      .onConflictDoUpdate({
+        target: emailSubmissions.email,
+        set: {
+          source: emailData.source,
+        },
+      })
+      .returning();
+    return submission;
+  }
+
+  async hasEmailAccess(email: string, source: string): Promise<boolean> {
+    const [submission] = await db
+      .select()
+      .from(emailSubmissions)
+      .where(and(eq(emailSubmissions.email, email), eq(emailSubmissions.source, source)));
+    return !!submission;
+  }
 }
 
 export const storage = new DatabaseStorage();

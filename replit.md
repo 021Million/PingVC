@@ -31,6 +31,7 @@ The application follows a full-stack monolithic architecture with clear separati
 - **VCs**: Venture capitalist profiles with fund details, sectors, custom pricing, and verification status
 - **Founders**: Founder-specific profiles linked to users
 - **Payments**: Transaction records for unlocked VC contacts with intro templates
+- **Email Submissions**: Stores email addresses for Scout page access with source tracking
 - **Sessions**: Session storage (required for Replit Auth)
 
 ### Key Features
@@ -42,6 +43,7 @@ The application follows a full-stack monolithic architecture with clear separati
 - **Payment Integration**: Full Stripe integration for secure payment processing
 - **Founder Project Publishing**: Founders can save project details as drafts or pay $9 to publish and make them visible in Scout marketplace
 - **Draft/Publish Workflow**: Two-tier system where founders can save privately or pay to go public
+- **Email Gate for Scout**: Users must provide email to access the Scout marketplace, with remember functionality
 - **User Authentication**: Replit Auth integration with session management
 - **Responsive Design**: Mobile-friendly interface with Tailwind CSS and shadcn/ui components
 
@@ -116,3 +118,5 @@ Preferred communication style: Simple, everyday language.
 Changelog:
 - July 08, 2025. Initial setup
 - July 08, 2025. Added founder project publishing system with $9 payment for marketplace visibility
+- July 10, 2025. Implemented email gate for Scout page with database storage and remember functionality
+- July 10, 2025. Fixed footer navigation links to properly route to Terms, Privacy Policy, and Support pages
