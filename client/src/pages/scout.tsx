@@ -30,6 +30,17 @@ export default function Scout() {
     }
   }, []);
 
+  // Move queries before conditional return to follow hooks rules
+  const { data: featuredProjects = [], isLoading: loadingFeatured } = useQuery({
+    queryKey: ["/api/scout/featured"],
+    enabled: hasEmailAccess, // Only fetch when user has access
+  });
+
+  const { data: allProjects = [], isLoading: loadingAll } = useQuery({
+    queryKey: ["/api/scout/projects", { ecosystem: selectedEcosystem, vertical: selectedVertical }],
+    enabled: hasEmailAccess, // Only fetch when user has access
+  });
+
   // Show email gate if user doesn't have access
   if (!hasEmailAccess) {
     return (
@@ -41,14 +52,6 @@ export default function Scout() {
       />
     );
   }
-
-  const { data: featuredProjects = [], isLoading: loadingFeatured } = useQuery({
-    queryKey: ["/api/scout/featured"],
-  });
-
-  const { data: allProjects = [], isLoading: loadingAll } = useQuery({
-    queryKey: ["/api/scout/projects", { ecosystem: selectedEcosystem, vertical: selectedVertical }],
-  });
 
   const voteMutation = useMutation({
     mutationFn: async ({ founderId, action }: { founderId: number; action: 'vote' | 'unvote' }) => {
