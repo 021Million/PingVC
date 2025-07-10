@@ -74,7 +74,7 @@ export default function HowItWorks() {
                 <CardTitle>2. Pay for Access</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Pay the set price to unlock their contact details and receive a personalized intro template powered by AI.</p>
+                <p className="text-gray-600">Pay the set price to unlock their contact details. Each price is customized by the individual.</p>
               </CardContent>
             </Card>
 
