@@ -17,6 +17,7 @@ export default function Scout() {
   const [selectedEcosystem, setSelectedEcosystem] = useState("All");
   const [selectedVertical, setSelectedVertical] = useState("All");
   const [hasEmailAccess, setHasEmailAccess] = useState(false);
+  const [activeTab, setActiveTab] = useState("featured");
   
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -316,7 +317,7 @@ export default function Scout() {
           </div>
         </div>
 
-        <Tabs defaultValue="featured" className="w-full">
+        <Tabs defaultValue="featured" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-8">
             <TabsTrigger value="featured">Featured Projects</TabsTrigger>
             <TabsTrigger value="all">All Projects</TabsTrigger>
@@ -348,6 +349,23 @@ export default function Scout() {
                 <p className="text-gray-600">No featured projects yet</p>
               </div>
             )}
+            
+            {/* Visual indicator to view all projects */}
+            <div className="text-center mt-8 py-6 border-t border-gray-200">
+              <div className="flex flex-col items-center space-y-3">
+                <p className="text-gray-600 font-medium">Want to see more projects?</p>
+                <div className="flex items-center space-x-2 text-primary cursor-pointer hover:text-primary-dark transition-colors" 
+                     onClick={() => setActiveTab("all")}>
+                  <span className="text-sm font-medium">View All Projects</span>
+                  <div className="animate-bounce">
+                    <ArrowUp className="h-4 w-4 rotate-90" />
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Browse {allProjects.length} projects ranked by community votes
+                </div>
+              </div>
+            </div>
           </TabsContent>
           
           <TabsContent value="all">

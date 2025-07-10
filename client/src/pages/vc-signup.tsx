@@ -318,7 +318,6 @@ export default function VCSignup() {
                       type="number"
                       {...register("price", { valueAsNumber: true })}
                       min={25}
-                      max={500}
                       placeholder="49"
                       className={errors.price ? "border-red-500" : ""}
                     />
