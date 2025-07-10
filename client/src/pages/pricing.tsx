@@ -133,7 +133,7 @@ export default function Pricing() {
                 <ul className="space-y-3">
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-sm">Featured placement on main page</span>
+                    <span className="text-sm">Featured</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
