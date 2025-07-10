@@ -137,8 +137,8 @@ export default function Profile() {
 
   const isProjectComplete = projectName && description;
 
-  const ecosystems = ["Ethereum", "Arbitrum", "Sui", "Bitcoin", "Solana", "Polygon", "Other"];
-  const verticals = ["DeFi", "Gaming", "Infrastructure", "NFTs", "Stablecoins", "RWA", "Other"];
+  const ecosystems = ["Ethereum", "Binance Smart Chain", "Avalanche", "Cardano", "TON", "Sui", "Polkadot", "Cosmos", "Optimism", "Apotos", "Hedera", "Base", "Stellar", "Arbitrum", "Bitcoin", "Solana", "Polygon", "Multi-chain", "Other"];
+  const verticals = ["Supply Chain", "Payments", "Identity", "DAO", "Healthcare", "Meme", "Energy", "Compute", "SocialFi", "Data", "Education", "Privacy", "DeFi", "Gaming", "NFTs", "Infrastructure", "Stablecoins", "RWA", "AI/ML", "Social", "Enterprise", "Other"];
 
   if (!user) {
     return (

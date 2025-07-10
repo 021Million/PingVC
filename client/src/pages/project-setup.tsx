@@ -122,11 +122,24 @@ export default function ProjectSetup() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Ethereum">Ethereum</SelectItem>
+                        <SelectItem value="Binance Smart Chain">Binance Smart Chain</SelectItem>
+                        <SelectItem value="Avalanche">Avalanche</SelectItem>
+                        <SelectItem value="Cardano">Cardano</SelectItem>
+                        <SelectItem value="TON">TON</SelectItem>
+                        <SelectItem value="Sui">Sui</SelectItem>
+                        <SelectItem value="Polkadot">Polkadot</SelectItem>
+                        <SelectItem value="Cosmos">Cosmos</SelectItem>
+                        <SelectItem value="Optimism">Optimism</SelectItem>
+                        <SelectItem value="Apotos">Apotos</SelectItem>
+                        <SelectItem value="Hedera">Hedera</SelectItem>
+                        <SelectItem value="Base">Base</SelectItem>
+                        <SelectItem value="Stellar">Stellar</SelectItem>
+                        <SelectItem value="Arbitrum">Arbitrum</SelectItem>
+                        <SelectItem value="Bitcoin">Bitcoin</SelectItem>
                         <SelectItem value="Solana">Solana</SelectItem>
                         <SelectItem value="Polygon">Polygon</SelectItem>
-                        <SelectItem value="Arbitrum">Arbitrum</SelectItem>
-                        <SelectItem value="Base">Base</SelectItem>
                         <SelectItem value="Multi-chain">Multi-chain</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -138,13 +151,28 @@ export default function ProjectSetup() {
                         <SelectValue placeholder="Select vertical" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="Supply Chain">Supply Chain</SelectItem>
+                        <SelectItem value="Payments">Payments</SelectItem>
+                        <SelectItem value="Identity">Identity</SelectItem>
+                        <SelectItem value="DAO">DAO</SelectItem>
+                        <SelectItem value="Healthcare">Healthcare</SelectItem>
+                        <SelectItem value="Meme">Meme</SelectItem>
+                        <SelectItem value="Energy">Energy</SelectItem>
+                        <SelectItem value="Compute">Compute</SelectItem>
+                        <SelectItem value="SocialFi">SocialFi</SelectItem>
+                        <SelectItem value="Data">Data</SelectItem>
+                        <SelectItem value="Education">Education</SelectItem>
+                        <SelectItem value="Privacy">Privacy</SelectItem>
                         <SelectItem value="DeFi">DeFi</SelectItem>
                         <SelectItem value="Gaming">Gaming</SelectItem>
                         <SelectItem value="NFTs">NFTs</SelectItem>
                         <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                        <SelectItem value="Stablecoins">Stablecoins</SelectItem>
+                        <SelectItem value="RWA">RWA</SelectItem>
                         <SelectItem value="AI/ML">AI/ML</SelectItem>
                         <SelectItem value="Social">Social</SelectItem>
                         <SelectItem value="Enterprise">Enterprise</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

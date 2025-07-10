@@ -241,8 +241,19 @@ export default function Scout() {
               >
                 <option value="All">All Ecosystems</option>
                 <option value="Ethereum">Ethereum</option>
-                <option value="Arbitrum">Arbitrum</option>
+                <option value="Binance Smart Chain">Binance Smart Chain</option>
+                <option value="Avalanche">Avalanche</option>
+                <option value="Cardano">Cardano</option>
+                <option value="TON">TON</option>
                 <option value="Sui">Sui</option>
+                <option value="Polkadot">Polkadot</option>
+                <option value="Cosmos">Cosmos</option>
+                <option value="Optimism">Optimism</option>
+                <option value="Apotos">Apotos</option>
+                <option value="Hedera">Hedera</option>
+                <option value="Base">Base</option>
+                <option value="Stellar">Stellar</option>
+                <option value="Arbitrum">Arbitrum</option>
                 <option value="Bitcoin">Bitcoin</option>
                 <option value="Solana">Solana</option>
                 <option value="Polygon">Polygon</option>
@@ -254,15 +265,27 @@ export default function Scout() {
                 className="px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="All">All Verticals</option>
+                <option value="Supply Chain">Supply Chain</option>
+                <option value="Payments">Payments</option>
+                <option value="Identity">Identity</option>
+                <option value="DAO">DAO</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Meme">Meme</option>
+                <option value="Energy">Energy</option>
+                <option value="Compute">Compute</option>
+                <option value="SocialFi">SocialFi</option>
+                <option value="Data">Data</option>
+                <option value="Education">Education</option>
+                <option value="Privacy">Privacy</option>
                 <option value="DeFi">DeFi</option>
                 <option value="Gaming">Gaming</option>
                 <option value="NFTs">NFTs</option>
                 <option value="Infrastructure">Infrastructure</option>
                 <option value="Stablecoins">Stablecoins</option>
                 <option value="RWA">RWA</option>
-                <option value="Other">Other</option>
                 <option value="AI/ML">AI/ML</option>
                 <option value="Social">Social</option>
+                <option value="Other">Other</option>
               </select>
             </div>
           </div>

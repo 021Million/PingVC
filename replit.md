@@ -120,3 +120,4 @@ Changelog:
 - July 08, 2025. Added founder project publishing system with $9 payment for marketplace visibility
 - July 10, 2025. Implemented email gate for Scout page with database storage and remember functionality
 - July 10, 2025. Fixed footer navigation links to properly route to Terms, Privacy Policy, and Support pages
+- July 10, 2025. Added expanded ecosystem options (Binance Smart Chain, Avalanche, Cardano, TON, Sui, Polkadot, Cosmos, Optimism, Apotos, Hedera, Base, Stellar) and vertical options (Supply Chain, Payments, Identity, DAO, Healthcare, Meme, Energy, Compute, SocialFi, Data, Education, Privacy) to Scout filters and project setup forms
