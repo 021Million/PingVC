@@ -117,7 +117,7 @@ export default function Landing() {
               <div className="text-sm text-gray-600">No cold DMs</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">73%</div>
+              <div className="text-2xl font-bold text-gray-900">100%</div>
               <div className="text-sm text-gray-600">Response Rate</div>
             </div>
           </div>
