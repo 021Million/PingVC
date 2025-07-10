@@ -99,9 +99,7 @@ export default function HowItWorks() {
           <div className="bg-gradient-to-r from-primary to-primary-600 rounded-2xl p-8 text-white mb-12">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-4">Scout Marketplace</h2>
-              <p className="text-xl text-primary-100 mb-6">
-                Showcase your project to the community and get discovered by VCs
-              </p>
+              <p className="text-xl text-primary-100 mb-6">Showcase your project to the community and get discovered by VCs & Angels</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                 <div className="text-center">
                   <Users className="h-12 w-12 mx-auto mb-4 text-primary-200" />
