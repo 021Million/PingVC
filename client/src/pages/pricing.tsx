@@ -43,9 +43,7 @@ export default function Pricing() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Pay only for what you use. VCs set their own intro prices, and you pay directly for access to their contact information.
-          </p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Pay only for what you use. VCs & Angels set their own intro prices, and you pay directly for access to their contact information.</p>
         </div>
 
         {/* For Founders */}
