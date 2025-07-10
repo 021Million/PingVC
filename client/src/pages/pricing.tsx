@@ -104,7 +104,7 @@ export default function Pricing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-sm">AI-generated intro template</span>
+                    <span className="text-sm">1:1 meeting with VC or Angel</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-green-500 mr-2" />
