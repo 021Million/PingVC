@@ -124,7 +124,7 @@ export default function Pricing() {
             {/* Scout Features */}
             <Card className="border-gray-200">
               <CardHeader>
-                <CardTitle className="text-xl">Scout Features</CardTitle>
+                <CardTitle className="text-xl">Scout Feature</CardTitle>
                 <div className="text-3xl font-bold text-gray-900">$9</div>
                 <p className="text-gray-600">Per featured project (1-4 weeks)</p>
               </CardHeader>
