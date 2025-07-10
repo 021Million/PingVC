@@ -114,7 +114,7 @@ export default function Landing() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">Trusted</div>
-              <div className="text-sm text-gray-600">Intros Made</div>
+              <div className="text-sm text-gray-600">No cold DMs</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">73%</div>
