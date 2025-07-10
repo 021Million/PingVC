@@ -23,6 +23,7 @@ export default function Pricing() {
             <nav className="hidden md:flex items-center space-x-8">
               <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">Home</a></Link>
               <Link href="/scout"><a className="text-gray-700 hover:text-primary transition-colors">Scout</a></Link>
+              <Link href="/ping"><a className="text-gray-700 hover:text-primary transition-colors">Ping</a></Link>
               <Link href="/how-it-works"><a className="text-gray-700 hover:text-primary transition-colors">For Founders</a></Link>
               <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For VCs</a></Link>
               <span className="text-primary font-medium">Pricing</span>
@@ -81,7 +82,7 @@ export default function Pricing() {
                   </li>
                 </ul>
                 <Button className="w-full mt-6" variant="outline" asChild>
-                  <Link href="/">Start Browsing</Link>
+                  <Link href="/ping">Start Browsing</Link>
                 </Button>
               </CardContent>
             </Card>
