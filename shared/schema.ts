@@ -68,6 +68,7 @@ export const founders = pgTable("founders", {
   companyName: varchar("company_name"),
   founderName: varchar("founder_name"),
   profileImageUrl: varchar("profile_image_url"),
+  logoUrl: varchar("logo_url"), // Company logo URL
   pitchDeckUrl: varchar("pitch_deck_url"),
   amountRaising: integer("amount_raising"), // Amount in USD
   traction: text("traction"),
@@ -106,7 +107,8 @@ export const payments = pgTable("payments", {
 export const projectVotes = pgTable("project_votes", {
   id: uuid("id").primaryKey().defaultRandom(),
   founderId: integer("founder_id").references(() => founders.id).notNull(),
-  userId: varchar("user_id").references(() => users.id).notNull(),
+  email: varchar("email").notNull(), // Email address instead of userId to allow non-authenticated voting
+  userId: varchar("user_id").references(() => users.id), // Optional - for authenticated users
   createdAt: timestamp("created_at").defaultNow(),
 });
 

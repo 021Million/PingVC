@@ -384,13 +384,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/scout/projects', async (req: any, res) => {
     try {
       const userId = req.user?.claims?.sub;
+      const email = req.user?.email || req.headers['x-user-email'];
       const founders = await storage.getFoundersByRanking();
       
-      // Add voting status for authenticated users
+      // Add voting status for users with email
       const foundersWithVotes = await Promise.all(
         founders.map(async (founder) => ({
           ...founder,
-          hasVoted: userId ? await storage.hasUserVotedForProject(founder.id, userId) : false,
+          hasVoted: email ? await storage.hasEmailVotedForProject(founder.id, email) : false,
         }))
       );
       
@@ -401,12 +402,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/scout/projects/:founderId/vote', isAuthenticated, async (req: any, res) => {
+  app.post('/api/scout/projects/:founderId/vote', async (req: any, res) => {
     try {
       const founderId = parseInt(req.params.founderId);
-      const userId = req.user.claims.sub;
+      const { email } = req.body;
+      const userId = req.user?.claims?.sub;
       
-      await storage.voteForProject(founderId, userId);
+      if (!email) {
+        return res.status(400).json({ message: "Email is required for voting" });
+      }
+
+      // Check if email can vote today (24-hour limit)
+      const canVote = await storage.canEmailVoteToday(email);
+      if (!canVote) {
+        return res.status(429).json({ message: "You can only vote once every 24 hours" });
+      }
+
+      // Check if already voted for this project
+      const hasVoted = await storage.hasEmailVotedForProject(founderId, email);
+      if (hasVoted) {
+        return res.status(400).json({ message: "You have already voted for this project" });
+      }
+      
+      await storage.voteForProject(founderId, email, userId);
       res.json({ success: true });
     } catch (error) {
       console.error("Error voting for project:", error);
@@ -414,12 +432,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/scout/projects/:founderId/unvote', isAuthenticated, async (req: any, res) => {
+  app.post('/api/scout/projects/:founderId/unvote', async (req: any, res) => {
     try {
       const founderId = parseInt(req.params.founderId);
-      const userId = req.user.claims.sub;
+      const { email } = req.body;
+      const userId = req.user?.claims?.sub;
       
-      await storage.unvoteForProject(founderId, userId);
+      if (!email) {
+        return res.status(400).json({ message: "Email is required for voting" });
+      }
+      
+      await storage.unvoteForProject(founderId, email, userId);
       res.json({ success: true });
     } catch (error) {
       console.error("Error removing vote:", error);
@@ -446,6 +469,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const projectData = {
         companyName: req.body.companyName,
+        logoUrl: req.body.logoUrl, // Add logo URL support
         pitchDeckUrl: req.body.pitchDeckUrl,
         amountRaising: req.body.amountRaising,
         traction: req.body.traction,

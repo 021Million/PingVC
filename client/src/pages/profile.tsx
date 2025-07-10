@@ -26,6 +26,7 @@ export default function Profile() {
 
   // Project/Founder form state
   const [projectName, setProjectName] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
   const [pitchDeckUrl, setPitchDeckUrl] = useState("");
   const [amountRaising, setAmountRaising] = useState("");
   const [traction, setTraction] = useState("");
@@ -54,6 +55,7 @@ export default function Profile() {
   useEffect(() => {
     if (founder) {
       setProjectName(founder.companyName || "");
+      setLogoUrl(founder.logoUrl || "");
       setPitchDeckUrl(founder.pitchDeckUrl || "");
       setAmountRaising(founder.amountRaising?.toString() || "");
       setTraction(founder.traction || "");
@@ -112,6 +114,7 @@ export default function Profile() {
   const handleSaveProject = () => {
     updateProjectMutation.mutate({
       companyName: projectName,
+      logoUrl,
       pitchDeckUrl,
       amountRaising: amountRaising ? parseInt(amountRaising) : null,
       traction,
@@ -287,6 +290,20 @@ export default function Profile() {
                     placeholder="Enter your project name"
                     required
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="logoUrl">Company Logo URL</Label>
+                  <Input
+                    id="logoUrl"
+                    type="url"
+                    value={logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    placeholder="https://your-logo-url.com/logo.png"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Upload your logo to a service like Imgur, Cloudinary, or your website and paste the URL here
+                  </p>
                 </div>
 
                 <div>

@@ -43,18 +43,28 @@ export default function Scout() {
 
   const voteMutation = useMutation({
     mutationFn: async ({ founderId, action }: { founderId: number; action: 'vote' | 'unvote' }) => {
-      await apiRequest("POST", `/api/scout/projects/${founderId}/${action}`);
+      const email = localStorage.getItem('email_access_scout');
+      await apiRequest("POST", `/api/scout/projects/${founderId}/${action}`, { email });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/scout/featured"] });
       queryClient.invalidateQueries({ queryKey: ["/api/scout/projects"] });
     },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to update vote. Please try again.",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      const errorMessage = error?.message || "Failed to update vote. Please try again.";
+      if (errorMessage.includes("24 hours")) {
+        toast({
+          title: "Voting Limit Reached",
+          description: "You can only vote once every 24 hours. Please try again tomorrow.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -71,10 +81,11 @@ export default function Scout() {
   }
 
   const handleVote = (founderId: number, hasVoted: boolean) => {
-    if (!isAuthenticated) {
+    const email = localStorage.getItem('email_access_scout');
+    if (!email) {
       toast({
-        title: "Sign In Required",
-        description: "Please sign in to vote for projects",
+        title: "Email Required",
+        description: "Please provide your email to vote for projects",
         variant: "destructive",
       });
       return;
@@ -90,12 +101,27 @@ export default function Scout() {
     <Card className={`${featured ? 'border-2 border-primary' : ''} hover:shadow-lg transition-shadow`}>
       <CardHeader>
         <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-lg">{project.companyName || "Stealth Startup"}</CardTitle>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <Badge variant="secondary">{project.ecosystem || "Multi-chain"}</Badge>
-              <Badge variant="outline">{project.vertical || "General"}</Badge>
-              {featured && <Badge className="bg-primary">Featured</Badge>}
+          <div className="flex items-start space-x-3">
+            {project.logoUrl && (
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                <img 
+                  src={project.logoUrl} 
+                  alt={`${project.companyName} logo`}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Hide image if it fails to load
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+            <div>
+              <CardTitle className="text-lg">{project.companyName || "Stealth Startup"}</CardTitle>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <Badge variant="secondary">{project.ecosystem || "Multi-chain"}</Badge>
+                <Badge variant="outline">{project.vertical || "General"}</Badge>
+                {featured && <Badge className="bg-primary">Featured</Badge>}
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">

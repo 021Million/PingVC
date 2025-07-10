@@ -17,7 +17,7 @@ import {
   type InsertEmailSubmission,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, gt } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -38,9 +38,10 @@ export interface IStorage {
   updateFounderProject(founderId: number, projectData: Partial<Founder>): Promise<Founder>;
   getFeaturedFounders(): Promise<Founder[]>;
   getFoundersByRanking(): Promise<Founder[]>;
-  voteForProject(founderId: number, userId: string): Promise<void>;
-  unvoteForProject(founderId: number, userId: string): Promise<void>;
-  hasUserVotedForProject(founderId: number, userId: string): Promise<boolean>;
+  voteForProject(founderId: number, email: string, userId?: string): Promise<void>;
+  unvoteForProject(founderId: number, email: string, userId?: string): Promise<void>;
+  hasEmailVotedForProject(founderId: number, email: string): Promise<boolean>;
+  canEmailVoteToday(email: string): Promise<boolean>;
   
   // Payment operations
   createPayment(payment: InsertPayment): Promise<Payment>;
@@ -257,11 +258,12 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(founders.upvotes), desc(founders.createdAt));
   }
 
-  async voteForProject(founderId: number, userId: string): Promise<void> {
+  async voteForProject(founderId: number, email: string, userId?: string): Promise<void> {
     await db.transaction(async (tx) => {
       // Insert vote
       await tx.insert(projectVotes).values({
         founderId,
+        email,
         userId,
       });
       
@@ -275,14 +277,14 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
-  async unvoteForProject(founderId: number, userId: string): Promise<void> {
+  async unvoteForProject(founderId: number, email: string, userId?: string): Promise<void> {
     await db.transaction(async (tx) => {
       // Remove vote
       await tx
         .delete(projectVotes)
         .where(and(
           eq(projectVotes.founderId, founderId),
-          eq(projectVotes.userId, userId)
+          eq(projectVotes.email, email)
         ));
       
       // Decrement upvote count
@@ -295,16 +297,30 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
-  async hasUserVotedForProject(founderId: number, userId: string): Promise<boolean> {
+  async hasEmailVotedForProject(founderId: number, email: string): Promise<boolean> {
     const [vote] = await db
       .select()
       .from(projectVotes)
       .where(and(
         eq(projectVotes.founderId, founderId),
-        eq(projectVotes.userId, userId)
+        eq(projectVotes.email, email)
       ))
       .limit(1);
     return !!vote;
+  }
+
+  async canEmailVoteToday(email: string): Promise<boolean> {
+    // Check if email has voted in the last 24 hours
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const [recentVote] = await db
+      .select()
+      .from(projectVotes)
+      .where(and(
+        eq(projectVotes.email, email),
+        gt(projectVotes.createdAt, oneDayAgo)
+      ))
+      .limit(1);
+    return !recentVote; // Can vote if no recent vote found
   }
 
   // Email submission operations
