@@ -39,14 +39,11 @@ export default function HowItWorks() {
           </div>
         </div>
       </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">How Ping Me Works</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            The simplest way for web3 founders to connect with the right VCs. No cold outreach, no waiting, just direct access to decision makers.
-          </p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">The simplest way for Web3 founders to connect with the right VCs and Angels. No cold outreach, no waiting, just direct access to decision makers.</p>
         </div>
 
         {/* For Founders */}
@@ -181,7 +178,6 @@ export default function HowItWorks() {
           </div>
         </div>
       </div>
-
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
