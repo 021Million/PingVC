@@ -45,7 +45,7 @@ export default function Home() {
           {/* Trust indicators */}
           <div className="grid grid-cols-3 gap-8 max-w-md mx-auto text-center">
             <div>
-              <div className="text-2xl font-bold text-gray-900">{vcs.length}</div>
+              <div className="text-2xl font-bold text-gray-900">1:1</div>
               <div className="text-sm text-gray-600">Active VCs</div>
             </div>
             <div>
