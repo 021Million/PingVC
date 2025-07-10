@@ -42,12 +42,63 @@ export default function Scout() {
     enabled: hasEmailAccess, // Only fetch when user has access
   });
 
+  // Function to create animated rocket ship emojis
+  const createRocketAnimation = () => {
+    const rockets = ['🚀', '🚀', '🚀', '🚀', '🚀'];
+    
+    rockets.forEach((rocket, index) => {
+      const rocketElement = document.createElement('div');
+      rocketElement.textContent = rocket;
+      rocketElement.style.cssText = `
+        position: fixed;
+        font-size: 2rem;
+        z-index: 9999;
+        pointer-events: none;
+        left: ${Math.random() * window.innerWidth}px;
+        top: ${window.innerHeight}px;
+        animation: rocketFly 2s ease-out forwards;
+      `;
+      
+      // Add rocket animation keyframes if not already added
+      if (!document.querySelector('#rocket-animation-style')) {
+        const style = document.createElement('style');
+        style.id = 'rocket-animation-style';
+        style.textContent = `
+          @keyframes rocketFly {
+            0% {
+              transform: translateY(0) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(-${window.innerHeight + 100}px) rotate(360deg);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      document.body.appendChild(rocketElement);
+      
+      // Remove element after animation
+      setTimeout(() => {
+        rocketElement.remove();
+      }, 2000);
+    });
+  };
+
   const voteMutation = useMutation({
     mutationFn: async ({ founderId, action }: { founderId: number; action: 'vote' | 'unvote' }) => {
       const email = localStorage.getItem('email_access_scout');
       await apiRequest("POST", `/api/scout/projects/${founderId}/${action}`, { email });
+      return { action }; // Return the action so we can access it in onSuccess
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Trigger rocket animation only when voting (not unvoting)
+      if (data.action === 'vote') {
+        createRocketAnimation();
+      }
+      
       queryClient.invalidateQueries({ queryKey: ["/api/scout/featured"] });
       queryClient.invalidateQueries({ queryKey: ["/api/scout/projects"] });
     },
