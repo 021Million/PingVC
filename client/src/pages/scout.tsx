@@ -30,7 +30,7 @@ export default function Scout() {
     }
   }, []);
 
-  // Move queries before conditional return to follow hooks rules
+  // Move ALL hooks before conditional return to follow hooks rules
   const { data: featuredProjects = [], isLoading: loadingFeatured } = useQuery({
     queryKey: ["/api/scout/featured"],
     enabled: hasEmailAccess, // Only fetch when user has access
@@ -40,18 +40,6 @@ export default function Scout() {
     queryKey: ["/api/scout/projects", { ecosystem: selectedEcosystem, vertical: selectedVertical }],
     enabled: hasEmailAccess, // Only fetch when user has access
   });
-
-  // Show email gate if user doesn't have access
-  if (!hasEmailAccess) {
-    return (
-      <EmailGate
-        title="Access Scout"
-        description="To unlock instant access to the Scout page and discover emerging web3 projects, please provide your email address. This helps us maintain a quality community of founders and investors."
-        source="scout"
-        onSuccess={() => setHasEmailAccess(true)}
-      />
-    );
-  }
 
   const voteMutation = useMutation({
     mutationFn: async ({ founderId, action }: { founderId: number; action: 'vote' | 'unvote' }) => {
@@ -69,6 +57,18 @@ export default function Scout() {
       });
     },
   });
+
+  // Show email gate if user doesn't have access
+  if (!hasEmailAccess) {
+    return (
+      <EmailGate
+        title="Access Scout"
+        description="To unlock instant access to the Scout page and discover emerging web3 projects, please provide your email address. This helps us maintain a quality community of founders and investors."
+        source="scout"
+        onSuccess={() => setHasEmailAccess(true)}
+      />
+    );
+  }
 
   const handleVote = (founderId: number, hasVoted: boolean) => {
     if (!isAuthenticated) {
