@@ -74,6 +74,13 @@ export function ImprovedHeader() {
                 Scout
               </a>
             </Link>
+            <Link href="/ping">
+              <a className={`transition-colors font-medium ${
+                isActive("/ping") ? "text-primary" : "text-gray-700 hover:text-primary"
+              }`}>
+                Ping
+              </a>
+            </Link>
             <Link href="/how-it-works">
               <a className={`transition-colors font-medium ${
                 isActive("/how-it-works") ? "text-primary" : "text-gray-700 hover:text-primary"

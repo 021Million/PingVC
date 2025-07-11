@@ -101,7 +101,7 @@ export default function ForVCs() {
         {/* Key Benefits */}
         <div className="mb-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why VCs Love Ping Me</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why VCs & Angels Love Ping Me</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
