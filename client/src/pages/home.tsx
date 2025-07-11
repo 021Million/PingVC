@@ -100,7 +100,7 @@ export default function Home() {
           
           {!isLoading && vcs.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500">No VCs found matching your filters.</p>
+              <p className="text-gray-500">No VCs or Angels found matching your filters.</p>
             </div>
           )}
         </div>
