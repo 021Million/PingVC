@@ -294,9 +294,7 @@ export default function Pricing() {
                 <CardTitle className="text-lg">What if a VC or Angel doesn't respond?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  While we can't guarantee responses, all VCs are verified and have committed to the platform. We provide their preferred contact method (Telegram or meeting link) for direct access.
-                </p>
+                <p className="text-gray-600">While we can't guarantee responses, all VCs are verified and have committed to the platform. We provide their preferred contact method (Telegram or meeting link) for direct access. If they are a no show, then we 100% refund.</p>
               </CardContent>
             </Card>
 
