@@ -213,9 +213,7 @@ export default function ForVCs() {
         {/* CTA Section */}
         <div className="text-center bg-white rounded-2xl p-12 shadow-lg">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Join Ping Me?</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Join leading web3 VCs who are already using Ping Me to streamline their deal flow
-          </p>
+          <p className="text-xl text-gray-600 mb-8">Join leading Web3 VCs who are already using Ping Me to streamline their deal flow</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
               <Link href="/vc-signup">Create Your Profile <ArrowRight className="ml-2 h-4 w-4" /></Link>
