@@ -24,6 +24,7 @@ import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import Support from "@/pages/support";
 import ProjectVisibilityPayment from "@/pages/project-visibility-payment";
+import ProjectDetails from "@/pages/project-details";
 
 
 function Router() {
@@ -61,6 +62,7 @@ function Router() {
           <Route path="/profile" component={Profile} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
+          <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />

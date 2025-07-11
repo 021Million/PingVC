@@ -151,7 +151,9 @@ export default function Scout() {
   };
 
   const ProjectCard = ({ project, featured = false }: { project: any; featured?: boolean }) => (
-    <Card className={`${featured ? 'border-2 border-primary' : ''} hover:shadow-lg transition-shadow`}>
+    <Link href={`/project/${project.id}`}>
+      <a className="block">
+        <Card className={`${featured ? 'border-2 border-primary' : ''} hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]`}>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex items-start space-x-3">
@@ -170,18 +172,21 @@ export default function Scout() {
                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center space-x-1">
                   {project.websiteUrl && (
                     <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" 
+                       onClick={(e) => e.stopPropagation()}
                        className="text-white hover:text-gray-300 transition-colors">
                       <Globe className="h-3 w-3" />
                     </a>
                   )}
                   {project.linkedinUrl && (
                     <a href={project.linkedinUrl} target="_blank" rel="noopener noreferrer" 
+                       onClick={(e) => e.stopPropagation()}
                        className="text-white hover:text-gray-300 transition-colors">
                       <Linkedin className="h-3 w-3" />
                     </a>
                   )}
                   {project.twitterUrl && (
                     <a href={project.twitterUrl} target="_blank" rel="noopener noreferrer" 
+                       onClick={(e) => e.stopPropagation()}
                        className="text-white hover:text-gray-300 transition-colors">
                       <Twitter className="h-3 w-3" />
                     </a>
@@ -202,7 +207,11 @@ export default function Scout() {
             <Button
               size="sm"
               variant={project.hasVoted ? "default" : "outline"}
-              onClick={() => handleVote(project.id, project.hasVoted)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleVote(project.id, project.hasVoted);
+              }}
               disabled={voteMutation.isPending}
               className="flex items-center space-x-1"
             >
@@ -233,28 +242,28 @@ export default function Scout() {
           <div className="flex flex-wrap gap-2">
             {project.websiteUrl && (
               <Button size="sm" variant="ghost" asChild>
-                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
+                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                   <Globe className="h-4 w-4" />
                 </a>
               </Button>
             )}
             {project.linkedinUrl && (
               <Button size="sm" variant="ghost" asChild>
-                <a href={project.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                <a href={project.linkedinUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                   <Linkedin className="h-4 w-4" />
                 </a>
               </Button>
             )}
             {project.twitterUrl && (
               <Button size="sm" variant="ghost" asChild>
-                <a href={project.twitterUrl} target="_blank" rel="noopener noreferrer">
+                <a href={project.twitterUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                   <Twitter className="h-4 w-4" />
                 </a>
               </Button>
             )}
             {project.dataRoomUrl && (
               <Button size="sm" variant="ghost" asChild>
-                <a href={project.dataRoomUrl} target="_blank" rel="noopener noreferrer">
+                <a href={project.dataRoomUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                   <ExternalLink className="h-4 w-4" />
                   Data Room
                 </a>
@@ -263,7 +272,9 @@ export default function Scout() {
           </div>
         </div>
       </CardContent>
-    </Card>
+        </Card>
+      </a>
+    </Link>
   );
 
   const filteredProjects = allProjects.filter((project: any) =>

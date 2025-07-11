@@ -35,6 +35,7 @@ export interface IStorage {
   
   // Founder operations
   getOrCreateFounder(userId: string): Promise<Founder>;
+  getFounderById(id: number): Promise<Founder | undefined>;
   updateFounderProject(founderId: number, projectData: Partial<Founder>): Promise<Founder>;
   getFeaturedFounders(): Promise<Founder[]>;
   getFoundersByRanking(): Promise<Founder[]>;
@@ -166,6 +167,11 @@ export class DatabaseStorage implements IStorage {
       .values({ userId })
       .returning();
     return newFounder;
+  }
+
+  async getFounderById(id: number): Promise<Founder | undefined> {
+    const [founder] = await db.select().from(founders).where(eq(founders.id, id));
+    return founder || undefined;
   }
 
   // Payment operations

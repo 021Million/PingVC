@@ -55,6 +55,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile routes
+  app.get('/api/profile/founder', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      res.json(founder);
+    } catch (error) {
+      console.error("Error fetching founder profile:", error);
+      res.status(500).json({ message: "Failed to fetch founder profile" });
+    }
+  });
+
+  app.get('/api/profile/vcs', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const vcs = await storage.getVCsByUserId(userId);
+      res.json(vcs);
+    } catch (error) {
+      console.error("Error fetching user VCs:", error);
+      res.status(500).json({ message: "Failed to fetch user VCs" });
+    }
+  });
+
+  app.put('/api/profile', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { firstName, lastName, ...founderData } = req.body;
+      
+      // Update user profile
+      if (firstName && lastName) {
+        await storage.updateUserProfile(userId, { firstName, lastName });
+      }
+      
+      // Update founder profile if user is a founder and founder data is provided
+      if (Object.keys(founderData).length > 0) {
+        const founder = await storage.getOrCreateFounder(userId);
+        await storage.updateFounderProject(founder.id, founderData);
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  // Project details route
+  app.get('/api/projects/:id', async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const founder = await storage.getFounderById(projectId);
+      if (!founder) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Check if user has voted for this project
+      let hasVoted = false;
+      const userEmail = req.query.email as string || (req as any).user?.email;
+      if (userEmail) {
+        hasVoted = await storage.hasEmailVotedForProject(founder.id, userEmail);
+      }
+      
+      res.json({
+        ...founder,
+        hasVoted
+      });
+    } catch (error) {
+      console.error("Error fetching project:", error);
+      res.status(500).json({ message: "Failed to fetch project" });
+    }
+  });
+
   // VC routes
   app.get('/api/vcs', async (req, res) => {
     try {
