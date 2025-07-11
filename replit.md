@@ -121,3 +121,6 @@ Changelog:
 - July 10, 2025. Implemented email gate for Scout page with database storage and remember functionality
 - July 10, 2025. Fixed footer navigation links to properly route to Terms, Privacy Policy, and Support pages
 - July 10, 2025. Added expanded ecosystem options (Binance Smart Chain, Avalanche, Cardano, TON, Sui, Polkadot, Cosmos, Optimism, Apotos, Hedera, Base, Stellar) and vertical options (Supply Chain, Payments, Identity, DAO, Healthcare, Meme, Energy, Compute, SocialFi, Data, Education, Privacy) to Scout filters and project setup forms
+- July 11, 2025. Implemented comprehensive user type selection system with Founder, VC, and Angel investor roles
+- July 11, 2025. Enhanced founder profile with project draft functionality and $9 publishing workflow via Stripe checkout
+- July 11, 2025. Removed account type display from profile interface and streamlined project management experience

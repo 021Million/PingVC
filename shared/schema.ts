@@ -82,6 +82,7 @@ export const founders = pgTable("founders", {
   twitterUrl: varchar("twitter_url"),
   websiteUrl: varchar("website_url"),
   isVisible: boolean("is_visible").default(false), // Paid visibility
+  isPublished: boolean("is_published").default(false), // Whether project has been published via payment
   githubUrl: varchar("github_url"),
   isFeatured: boolean("is_featured").default(false),
   featuredUntil: timestamp("featured_until"),

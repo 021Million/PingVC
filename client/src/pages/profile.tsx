@@ -53,6 +53,8 @@ export default function Profile() {
     amountRaising: ""
   });
 
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -111,7 +113,7 @@ export default function Profile() {
     onSuccess: () => {
       toast({
         title: "Profile updated",
-        description: "Your profile has been successfully updated.",
+        description: "Your profile has been successfully saved as draft.",
       });
       setIsEditing(false);
       queryClient.invalidateQueries({ queryKey: ["/api/profile/founder"] });
@@ -121,6 +123,23 @@ export default function Profile() {
       toast({
         title: "Update failed",
         description: error.message || "Failed to update profile",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const publishProjectMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/publish-project");
+      return response.json();
+    },
+    onSuccess: (data) => {
+      window.location.href = data.paymentUrl;
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Publishing failed",
+        description: error.message || "Failed to start publishing process",
         variant: "destructive",
       });
     },
@@ -207,9 +226,6 @@ export default function Profile() {
                     {getUserDisplayName()}
                   </h1>
                   <div className="flex items-center space-x-4 mb-3">
-                    <Badge variant={user?.userType === 'vc' ? 'default' : 'secondary'}>
-                      {user?.userType === 'vc' ? 'VC Partner' : 'Founder'}
-                    </Badge>
                     {user?.isAdmin && (
                       <Badge variant="outline" className="border-purple-200 text-purple-800">
                         <UserCheck className="h-3 w-3 mr-1" />
@@ -301,10 +317,7 @@ export default function Profile() {
                         <span className="text-gray-600">Email</span>
                         <span className="font-medium">{user?.email}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">User Type</span>
-                        <Badge variant="outline">{user?.userType}</Badge>
-                      </div>
+
                     </div>
                   )}
                 </CardContent>
@@ -319,10 +332,7 @@ export default function Profile() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Account Type</span>
-                      <span className="font-medium capitalize">{user?.userType}</span>
-                    </div>
+
                     <div className="flex justify-between">
                       <span className="text-gray-600">Member Since</span>
                       <span className="font-medium">{new Date(user?.createdAt || '').toLocaleDateString()}</span>
@@ -466,6 +476,28 @@ export default function Profile() {
                               value={editForm.amountRaising}
                               onChange={(e) => setEditForm(prev => ({ ...prev, amountRaising: e.target.value }))}
                             />
+                          </div>
+                          
+                          {/* Action Buttons */}
+                          <Separator className="my-6" />
+                          <div className="flex justify-between items-center">
+                            <Button 
+                              onClick={handleSave}
+                              disabled={updateProfileMutation.isPending}
+                              className="flex items-center"
+                            >
+                              <Save className="h-4 w-4 mr-2" />
+                              Save as Draft
+                            </Button>
+                            
+                            <Button 
+                              onClick={() => publishProjectMutation.mutate()}
+                              disabled={publishProjectMutation.isPending || !editForm.companyName || !editForm.description}
+                              className="flex items-center bg-green-600 hover:bg-green-700"
+                            >
+                              <DollarSign className="h-4 w-4 mr-2" />
+                              Publish for $9
+                            </Button>
                           </div>
                         </div>
                       ) : founderProfile ? (

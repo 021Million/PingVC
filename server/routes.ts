@@ -349,6 +349,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Project publishing route - creates Stripe checkout for $9
+  app.post("/api/publish-project", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const founder = await storage.getOrCreateFounder(userId);
+      
+      if (!founder.companyName || !founder.description) {
+        return res.status(400).json({ 
+          message: "Please complete your company name and description before publishing" 
+        });
+      }
+
+      // Create Stripe checkout session for $9
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Project Visibility',
+                description: 'Publish your project to the Scout marketplace',
+              },
+              unit_amount: 900, // $9.00 in cents
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${req.protocol}://${req.get('host')}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.protocol}://${req.get('host')}/profile`,
+        metadata: {
+          founderId: founder.id.toString(),
+          paymentType: 'project_visibility',
+        },
+      });
+
+      res.json({ paymentUrl: session.url });
+    } catch (error: any) {
+      console.error("Error creating checkout session:", error);
+      res.status(500).json({ message: "Failed to create checkout session" });
+    }
+  });
+
+  // Webhook to handle Stripe checkout completion
+  app.post("/api/stripe-webhook", async (req, res) => {
+    try {
+      const event = req.body;
+
+      if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        const founderId = parseInt(session.metadata.founderId);
+        const paymentType = session.metadata.paymentType;
+
+        if (paymentType === 'project_visibility') {
+          // Update founder visibility and published status
+          await storage.updateFounderProject(founderId, { 
+            isVisible: true, 
+            isPublished: true 
+          });
+          
+          // Create payment record
+          await storage.createPayment({
+            id: session.payment_intent,
+            founderId: founderId,
+            amount: 900,
+            paymentType: "project_visibility",
+            stripePaymentIntentId: session.payment_intent,
+            status: "completed",
+          });
+        }
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error("Webhook error:", error);
+      res.status(400).send(`Webhook Error: ${error}`);
+    }
+  });
+
   app.post("/api/confirm-payment", isAuthenticated, async (req: any, res) => {
     try {
       const { paymentIntentId } = req.body;
