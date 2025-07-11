@@ -312,9 +312,7 @@ export default function Pricing() {
                 <CardTitle className="text-lg">How does Scout featuring work?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  Scout featuring places your project at the top of our marketplace for 1-4 weeks depending on the package. Featured projects get 10x more visibility from our VC network.
-                </p>
+                <p className="text-gray-600">Scout Featuring puts your project on the Ping Me marketplace for 4 weeks and sends it directly to VC and angels inboxes weekly,  all for just $9. For less than a coffee, you get visibility, credibility, and a shot at real conversations.</p>
               </CardContent>
             </Card>
           </div>
