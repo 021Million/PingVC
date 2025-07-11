@@ -55,6 +55,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/complete-profile', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { firstName, lastName } = req.body;
+      
+      if (!firstName || !lastName) {
+        return res.status(400).json({ message: "First name and last name are required" });
+      }
+      
+      const user = await storage.completeUserProfile(userId, { firstName, lastName });
+      res.json(user);
+    } catch (error) {
+      console.error("Error completing user profile:", error);
+      res.status(500).json({ message: "Failed to complete user profile" });
+    }
+  });
+
   // Profile routes
   app.get('/api/profile/founder', isAuthenticated, async (req: any, res) => {
     try {

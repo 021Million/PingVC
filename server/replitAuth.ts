@@ -56,6 +56,7 @@ function updateUserSession(
 
 async function upsertUser(
   claims: any,
+  userType?: string,
 ) {
   await storage.upsertUser({
     id: claims["sub"],
@@ -63,6 +64,7 @@ async function upsertUser(
     firstName: claims["first_name"],
     lastName: claims["last_name"],
     profileImageUrl: claims["profile_image_url"],
+    userType: userType || 'founder', // Default to founder if no type specified
   });
 }
 
@@ -76,11 +78,21 @@ export async function setupAuth(app: Express) {
 
   const verify: VerifyFunction = async (
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
-    verified: passport.AuthenticateCallback
+    verified: passport.AuthenticateCallback,
+    req?: any
   ) => {
     const user = {};
     updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
+    
+    // Get user type from session if available
+    const userType = req?.session?.pendingUserType;
+    await upsertUser(tokens.claims(), userType);
+    
+    // Clear the pending user type from session
+    if (req?.session?.pendingUserType) {
+      delete req.session.pendingUserType;
+    }
+    
     verified(null, user);
   };
 
@@ -102,6 +114,12 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
+    // Store user type in session for later use during callback
+    const userType = req.query.type as string;
+    if (userType) {
+      (req.session as any).pendingUserType = userType;
+    }
+    
     passport.authenticate(`replitauth:${req.hostname}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],

@@ -1,17 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/header";
-import { Users, Building2, TrendingUp, Shield, CheckCircle, ArrowRight } from "lucide-react";
+import { Users, Building2, TrendingUp, Shield, CheckCircle, ArrowRight, Star } from "lucide-react";
 
 export default function SignupType() {
   const handleFounderSignup = () => {
     localStorage.setItem('signup_type', 'founder');
-    window.location.href = '/api/login';
+    window.location.href = '/api/login?type=founder';
   };
 
   const handleVCSignup = () => {
     localStorage.setItem('signup_type', 'vc');
-    window.location.href = '/api/login';
+    window.location.href = '/api/login?type=vc';
+  };
+
+  const handleAngelSignup = () => {
+    localStorage.setItem('signup_type', 'angel');
+    window.location.href = '/api/login?type=angel';
   };
 
   return (
@@ -30,8 +35,8 @@ export default function SignupType() {
             </p>
           </div>
 
-          {/* Two Options */}
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* Three Options */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {/* Founder Signup */}
             <Card className="relative overflow-hidden border-2 hover:border-primary/30 transition-all duration-200 group cursor-pointer">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-blue-50 rounded-bl-full"></div>
@@ -143,6 +148,62 @@ export default function SignupType() {
                   <p className="text-xs text-gray-500 text-center mt-2">
                     Subject to verification process
                   </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Angel Investor Signup */}
+            <Card className="relative overflow-hidden border-2 hover:border-purple-200 transition-all duration-200 group cursor-pointer">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-bl-full"></div>
+              <CardHeader className="text-center pb-6">
+                <div className="mx-auto w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                  <Star className="h-10 w-10 text-purple-600" />
+                </div>
+                <CardTitle className="text-2xl mb-3">I'm an Angel</CardTitle>
+                <p className="text-gray-600">Individual investor looking for quality deals</p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm">
+                      <div className="font-medium">Curated Dealflow</div>
+                      <div className="text-gray-600">Access vetted startup opportunities</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm">
+                      <div className="font-medium">Direct Founder Access</div>
+                      <div className="text-gray-600">Connect directly with startup founders</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm">
+                      <div className="font-medium">Scout Community</div>
+                      <div className="text-gray-600">Vote on emerging projects and trends</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm">
+                      <div className="font-medium">Investment Tracking</div>
+                      <div className="text-gray-600">Track your portfolio and returns</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-4">
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                    onClick={handleAngelSignup}
+                  >
+                    <Star className="mr-2 h-4 w-4" />
+                    Join as Angel
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>

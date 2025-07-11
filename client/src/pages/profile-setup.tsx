@@ -24,7 +24,15 @@ export default function ProfileSetup() {
         title: "Profile Complete",
         description: "Welcome to Ping Me! Your profile has been set up successfully.",
       });
-      window.location.href = "/project-setup";
+      // Redirect based on user type
+      const userType = localStorage.getItem('signup_type') || 'founder';
+      if (userType === 'vc') {
+        window.location.href = "/vc-signup";
+      } else if (userType === 'founder') {
+        window.location.href = "/project-setup";
+      } else {
+        window.location.href = "/"; // Angels go to home page
+      }
     },
     onError: (error) => {
       toast({
