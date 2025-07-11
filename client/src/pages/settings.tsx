@@ -7,16 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Lock, User, Shield } from "lucide-react";
+import { Eye, EyeOff, Lock, User, Shield, RotateCcw } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ImprovedHeader } from "@/components/improved-header";
 
 export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [resetPassword, setResetPassword] = useState("");
+  const [resetConfirmPassword, setResetConfirmPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -51,6 +56,32 @@ export default function Settings() {
     },
   });
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (data: { newPassword: string }) => {
+      const response = await apiRequest("POST", "/api/reset-password", data);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to reset password");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Password Reset",
+        description: "Your password has been reset successfully.",
+      });
+      setResetPassword("");
+      setResetConfirmPassword("");
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error Resetting Password",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handlePasswordUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -75,6 +106,30 @@ export default function Settings() {
     updatePasswordMutation.mutate({ 
       currentPassword, 
       newPassword 
+    });
+  };
+
+  const handlePasswordReset = () => {
+    if (resetPassword.length < 8) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 8 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (resetPassword !== resetConfirmPassword) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please make sure both passwords are identical.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    resetPasswordMutation.mutate({ 
+      newPassword: resetPassword 
     });
   };
 
@@ -229,14 +284,116 @@ export default function Settings() {
                     Password must be at least 8 characters long
                   </p>
 
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={updatePasswordMutation.isPending}
-                  >
-                    <Lock className="w-4 h-4 mr-2" />
-                    {updatePasswordMutation.isPending ? "Updating..." : "Update Password"}
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button
+                      type="submit"
+                      className="flex-1"
+                      disabled={updatePasswordMutation.isPending}
+                    >
+                      <Lock className="w-4 h-4 mr-2" />
+                      {updatePasswordMutation.isPending ? "Updating..." : "Update Password"}
+                    </Button>
+                    
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="flex-1"
+                          disabled={updatePasswordMutation.isPending}
+                        >
+                          <RotateCcw className="w-4 h-4 mr-2" />
+                          Reset Password
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Reset Password</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Reset your password without needing your current password. This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="resetPassword">New Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="resetPassword"
+                                type={showResetPassword ? "text" : "password"}
+                                value={resetPassword}
+                                onChange={(e) => setResetPassword(e.target.value)}
+                                placeholder="Enter new password"
+                                className="pr-10"
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3"
+                                onClick={() => setShowResetPassword(!showResetPassword)}
+                              >
+                                {showResetPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="resetConfirmPassword">Confirm New Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="resetConfirmPassword"
+                                type={showResetConfirmPassword ? "text" : "password"}
+                                value={resetConfirmPassword}
+                                onChange={(e) => setResetConfirmPassword(e.target.value)}
+                                placeholder="Confirm new password"
+                                className="pr-10"
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3"
+                                onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)}
+                              >
+                                {showResetConfirmPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+
+                          <p className="text-sm text-gray-500">
+                            Password must be at least 8 characters long
+                          </p>
+                        </div>
+                        
+                        <AlertDialogFooter>
+                          <AlertDialogCancel 
+                            onClick={() => {
+                              setResetPassword("");
+                              setResetConfirmPassword("");
+                            }}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handlePasswordReset}
+                            disabled={resetPasswordMutation.isPending}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            {resetPasswordMutation.isPending ? "Resetting..." : "Reset Password"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </form>
               ) : (
                 <div className="text-center py-8">

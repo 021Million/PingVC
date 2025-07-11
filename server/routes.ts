@@ -480,6 +480,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/reset-password", isAuthenticated, async (req: any, res) => {
+    try {
+      const { newPassword } = req.body;
+      const userId = req.user.claims.sub;
+      
+      if (!newPassword || newPassword.length < 8) {
+        return res.status(400).json({ message: "Password must be at least 8 characters long" });
+      }
+      
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      await storage.updateUserPassword(userId, hashedPassword);
+      
+      res.json({ success: true, message: "Password reset successfully" });
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      res.status(500).json({ message: "Failed to reset password" });
+    }
+  });
+
   app.post("/api/confirm-payment", isAuthenticated, async (req: any, res) => {
     try {
       const { paymentIntentId } = req.body;
