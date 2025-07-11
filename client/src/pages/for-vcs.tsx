@@ -145,9 +145,7 @@ export default function ForVCs() {
                 <CardTitle>Web3 Focus</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  Exclusively focused on crypto and web3 startups. Connect with founders building the future of decentralized technology.
-                </p>
+                <p className="text-gray-600">Exclusively focused on crypto and Web3 startups. Connect with founders building the future of decentralized technology.</p>
               </CardContent>
             </Card>
           </div>
