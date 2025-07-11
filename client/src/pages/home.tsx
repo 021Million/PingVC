@@ -166,7 +166,7 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold mb-4">For VCs</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC</a></li>
+                <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC or Angel</a></li>
               </ul>
             </div>
           </div>
