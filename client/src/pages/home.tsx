@@ -159,7 +159,7 @@ export default function Home() {
               <ul className="space-y-2 text-gray-300">
                 <li><a href="/ping" className="hover:text-white transition-colors">Ping</a></li>
                 <li><a href="/how-it-works" className="hover:text-white transition-colors">Join as Founder</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
               </ul>
             </div>
             

@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { EmailGate } from "@/components/email-gate";
+import { ImprovedHeader } from "@/components/improved-header";
 
 export default function Ping() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -135,48 +136,7 @@ export default function Ping() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">Ping Me</span>
-            </Link>
-            
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-gray-600 hover:text-primary transition-colors">
-                Home
-              </Link>
-              <Link href="/scout" className="text-gray-600 hover:text-primary transition-colors">
-                Scout
-              </Link>
-              {!isAuthenticated ? (
-                <Button 
-                  onClick={() => window.location.href = '/api/login'}
-                  size="sm"
-                  className="bg-primary text-white hover:bg-indigo-700"
-                >
-                  Sign In
-                </Button>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600">Welcome back!</span>
-                  <Button 
-                    onClick={() => window.location.href = '/api/logout'}
-                    variant="ghost"
-                    size="sm"
-                  >
-                    Logout
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <ImprovedHeader />
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
