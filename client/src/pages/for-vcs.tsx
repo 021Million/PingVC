@@ -42,7 +42,7 @@ export default function ForVCs() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">For Venture Capitalists</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">For Venture Capitalists & Angels</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Connect with high-quality web3 founders while maintaining control over your time and pricing. Only engage with startups that are serious enough to pay for your attention.
           </p>
