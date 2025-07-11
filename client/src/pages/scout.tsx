@@ -18,6 +18,7 @@ export default function Scout() {
   const [selectedVertical, setSelectedVertical] = useState("All");
   const [hasEmailAccess, setHasEmailAccess] = useState(false);
   const [activeTab, setActiveTab] = useState("featured");
+  const [showAllFeatured, setShowAllFeatured] = useState(false);
   
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -408,11 +409,26 @@ export default function Scout() {
                 ))}
               </div>
             ) : featuredProjects.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredProjects.map((project: any) => (
-                  <ProjectCard key={project.id} project={project} featured={true} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {(showAllFeatured ? featuredProjects : featuredProjects.slice(0, 9)).map((project: any) => (
+                    <ProjectCard key={project.id} project={project} featured={true} />
+                  ))}
+                </div>
+                
+                {/* Show View More button if there are more than 9 featured projects */}
+                {!showAllFeatured && featuredProjects.length > 9 && (
+                  <div className="text-center mt-8">
+                    <Button 
+                      onClick={() => setShowAllFeatured(true)}
+                      variant="outline"
+                      className="px-8 py-2"
+                    >
+                      View All Featured Projects ({featuredProjects.length})
+                    </Button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="text-center py-12">
                 <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -421,18 +437,21 @@ export default function Scout() {
             )}
             
             {/* Visual indicator to view all projects */}
-            <div className="text-center mt-8 py-6 border-t border-gray-200">
-              <div className="flex flex-col items-center space-y-3">
-                <p className="text-gray-600 font-medium">Want to see more projects?</p>
-                <div className="flex items-center space-x-2 text-primary cursor-pointer hover:text-primary-dark transition-colors" 
-                     onClick={() => setActiveTab("all")}>
-                  <span className="text-sm font-medium">View All Projects</span>
-                  <div className="animate-bounce">
-                    <ArrowUp className="h-4 w-4 rotate-90" />
-                  </div>
+            <div className="text-center mt-12 py-8 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white rounded-lg">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="flex items-center space-x-2 text-gray-700">
+                  <Users className="h-5 w-5" />
+                  <p className="font-medium">Discover More Amazing Projects</p>
                 </div>
-                <div className="text-xs text-gray-500">
-                  Browse {allProjects.length} projects ranked by community votes
+                <Button 
+                  onClick={() => setActiveTab("all")}
+                  className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg font-medium"
+                >
+                  View All Projects
+                  <ArrowUp className="ml-2 h-5 w-5 rotate-90" />
+                </Button>
+                <div className="text-sm text-gray-500">
+                  Browse all {allProjects.length} projects ranked by community votes
                 </div>
               </div>
             </div>

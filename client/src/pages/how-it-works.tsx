@@ -132,8 +132,8 @@ export default function HowItWorks() {
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-green-600 font-bold text-lg">✓</span>
               </div>
-              <h3 className="font-semibold mb-2">Verified VCs Only</h3>
-              <p className="text-gray-600 text-sm">Every VC is manually verified by our team</p>
+              <h3 className="font-semibold mb-2">Verified VCs & Angels Only</h3>
+              <p className="text-gray-600 text-sm">Every VC & Angel is manually verified by our team</p>
             </div>
 
             <div className="text-center">
