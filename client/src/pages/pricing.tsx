@@ -219,7 +219,7 @@ export default function Pricing() {
                 </div>
                 <div className="text-center mt-8">
                   <Button size="lg" asChild>
-                    <Link href="/vc-signup">Join as VC <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    <Link href="/vc-signup">Join as VC or Angel <ArrowRight className="ml-2 h-4 w-4" /></Link>
                   </Button>
                 </div>
               </CardContent>
@@ -239,7 +239,7 @@ export default function Pricing() {
               <CardHeader>
                 <Badge variant="outline" className="mx-auto mb-2">🌱 Funding Feedback</Badge>
                 <CardTitle>Early Stage Partners</CardTitle>
-                <div className="text-2xl font-bold text-primary">$250 - $750</div>
+                <div className="text-2xl font-bold text-primary">$50 - $750</div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">Founders at early stage fundraising who want to polish deck, practice pitch and get feedback. </p>
