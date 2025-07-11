@@ -250,7 +250,7 @@ export default function Pricing() {
               <CardContent className="pt-6">
                 <Badge className="mx-auto mb-2">🎯 Sector Specialists</Badge>
                 <h3 className="font-semibold mb-2 text-[24px]">Growth Stage VCs</h3>
-                <div className="text-2xl font-bold text-primary mb-4">$250 - $2500</div>
+                <div className="text-2xl font-bold text-primary mb-4">$250 - $2500+</div>
                 <p className="text-gray-600">
                   Established partners at top-tier funds with specific sector expertise and track records.
                 </p>
