@@ -177,7 +177,6 @@ export default function Ping() {
           </div>
         </div>
       </header>
-
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
@@ -185,10 +184,7 @@ export default function Ping() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Discover Verified VCs
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Connect with top-tier venture capitalists who are actively investing in web3 and blockchain projects. 
-            All VCs are manually verified and ready to review your project.
-          </p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Connect with top-tier venture capitalists who are actively investing in web3 and blockchain projects. All VCs & Angels are manually verified.</p>
         </div>
 
         {/* Search and Filters */}
