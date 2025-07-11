@@ -239,7 +239,7 @@ export default function Pricing() {
               <CardHeader>
                 <Badge variant="outline" className="mx-auto mb-2">🌱 Funding Feedback</Badge>
                 <CardTitle>Early Stage Partners</CardTitle>
-                <div className="text-2xl font-bold text-primary">$50 - $750</div>
+                <div className="text-2xl font-bold text-primary">$50 - $750+</div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">Founders at early stage fundraising who want to polish deck, practice pitch and get feedback. </p>
