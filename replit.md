@@ -124,3 +124,4 @@ Changelog:
 - July 11, 2025. Implemented comprehensive user type selection system with Founder, VC, and Angel investor roles
 - July 11, 2025. Enhanced founder profile with project draft functionality and $9 publishing workflow via Stripe checkout
 - July 11, 2025. Removed account type display from profile interface and streamlined project management experience
+- July 11, 2025. Added password management system for first-time signin with database storage, API routes, settings page, and secure bcrypt hashing

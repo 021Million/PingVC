@@ -18,6 +18,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, sql, gt } from "drizzle-orm";
+import bcrypt from "bcrypt";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -25,6 +26,10 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
   updateUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
+  
+  // Password operations
+  setUserPassword(id: string, hashedPassword: string): Promise<User>;
+  updateUserPassword(id: string, hashedPassword: string): Promise<User>;
   
   // VC operations
   createVC(vc: InsertVC): Promise<VC>;
@@ -102,6 +107,41 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(users.id, id))
       .returning();
+    return user;
+  }
+
+  async setUserPassword(id: string, hashedPassword: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        password: hashedPassword,
+        hasSetPassword: true,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    return user;
+  }
+
+  async updateUserPassword(id: string, hashedPassword: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        password: hashedPassword,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
     return user;
   }
 

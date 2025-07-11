@@ -25,6 +25,8 @@ import TermsOfService from "@/pages/terms-of-service";
 import Support from "@/pages/support";
 import ProjectVisibilityPayment from "@/pages/project-visibility-payment";
 import ProjectDetails from "@/pages/project-details";
+import Settings from "@/pages/settings";
+import PasswordSetupPage from "@/pages/password-setup";
 
 
 function Router() {
@@ -33,6 +35,11 @@ function Router() {
   // Show profile setup if user is authenticated but hasn't completed profile
   if (isAuthenticated && user && !(user as any).profileCompleted) {
     return <ProfileSetup />;
+  }
+
+  // Show password setup if user is authenticated, profile completed, but no password set
+  if (isAuthenticated && user && (user as any).profileCompleted && !(user as any).hasSetPassword) {
+    return <PasswordSetupPage />;
   }
 
   return (
@@ -72,6 +79,8 @@ function Router() {
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
           <Route path="/project-payment" component={ProjectVisibilityPayment} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/password-setup" component={PasswordSetupPage} />
         </>
       )}
       <Route component={NotFound} />

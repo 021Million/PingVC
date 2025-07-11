@@ -150,7 +150,7 @@ export function ImprovedHeader() {
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
+                  <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>

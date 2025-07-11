@@ -35,6 +35,8 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  password: varchar("password"), // Hashed password for first-time setup
+  hasSetPassword: boolean("has_set_password").default(false),
   userType: varchar("user_type").default("founder"), // 'founder', 'vc', 'angel'
   isAdmin: boolean("is_admin").default(false),
   profileCompleted: boolean("profile_completed").default(false),

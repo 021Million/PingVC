@@ -5,6 +5,7 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertVCSchema, insertPaymentSchema, insertEmailSubmissionSchema } from "@shared/schema";
 import Stripe from "stripe";
 import OpenAI from "openai";
+import bcrypt from "bcrypt";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -426,6 +427,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Webhook error:", error);
       res.status(400).send(`Webhook Error: ${error}`);
+    }
+  });
+
+  // Password management routes
+  app.post("/api/set-password", isAuthenticated, async (req: any, res) => {
+    try {
+      const { password } = req.body;
+      const userId = req.user.claims.sub;
+      
+      if (!password || password.length < 8) {
+        return res.status(400).json({ message: "Password must be at least 8 characters long" });
+      }
+      
+      const hashedPassword = await bcrypt.hash(password, 12);
+      await storage.setUserPassword(userId, hashedPassword);
+      
+      res.json({ success: true, message: "Password set successfully" });
+    } catch (error) {
+      console.error("Error setting password:", error);
+      res.status(500).json({ message: "Failed to set password" });
+    }
+  });
+
+  app.post("/api/update-password", isAuthenticated, async (req: any, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const userId = req.user.claims.sub;
+      
+      if (!newPassword || newPassword.length < 8) {
+        return res.status(400).json({ message: "Password must be at least 8 characters long" });
+      }
+      
+      const user = await storage.getUser(userId);
+      if (!user || !user.password) {
+        return res.status(400).json({ message: "User has no password set" });
+      }
+      
+      // Verify current password
+      const isValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isValid) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+      
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      await storage.updateUserPassword(userId, hashedPassword);
+      
+      res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+      console.error("Error updating password:", error);
+      res.status(500).json({ message: "Failed to update password" });
     }
   });
 
