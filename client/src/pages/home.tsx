@@ -151,9 +151,7 @@ export default function Home() {
                 </div>
                 <span className="text-xl font-bold">Ping Me</span>
               </div>
-              <p className="text-gray-300 mb-4 max-w-md">
-                The fastest way for web3 founders to connect with VCs. No middlemen, no spam, just warm intros that work.
-              </p>
+              <p className="text-gray-300 mb-4 max-w-md">The fastest way for web3 founders to connect with VCs and Angels. No middlemen, no spam, just warm intros that work.</p>
             </div>
             
             <div>
