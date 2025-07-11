@@ -303,9 +303,7 @@ export default function Pricing() {
                 <CardTitle className="text-lg">Can I get refunds?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  We process refunds if a VC's contact information is incorrect or if they're no longer active. Contact our support team within 7 days of purchase.
-                </p>
+                <p className="text-gray-600">We process refunds if a VC's or Angels contact information is incorrect or if they're no longer active. Contact our support team within 7 days of purchase.</p>
               </CardContent>
             </Card>
 
