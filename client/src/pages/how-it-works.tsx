@@ -141,7 +141,7 @@ export default function HowItWorks() {
                 <span className="text-blue-600 font-bold text-lg">$</span>
               </div>
               <h3 className="font-semibold mb-2">Transparent Pricing</h3>
-              <p className="text-gray-600 text-sm">VCs set their own prices, no hidden fees</p>
+              <p className="text-gray-600 text-sm">VCs & Angels set their own prices, no hidden fees</p>
             </div>
 
             <div className="text-center">
