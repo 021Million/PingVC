@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   User, 
@@ -39,18 +41,41 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({
     firstName: "",
     lastName: "",
+    
+    // Founder & Project Basics
+    founderName: "",
     companyName: "",
+    oneLineDescription: "",
     description: "",
-    traction: "",
+    logoUrl: "",
     websiteUrl: "",
-    linkedinUrl: "",
     twitterUrl: "",
-    githubUrl: "",
-    pitchDeckUrl: "",
-    dataRoomUrl: "",
+    email: "",
+    
+    // Team & Company Info
+    teamSize: "",
+    teamRoles: "",
+    location: "",
+    
+    // Ecosystem & Vertical
     ecosystem: "",
     vertical: "",
-    amountRaising: ""
+    
+    // Fundraising Info
+    isRaising: false,
+    roundType: "",
+    amountRaising: "",
+    valuation: "",
+    committedAmount: "",
+    idealInvestorType: "",
+    
+    // Additional Info
+    traction: "",
+    pitchDeckUrl: "",
+    dataRoomUrl: "",
+    linkedinUrl: "",
+    githubUrl: "",
+    lookingFor: ""
   });
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -83,18 +108,41 @@ export default function Profile() {
       setEditForm({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
+        
+        // Founder & Project Basics
+        founderName: founderProfile.founderName || "",
         companyName: founderProfile.companyName || "",
+        oneLineDescription: founderProfile.oneLineDescription || "",
         description: founderProfile.description || "",
-        traction: founderProfile.traction || "",
+        logoUrl: founderProfile.logoUrl || "",
         websiteUrl: founderProfile.websiteUrl || "",
-        linkedinUrl: founderProfile.linkedinUrl || "",
         twitterUrl: founderProfile.twitterUrl || "",
-        githubUrl: founderProfile.githubUrl || "",
-        pitchDeckUrl: founderProfile.pitchDeckUrl || "",
-        dataRoomUrl: founderProfile.dataRoomUrl || "",
+        email: founderProfile.email || "",
+        
+        // Team & Company Info
+        teamSize: founderProfile.teamSize ? founderProfile.teamSize.toString() : "",
+        teamRoles: founderProfile.teamRoles || "",
+        location: founderProfile.location || "",
+        
+        // Ecosystem & Vertical
         ecosystem: founderProfile.ecosystem || "",
         vertical: founderProfile.vertical || "",
-        amountRaising: founderProfile.amountRaising?.toString() || ""
+        
+        // Fundraising Info
+        isRaising: founderProfile.isRaising || false,
+        roundType: founderProfile.roundType || "",
+        amountRaising: founderProfile.amountRaising ? founderProfile.amountRaising.toString() : "",
+        valuation: founderProfile.valuation || "",
+        committedAmount: founderProfile.committedAmount ? founderProfile.committedAmount.toString() : "",
+        idealInvestorType: founderProfile.idealInvestorType || "",
+        
+        // Additional Info
+        traction: founderProfile.traction || "",
+        pitchDeckUrl: founderProfile.pitchDeckUrl || "",
+        dataRoomUrl: founderProfile.dataRoomUrl || "",
+        linkedinUrl: founderProfile.linkedinUrl || "",
+        githubUrl: founderProfile.githubUrl || "",
+        lookingFor: founderProfile.lookingFor || ""
       });
     } else if (user) {
       setEditForm(prev => ({
@@ -150,18 +198,40 @@ export default function Profile() {
       firstName: editForm.firstName,
       lastName: editForm.lastName,
       ...(user?.userType === 'founder' && {
+        // Founder & Project Basics
+        founderName: editForm.founderName,
         companyName: editForm.companyName,
+        oneLineDescription: editForm.oneLineDescription,
         description: editForm.description,
-        traction: editForm.traction,
+        logoUrl: editForm.logoUrl,
         websiteUrl: editForm.websiteUrl,
-        linkedinUrl: editForm.linkedinUrl,
         twitterUrl: editForm.twitterUrl,
-        githubUrl: editForm.githubUrl,
-        pitchDeckUrl: editForm.pitchDeckUrl,
-        dataRoomUrl: editForm.dataRoomUrl,
+        email: editForm.email,
+        
+        // Team & Company Info
+        teamSize: editForm.teamSize ? parseInt(editForm.teamSize) : null,
+        teamRoles: editForm.teamRoles,
+        location: editForm.location,
+        
+        // Ecosystem & Vertical
         ecosystem: editForm.ecosystem,
         vertical: editForm.vertical,
-        amountRaising: editForm.amountRaising ? parseInt(editForm.amountRaising) : null
+        
+        // Fundraising Info
+        isRaising: editForm.isRaising,
+        roundType: editForm.roundType,
+        amountRaising: editForm.amountRaising ? parseInt(editForm.amountRaising) : null,
+        valuation: editForm.valuation,
+        committedAmount: editForm.committedAmount ? parseInt(editForm.committedAmount) : null,
+        idealInvestorType: editForm.idealInvestorType,
+        
+        // Additional Info
+        traction: editForm.traction,
+        pitchDeckUrl: editForm.pitchDeckUrl,
+        dataRoomUrl: editForm.dataRoomUrl,
+        linkedinUrl: editForm.linkedinUrl,
+        githubUrl: editForm.githubUrl,
+        lookingFor: editForm.lookingFor
       })
     };
 
@@ -378,104 +448,356 @@ export default function Profile() {
                     </CardHeader>
                     <CardContent>
                       {isEditing ? (
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor="companyName">Company Name</Label>
-                            <Input
-                              id="companyName"
-                              value={editForm.companyName}
-                              onChange={(e) => setEditForm(prev => ({ ...prev, companyName: e.target.value }))}
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="description">Description</Label>
-                            <Textarea
-                              id="description"
-                              value={editForm.description}
-                              onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
-                              rows={4}
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="traction">Traction</Label>
-                            <Textarea
-                              id="traction"
-                              value={editForm.traction}
-                              onChange={(e) => setEditForm(prev => ({ ...prev, traction: e.target.value }))}
-                              rows={3}
-                            />
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <Label htmlFor="ecosystem">Ecosystem</Label>
-                              <select
-                                id="ecosystem"
-                                value={editForm.ecosystem}
-                                onChange={(e) => setEditForm(prev => ({ ...prev, ecosystem: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                              >
-                                <option value="">Select Ecosystem</option>
-                                <option value="Ethereum">Ethereum</option>
-                                <option value="Binance Smart Chain">Binance Smart Chain</option>
-                                <option value="Avalanche">Avalanche</option>
-                                <option value="Cardano">Cardano</option>
-                                <option value="TON">TON</option>
-                                <option value="Sui">Sui</option>
-                                <option value="Polkadot">Polkadot</option>
-                                <option value="Cosmos">Cosmos</option>
-                                <option value="Optimism">Optimism</option>
-                                <option value="Apotos">Apotos</option>
-                                <option value="Hedera">Hedera</option>
-                                <option value="Base">Base</option>
-                                <option value="Stellar">Stellar</option>
-                                <option value="Arbitrum">Arbitrum</option>
-                                <option value="Bitcoin">Bitcoin</option>
-                                <option value="Solana">Solana</option>
-                                <option value="Polygon">Polygon</option>
-                                <option value="Other">Other</option>
-                              </select>
+                        <div className="space-y-6">
+                          {/* Founder & Project Basics */}
+                          <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">🔹 Founder & Project Basics</h3>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="founderName">Founder Name</Label>
+                                <Input
+                                  id="founderName"
+                                  value={editForm.founderName}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, founderName: e.target.value }))}
+                                  placeholder="Your full name"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="companyName">Project Name</Label>
+                                <Input
+                                  id="companyName"
+                                  value={editForm.companyName}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, companyName: e.target.value }))}
+                                  placeholder="Your project/company name"
+                                />
+                              </div>
                             </div>
+                            
                             <div>
-                              <Label htmlFor="vertical">Vertical</Label>
-                              <select
-                                id="vertical"
-                                value={editForm.vertical}
-                                onChange={(e) => setEditForm(prev => ({ ...prev, vertical: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                              >
-                                <option value="">Select Vertical</option>
-                                <option value="Supply Chain">Supply Chain</option>
-                                <option value="Payments">Payments</option>
-                                <option value="Identity">Identity</option>
-                                <option value="DAO">DAO</option>
-                                <option value="Healthcare">Healthcare</option>
-                                <option value="Meme">Meme</option>
-                                <option value="Energy">Energy</option>
-                                <option value="Compute">Compute</option>
-                                <option value="SocialFi">SocialFi</option>
-                                <option value="Data">Data</option>
-                                <option value="Education">Education</option>
-                                <option value="Privacy">Privacy</option>
-                                <option value="DeFi">DeFi</option>
-                                <option value="Gaming">Gaming</option>
-                                <option value="NFTs">NFTs</option>
-                                <option value="Infrastructure">Infrastructure</option>
-                                <option value="Stablecoins">Stablecoins</option>
-                                <option value="RWA">RWA</option>
-                                <option value="AI/ML">AI/ML</option>
-                                <option value="Social">Social</option>
-                                <option value="Other">Other</option>
-                              </select>
+                              <Label htmlFor="oneLineDescription">One-Line Description</Label>
+                              <Input
+                                id="oneLineDescription"
+                                value={editForm.oneLineDescription}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, oneLineDescription: e.target.value }))}
+                                placeholder="What are you building? (1 sentence)"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="description">Detailed Description</Label>
+                              <Textarea
+                                id="description"
+                                value={editForm.description}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                                rows={4}
+                                placeholder="Problem, solution, traction, etc."
+                              />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="logoUrl">Project Logo (Image link)</Label>
+                                <Input
+                                  id="logoUrl"
+                                  value={editForm.logoUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, logoUrl: e.target.value }))}
+                                  placeholder="https://..."
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="websiteUrl">Website (or demo link)</Label>
+                                <Input
+                                  id="websiteUrl"
+                                  value={editForm.websiteUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, websiteUrl: e.target.value }))}
+                                  placeholder="https://..."
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="twitterUrl">Twitter / X Handle (optional)</Label>
+                                <Input
+                                  id="twitterUrl"
+                                  value={editForm.twitterUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, twitterUrl: e.target.value }))}
+                                  placeholder="@username or https://..."
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="email">Email Contact (for VCs)</Label>
+                                <Input
+                                  id="email"
+                                  type="email"
+                                  value={editForm.email}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+                                  placeholder="founder@company.com"
+                                />
+                              </div>
                             </div>
                           </div>
-                          <div>
-                            <Label htmlFor="amountRaising">Amount Raising ($)</Label>
-                            <Input
-                              id="amountRaising"
-                              type="number"
-                              value={editForm.amountRaising}
-                              onChange={(e) => setEditForm(prev => ({ ...prev, amountRaising: e.target.value }))}
-                            />
+
+                          {/* Team & Company Info */}
+                          <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">🔹 Team & Company Info</h3>
+                            
+                            <div className="grid grid-cols-3 gap-4">
+                              <div>
+                                <Label htmlFor="teamSize">Number of Team Members</Label>
+                                <Input
+                                  id="teamSize"
+                                  type="number"
+                                  value={editForm.teamSize}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, teamSize: e.target.value }))}
+                                  placeholder="5"
+                                />
+                              </div>
+                              <div className="col-span-2">
+                                <Label htmlFor="location">Location</Label>
+                                <Input
+                                  id="location"
+                                  value={editForm.location}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, location: e.target.value }))}
+                                  placeholder="City, Country or Remote"
+                                />
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="teamRoles">Team Member Roles</Label>
+                              <Textarea
+                                id="teamRoles"
+                                value={editForm.teamRoles}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, teamRoles: e.target.value }))}
+                                rows={3}
+                                placeholder="Briefly describe core team roles (e.g., CEO - 10 years tech, CTO - ex-Google engineer, etc.)"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Ecosystem & Vertical */}
+                          <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">🔹 Ecosystem & Vertical</h3>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="ecosystem">Ecosystem</Label>
+                                <Select value={editForm.ecosystem} onValueChange={(value) => setEditForm(prev => ({ ...prev, ecosystem: value }))}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Ecosystem" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Ethereum">Ethereum</SelectItem>
+                                    <SelectItem value="Binance Smart Chain">Binance Smart Chain</SelectItem>
+                                    <SelectItem value="Avalanche">Avalanche</SelectItem>
+                                    <SelectItem value="Cardano">Cardano</SelectItem>
+                                    <SelectItem value="TON">TON</SelectItem>
+                                    <SelectItem value="Sui">Sui</SelectItem>
+                                    <SelectItem value="Polkadot">Polkadot</SelectItem>
+                                    <SelectItem value="Cosmos">Cosmos</SelectItem>
+                                    <SelectItem value="Optimism">Optimism</SelectItem>
+                                    <SelectItem value="Apotos">Apotos</SelectItem>
+                                    <SelectItem value="Hedera">Hedera</SelectItem>
+                                    <SelectItem value="Base">Base</SelectItem>
+                                    <SelectItem value="Stellar">Stellar</SelectItem>
+                                    <SelectItem value="Arbitrum">Arbitrum</SelectItem>
+                                    <SelectItem value="Bitcoin">Bitcoin</SelectItem>
+                                    <SelectItem value="Solana">Solana</SelectItem>
+                                    <SelectItem value="Polygon">Polygon</SelectItem>
+                                    <SelectItem value="Other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div>
+                                <Label htmlFor="vertical">Vertical</Label>
+                                <Select value={editForm.vertical} onValueChange={(value) => setEditForm(prev => ({ ...prev, vertical: value }))}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Vertical" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Supply Chain">Supply Chain</SelectItem>
+                                    <SelectItem value="Payments">Payments</SelectItem>
+                                    <SelectItem value="Identity">Identity</SelectItem>
+                                    <SelectItem value="DAO">DAO</SelectItem>
+                                    <SelectItem value="Healthcare">Healthcare</SelectItem>
+                                    <SelectItem value="Meme">Meme</SelectItem>
+                                    <SelectItem value="Energy">Energy</SelectItem>
+                                    <SelectItem value="Compute">Compute</SelectItem>
+                                    <SelectItem value="SocialFi">SocialFi</SelectItem>
+                                    <SelectItem value="Data">Data</SelectItem>
+                                    <SelectItem value="Education">Education</SelectItem>
+                                    <SelectItem value="Privacy">Privacy</SelectItem>
+                                    <SelectItem value="DeFi">DeFi</SelectItem>
+                                    <SelectItem value="Gaming">Gaming</SelectItem>
+                                    <SelectItem value="NFTs">NFTs</SelectItem>
+                                    <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                                    <SelectItem value="Stablecoins">Stablecoins</SelectItem>
+                                    <SelectItem value="RWA">RWA</SelectItem>
+                                    <SelectItem value="AI/ML">AI/ML</SelectItem>
+                                    <SelectItem value="Social">Social</SelectItem>
+                                    <SelectItem value="Other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Fundraising Info */}
+                          <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">🔹 Fundraising Info</h3>
+                            
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id="isRaising"
+                                checked={editForm.isRaising}
+                                onCheckedChange={(checked) => setEditForm(prev => ({ ...prev, isRaising: !!checked }))}
+                              />
+                              <Label htmlFor="isRaising">Are you currently fundraising?</Label>
+                            </div>
+                            
+                            {editForm.isRaising && (
+                              <>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <Label htmlFor="roundType">Round Type</Label>
+                                    <Select value={editForm.roundType} onValueChange={(value) => setEditForm(prev => ({ ...prev, roundType: value }))}>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select Round" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Pre-Seed">Pre-Seed</SelectItem>
+                                        <SelectItem value="Seed">Seed</SelectItem>
+                                        <SelectItem value="Series A">Series A</SelectItem>
+                                        <SelectItem value="Series B">Series B</SelectItem>
+                                        <SelectItem value="Series C+">Series C+</SelectItem>
+                                        <SelectItem value="Bridge">Bridge</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="amountRaising">Amount Raising ($)</Label>
+                                    <Input
+                                      id="amountRaising"
+                                      type="number"
+                                      value={editForm.amountRaising}
+                                      onChange={(e) => setEditForm(prev => ({ ...prev, amountRaising: e.target.value }))}
+                                      placeholder="500000"
+                                    />
+                                  </div>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <Label htmlFor="valuation">Valuation (Pre/Post)</Label>
+                                    <Input
+                                      id="valuation"
+                                      value={editForm.valuation}
+                                      onChange={(e) => setEditForm(prev => ({ ...prev, valuation: e.target.value }))}
+                                      placeholder="$5M pre-money"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="committedAmount">Amount Already Committed ($)</Label>
+                                    <Input
+                                      id="committedAmount"
+                                      type="number"
+                                      value={editForm.committedAmount}
+                                      onChange={(e) => setEditForm(prev => ({ ...prev, committedAmount: e.target.value }))}
+                                      placeholder="100000"
+                                    />
+                                  </div>
+                                </div>
+                                
+                                <div>
+                                  <Label htmlFor="idealInvestorType">Ideal Investor Type</Label>
+                                  <Select value={editForm.idealInvestorType} onValueChange={(value) => setEditForm(prev => ({ ...prev, idealInvestorType: value }))}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select Investor Type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Operator Angel">Operator Angel</SelectItem>
+                                      <SelectItem value="Micro VC">Micro VC</SelectItem>
+                                      <SelectItem value="Tier 1 VC">Tier 1 VC</SelectItem>
+                                      <SelectItem value="Strategic">Strategic</SelectItem>
+                                      <SelectItem value="Family Office">Family Office</SelectItem>
+                                      <SelectItem value="Accelerator">Accelerator</SelectItem>
+                                      <SelectItem value="Any">Any</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </>
+                            )}
+                          </div>
+
+                          {/* Additional Info */}
+                          <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">🔹 Additional Info</h3>
+                            
+                            <div>
+                              <Label htmlFor="traction">Traction & Metrics</Label>
+                              <Textarea
+                                id="traction"
+                                value={editForm.traction}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, traction: e.target.value }))}
+                                rows={3}
+                                placeholder="Users, revenue, partnerships, key metrics, etc."
+                              />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="pitchDeckUrl">Pitch Deck (optional)</Label>
+                                <Input
+                                  id="pitchDeckUrl"
+                                  value={editForm.pitchDeckUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, pitchDeckUrl: e.target.value }))}
+                                  placeholder="https://..."
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="dataRoomUrl">Data Room (optional)</Label>
+                                <Input
+                                  id="dataRoomUrl"
+                                  value={editForm.dataRoomUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, dataRoomUrl: e.target.value }))}
+                                  placeholder="https://..."
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="linkedinUrl">LinkedIn (optional)</Label>
+                                <Input
+                                  id="linkedinUrl"
+                                  value={editForm.linkedinUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, linkedinUrl: e.target.value }))}
+                                  placeholder="https://linkedin.com/in/..."
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="githubUrl">GitHub (optional)</Label>
+                                <Input
+                                  id="githubUrl"
+                                  value={editForm.githubUrl}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, githubUrl: e.target.value }))}
+                                  placeholder="https://github.com/..."
+                                />
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="lookingFor">What are you looking for?</Label>
+                              <Textarea
+                                id="lookingFor"
+                                value={editForm.lookingFor}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, lookingFor: e.target.value }))}
+                                rows={3}
+                                placeholder="Funding, advisors, partnerships, talent, feedback, etc."
+                              />
+                            </div>
                           </div>
                           
                           {/* Action Buttons */}

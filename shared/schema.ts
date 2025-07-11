@@ -69,23 +69,46 @@ export const vcs = pgTable("vcs", {
 export const founders = pgTable("founders", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").references(() => users.id).notNull().unique(),
-  companyName: varchar("company_name"),
+  
+  // Founder & Project Basics
   founderName: varchar("founder_name"),
-  profileImageUrl: varchar("profile_image_url"),
-  logoUrl: varchar("logo_url"), // Company logo URL
-  pitchDeckUrl: varchar("pitch_deck_url"),
-  amountRaising: integer("amount_raising"), // Amount in USD
-  traction: text("traction"),
-  description: text("description"),
+  companyName: varchar("company_name"),
+  oneLineDescription: varchar("one_line_description"),
+  description: text("description"), // Detailed description
+  logoUrl: varchar("logo_url"), // Project logo
+  websiteUrl: varchar("website_url"),
+  twitterUrl: varchar("twitter_url"),
+  email: varchar("email"), // Contact email for VCs
+  
+  // Team & Company Info
+  teamSize: integer("team_size"),
+  teamRoles: text("team_roles"), // Core team roles description
+  location: varchar("location"), // City, Country or Remote
+  
+  // Ecosystem & Vertical
   ecosystem: varchar("ecosystem"), // e.g., "Ethereum", "Solana", "Polygon"
   vertical: varchar("vertical"), // e.g., "DeFi", "Gaming", "NFTs"
+  
+  // Fundraising Info
+  isRaising: boolean("is_raising").default(false),
+  roundType: varchar("round_type"), // Pre-Seed, Seed, Series A, etc.
+  amountRaising: integer("amount_raising"), // Amount in USD
+  valuation: varchar("valuation"), // Pre/Post valuation
+  committedAmount: integer("committed_amount"), // Amount already soft-circled
+  idealInvestorType: varchar("ideal_investor_type"), // Operator Angel, Micro VC, etc.
+  
+  // Additional Info
+  traction: text("traction"),
+  pitchDeckUrl: varchar("pitch_deck_url"),
   dataRoomUrl: varchar("data_room_url"),
   linkedinUrl: varchar("linkedin_url"),
-  twitterUrl: varchar("twitter_url"),
-  websiteUrl: varchar("website_url"),
+  githubUrl: varchar("github_url"),
+  lookingFor: text("looking_for"), // What are you looking for
+  
+  // Legacy/System fields
+  profileImageUrl: varchar("profile_image_url"),
   isVisible: boolean("is_visible").default(false), // Paid visibility
   isPublished: boolean("is_published").default(false), // Whether project has been published via payment
-  githubUrl: varchar("github_url"),
   isFeatured: boolean("is_featured").default(false),
   featuredUntil: timestamp("featured_until"),
   upvotes: integer("upvotes").default(0),
