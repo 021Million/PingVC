@@ -95,7 +95,7 @@ export default function Pricing() {
                   <Badge className="bg-primary">Popular</Badge>
                 </div>
                 <div className="text-3xl font-bold text-gray-900">Custom Pricing</div>
-                <p className="text-gray-600">Per VC intro (price set by each VC)</p>
+                <p className="text-gray-600">Per VC or Angel intro (price set by each VC)</p>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
