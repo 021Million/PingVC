@@ -39,7 +39,6 @@ export default function ForVCs() {
           </div>
         </div>
       </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -79,9 +78,7 @@ export default function ForVCs() {
                 <CardTitle>2. Get Verified</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
-                  Our team manually verifies your credentials to ensure only legitimate VCs appear on the platform.
-                </p>
+                <p className="text-gray-600">Our team manually verifies your credentials to ensure only legitimate VCs & Angels appear on the platform.</p>
               </CardContent>
             </Card>
 
@@ -233,7 +230,6 @@ export default function ForVCs() {
           </div>
         </div>
       </div>
-
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
