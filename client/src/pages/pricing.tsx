@@ -291,7 +291,7 @@ export default function Pricing() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">What if a VC doesn't respond?</CardTitle>
+                <CardTitle className="text-lg">What if a VC or Angel doesn't respond?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
