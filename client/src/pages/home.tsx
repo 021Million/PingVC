@@ -49,7 +49,7 @@ export default function Home() {
               <div className="text-sm text-gray-600">Warm Intro</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">Trust</div>
+              <div className="text-2xl font-bold text-gray-900">Trusted</div>
               <div className="text-sm text-gray-600">Intros Made</div>
             </div>
             <div>
