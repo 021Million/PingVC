@@ -128,11 +128,10 @@ export default function VCSignup() {
           </div>
         </div>
       </header>
-
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Join as a VC Partner</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Join as a VC or Angel</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Curated dealflow without the noise. Get quality founder intros and earn from each connection.
           </p>
@@ -157,7 +156,6 @@ export default function VCSignup() {
           </div>
         </div>
       </section>
-
       {/* Signup Form */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -5,7 +5,7 @@ import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
-import { Header } from "@/components/header";
+import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <ImprovedHeader />
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

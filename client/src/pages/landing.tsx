@@ -6,7 +6,7 @@ import { CheckCircle, Lock, Calendar, MessageCircle, Mail } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
-import { Header } from "@/components/header";
+import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -38,31 +38,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <a href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">Ping Me</span>
-            </a>
-            
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-primary font-medium">Home</a>
-              <a href="/scout" className="text-gray-700 hover:text-primary transition-colors">Scout</a>
-              <a href="/how-it-works" className="text-gray-700 hover:text-primary transition-colors">For Founders</a>
-              <a href="/for-vcs" className="text-gray-700 hover:text-primary transition-colors">For VCs</a>
-              <a href="/pricing" className="text-gray-700 hover:text-primary transition-colors">Pricing</a>
-            </nav>
-            
-            <div className="flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
-                onClick={() => window.location.href = '/api/login'}
-                className="text-gray-700 hover:text-primary font-medium"
-              >
+      <ImprovedHeader />
                 Sign In
               </Button>
               <Button 
