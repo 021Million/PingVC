@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, ExternalLink, Globe, Linkedin, Twitter, Github, DollarSign, TrendingUp, Users, Calendar, ArrowUp } from "lucide-react";
+import { ArrowLeft, ExternalLink, Globe, Linkedin, X, Github, DollarSign, TrendingUp, Users, Calendar, ArrowUp } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -321,8 +321,8 @@ export default function ProjectDetails() {
                       rel="noopener noreferrer"
                       className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                      <Twitter className="h-5 w-5 text-blue-400 mr-3" />
-                      <span className="font-medium">Twitter</span>
+                      <X className="h-5 w-5 text-blue-400 mr-3" />
+                      <span className="font-medium">X</span>
                       <ExternalLink className="h-4 w-4 text-gray-400 ml-auto" />
                     </a>
                   )}

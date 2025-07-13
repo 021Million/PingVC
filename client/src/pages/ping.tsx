@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DollarSign, Users, Star, Shield, Globe, Linkedin, Twitter, ExternalLink } from "lucide-react";
+import { DollarSign, Users, Star, Shield, Globe, Linkedin, X, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -116,7 +116,7 @@ export default function Ping() {
               {vc.twitterUrl && (
                 <Button size="sm" variant="ghost" asChild>
                   <a href={vc.twitterUrl} target="_blank" rel="noopener noreferrer">
-                    <Twitter className="h-4 w-4" />
+                    <X className="h-4 w-4" />
                   </a>
                 </Button>
               )}
