@@ -1,0 +1,147 @@
+🎯 Features to Implement
+Scout Page Email Gate
+
+Verified VC Page Email Gate + Contact Paywall
+
+Cold Investor Scout: Social Link Paywall ($1 unlock)
+
+All email gates should store the email locally (e.g., in Airtable or session), so returning users can bypass the gate.
+
+✅ 1. SCOUT PAGE – Email Wall for First-Time Visitors
+🔧 Backend (main.py)
+python
+Copy
+Edit
+from flask import request, session, redirect, render_template
+
+app.secret_key = "your_secret_key"  # Required for session handling
+
+@app.route("/scout", methods=["GET", "POST"])
+def scout():
+    if request.method == "POST":
+        email = request.form["email"]
+        session["email"] = email
+        save_email_to_airtable(email)  # define this
+        return redirect("/scout")
+
+    if "email" not in session:
+        return render_template("enter_email.html", next_page="scout")
+
+    # Fetch projects from Airtable as before
+    top_projects, all_projects = fetch_project_data()
+    return render_template("scout.html", top_projects=top_projects, all_projects=all_projects)
+📄 templates/enter_email.html
+html
+Copy
+Edit
+<h2>🔐 Enter your email to unlock access</h2>
+<form method="POST">
+  <input type="email" name="email" required placeholder="you@example.com">
+  <button type="submit">Unlock</button>
+</form>
+✅ 2. PING PAGE – Gate + Paywall for Verified VCs
+🔧 Backend Route:
+python
+Copy
+Edit
+@app.route("/ping", methods=["GET", "POST"])
+def ping():
+    if request.method == "POST":
+        session["email"] = request.form["email"]
+        save_email_to_airtable(session["email"])
+        return redirect("/ping")
+
+    if "email" not in session:
+        return render_template("enter_email.html", next_page="ping")
+
+    verified_vcs, unverified_vcs = fetch_vc_data()
+    return render_template("ping.html", verified_vcs=verified_vcs, unverified_vcs=unverified_vcs)
+🧠 Paywall Logic Inside ping.html
+html
+Copy
+Edit
+{% for vc in verified_vcs %}
+  <div class="vc-card">
+    <h3>{{ vc.name }}</h3>
+    <p>{{ vc.fund }}</p>
+    {% if vc_unlocked(vc.id, session['email']) %}
+      <a href="{{ vc.contact_link }}">Book Now</a>
+    {% else %}
+      <form action="/unlock-vc/{{ vc.id }}" method="POST">
+        <button type="submit">$5 to Unlock Contact</button>
+      </form>
+    {% endif %}
+  </div>
+{% endfor %}
+🔧 Unlock Route (Example)
+python
+Copy
+Edit
+@app.route("/unlock-vc/<vc_id>", methods=["POST"])
+def unlock_vc(vc_id):
+    email = session.get("email")
+    # Run payment (Stripe, Gumroad, or manual test gate)
+    # On success:
+    mark_unlocked(email, vc_id)
+    return redirect("/ping")
+✅ 3. COLD INVESTOR SCOUT – $1 to Reveal Name + Social Links
+🔧 Template (partial)
+html
+Copy
+Edit
+{% for vc in cold_investors %}
+  <div class="cold-vc-card">
+    <p><strong>Fund:</strong> {{ vc.fund }}</p>
+    <p><strong>Position:</strong> {{ vc.role }}</p>
+    {% if cold_vc_unlocked(vc.id, session["email"]) %}
+      <p><strong>Name:</strong> {{ vc.name }}</p>
+      <a href="{{ vc.twitter }}">Twitter</a> | <a href="{{ vc.linkedin }}">LinkedIn</a>
+    {% else %}
+      <form action="/unlock-cold/{{ vc.id }}" method="POST">
+        <button type="submit">🔓 Unlock for $1</button>
+      </form>
+    {% endif %}
+  </div>
+{% endfor %}
+✅ Utility Functions (concept)
+python
+Copy
+Edit
+def save_email_to_airtable(email):
+    # Check for duplicate and insert new user into Airtable "UserAccess" table
+    pass
+
+def vc_unlocked(vc_id, email):
+    # Check from Airtable if this email unlocked this VC
+    return check_airtable_unlock("VerifiedVCs", vc_id, email)
+
+def cold_vc_unlocked(vc_id, email):
+    return check_airtable_unlock("ColdVCs", vc_id, email)
+
+def mark_unlocked(email, vc_id):
+    # Write unlock record to Airtable
+    pass
+🧾 Airtable Tables You’ll Need
+Table Name	Purpose
+UserAccess	Email whitelist for Scout/Ping pages
+VerifiedVCs	Unlocked VC bookings per user
+ColdVCs	$1 unlocks (name + socials)
+
+✅ Summary
+You now have:
+
+Session/email-based gate for access to scout and ping pages
+
+Verified VC paywall for booking access
+
+Cold VC $1 unlock for name/socials
+
+All unlocks and user emails tracked via Airtable
+
+Let me know if you'd like:
+
+Stripe or Gumroad integration for the paywalls
+
+A full Airtable schema + automation setup
+
+Dynamic expiry (e.g., unlock only lasts 7 days)

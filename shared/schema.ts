@@ -156,7 +156,19 @@ export const projectVotes = pgTable("project_votes", {
 export const emailSubmissions = pgTable("email_submissions", {
   id: serial("id").primaryKey(),
   email: varchar("email").unique().notNull(),
-  source: varchar("source").notNull(), // 'scout', 'landing', etc.
+  source: varchar("source").notNull(), // 'scout', 'ping', 'landing', etc.
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const vcUnlocks = pgTable("vc_unlocks", {
+  id: serial("id").primaryKey(),
+  email: varchar("email").notNull(),
+  vcId: integer("vc_id").notNull(), // Can reference either platform VCs or Airtable VC IDs
+  vcType: varchar("vc_type").notNull(), // 'platform' or 'airtable'
+  amount: integer("amount").notNull(), // Amount paid in cents
+  paymentType: varchar("payment_type").notNull(), // 'verified_vc', 'cold_scout'
+  stripePaymentIntentId: varchar("stripe_payment_intent_id"),
+  status: varchar("status").notNull().default("completed"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -219,6 +231,11 @@ export const insertEmailSubmissionSchema = createInsertSchema(emailSubmissions).
   createdAt: true,
 });
 
+export const insertVCUnlockSchema = createInsertSchema(vcUnlocks).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type UpsertUser = z.infer<typeof upsertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -230,3 +247,5 @@ export type Payment = typeof payments.$inferSelect;
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
 export type EmailSubmission = typeof emailSubmissions.$inferSelect;
 export type InsertEmailSubmission = z.infer<typeof insertEmailSubmissionSchema>;
+export type VCUnlock = typeof vcUnlocks.$inferSelect;
+export type InsertVCUnlock = z.infer<typeof insertVCUnlockSchema>;

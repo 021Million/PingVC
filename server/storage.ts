@@ -5,6 +5,7 @@ import {
   payments,
   projectVotes,
   emailSubmissions,
+  vcUnlocks,
   type User,
   type UpsertUser,
   type VC,
@@ -15,6 +16,8 @@ import {
   type InsertPayment,
   type EmailSubmission,
   type InsertEmailSubmission,
+  type VCUnlock,
+  type InsertVCUnlock,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, sql, gt } from "drizzle-orm";
@@ -60,6 +63,11 @@ export interface IStorage {
   // Email submission operations
   submitEmail(email: InsertEmailSubmission): Promise<EmailSubmission>;
   hasEmailAccess(email: string, source: string): Promise<boolean>;
+  
+  // VC unlock operations
+  createVCUnlock(unlock: InsertVCUnlock): Promise<VCUnlock>;
+  hasEmailUnlockedVC(email: string, vcId: number, vcType: string): Promise<boolean>;
+  getVCUnlocksByEmail(email: string): Promise<VCUnlock[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -423,6 +431,38 @@ export class DatabaseStorage implements IStorage {
       .from(emailSubmissions)
       .where(and(eq(emailSubmissions.email, email), eq(emailSubmissions.source, source)));
     return !!submission;
+  }
+
+  // VC unlock operations
+  async createVCUnlock(unlockData: InsertVCUnlock): Promise<VCUnlock> {
+    const [unlock] = await db
+      .insert(vcUnlocks)
+      .values(unlockData)
+      .returning();
+    return unlock;
+  }
+
+  async hasEmailUnlockedVC(email: string, vcId: number, vcType: string): Promise<boolean> {
+    const [unlock] = await db
+      .select()
+      .from(vcUnlocks)
+      .where(and(
+        eq(vcUnlocks.email, email), 
+        eq(vcUnlocks.vcId, vcId),
+        eq(vcUnlocks.vcType, vcType),
+        eq(vcUnlocks.status, "completed")
+      ))
+      .limit(1);
+    
+    return !!unlock;
+  }
+
+  async getVCUnlocksByEmail(email: string): Promise<VCUnlock[]> {
+    return await db
+      .select()
+      .from(vcUnlocks)
+      .where(eq(vcUnlocks.email, email))
+      .orderBy(desc(vcUnlocks.createdAt));
   }
 }
 

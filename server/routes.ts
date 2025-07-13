@@ -912,6 +912,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // VC unlock payment endpoint
+  app.post('/api/create-vc-unlock-payment', async (req: any, res) => {
+    try {
+      const { vcId, vcType, email, amount } = req.body;
+      
+      if (!vcId || !vcType || !email || !amount) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      // Check if already unlocked
+      const hasUnlocked = await storage.hasEmailUnlockedVC(email, vcId, vcType);
+      if (hasUnlocked) {
+        return res.status(400).json({ message: "VC already unlocked for this email" });
+      }
+
+      // Create payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: "usd",
+        metadata: {
+          vcId: vcId.toString(),
+          vcType,
+          email,
+          paymentType: "verified_vc",
+        },
+      });
+
+      // Create unlock record (for demo, mark as completed immediately)
+      await storage.createVCUnlock({
+        email,
+        vcId,
+        vcType,
+        amount,
+        paymentType: "verified_vc",
+        stripePaymentIntentId: paymentIntent.id,
+        status: "completed",
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+        success: true
+      });
+    } catch (error) {
+      console.error("Error creating VC unlock payment:", error);
+      res.status(500).json({ message: "Error creating payment intent" });
+    }
+  });
+
+  // Check VC unlock status endpoint
+  app.get('/api/check-vc-unlock', async (req: any, res) => {
+    try {
+      const { email, vcId, vcType } = req.query;
+      
+      if (!email || !vcId || !vcType) {
+        return res.status(400).json({ message: "Missing required parameters" });
+      }
+
+      const hasUnlocked = await storage.hasEmailUnlockedVC(email, parseInt(vcId), vcType);
+      res.json({ hasUnlocked });
+    } catch (error) {
+      console.error("Error checking VC unlock status:", error);
+      res.status(500).json({ message: "Error checking unlock status" });
+    }
+  });
+
   // Create payment intent for project visibility
   app.post('/api/create-project-payment', isAuthenticated, async (req: any, res) => {
     try {

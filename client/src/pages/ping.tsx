@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { EmailGate } from "@/components/email-gate";
 import { ImprovedHeader } from "@/components/improved-header";
+import { AirtableVCCard } from "@/components/airtable-vc-card";
 
 export default function Ping() {
   const [searchTerm, setSearchTerm] = useState("");
