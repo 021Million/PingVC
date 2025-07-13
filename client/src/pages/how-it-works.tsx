@@ -162,7 +162,7 @@ export default function HowItWorks() {
           <p className="text-xl text-gray-600 mb-8">Join hundreds of Web3 founders who have successfully raised funding through Ping Me</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/">Browse VCs <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link href="/">Browse VCs & Angels <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/scout">Explore Scout</Link>
