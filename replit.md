@@ -127,3 +127,6 @@ Changelog:
 - July 11, 2025. Added password management system for first-time signin with database storage, API routes, settings page, and secure bcrypt hashing
 - July 11, 2025. Added password reset functionality to settings page allowing users to reset passwords without current password verification
 - July 11, 2025. Added Ping button to all header navigation for easier access to VC marketplace
+- July 13, 2025. Enhanced VC signup form with multi-select checkboxes for sectors and investment stages, added Angel option, removed Multi-Stage option
+- July 13, 2025. Updated Ping page Investment Stage filter to include Angel option and remove Series C+ option
+- July 13, 2025. Completed Ping button integration across all page headers for consistent navigation

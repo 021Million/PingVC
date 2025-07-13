@@ -23,6 +23,7 @@ export default function HowItWorks() {
             <nav className="hidden md:flex items-center space-x-8">
               <Link href="/"><a className="text-gray-700 hover:text-primary transition-colors">Home</a></Link>
               <Link href="/scout"><a className="text-gray-700 hover:text-primary transition-colors">Scout</a></Link>
+              <Link href="/ping"><a className="text-gray-700 hover:text-primary transition-colors">Ping</a></Link>
               <span className="text-primary font-medium">For Founders</span>
               <Link href="/for-vcs"><a className="text-gray-700 hover:text-primary transition-colors">For VCs</a></Link>
               <Link href="/pricing"><a className="text-gray-700 hover:text-primary transition-colors">Pricing</a></Link>
