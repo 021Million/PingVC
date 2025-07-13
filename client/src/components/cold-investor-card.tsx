@@ -71,12 +71,9 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
     setUnlockingDMs(prev => new Set(prev).add(decisionMakerId));
 
     try {
-      const response = await apiRequest("/api/unlock-decision-maker", {
-        method: "POST",
-        body: JSON.stringify({
-          email: userEmail,
-          decisionMakerId,
-        }),
+      const response = await apiRequest("POST", "/api/unlock-decision-maker", {
+        email: userEmail,
+        decisionMakerId,
       });
 
       if (response.ok) {
