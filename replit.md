@@ -139,3 +139,4 @@ Changelog:
 - July 13, 2025. Updated sector filters changing "NFTs" to "Stablecoins" and "Gaming" to "RWA" across all components and seed data
 - July 13, 2025. Restructured Ping page to clearly separate "Verified Investors" section (including VCs, Angels, and Community VCs/DAOs/Syndicates verified by ping team) from "VC Scout" section (platform VCs)
 - July 13, 2025. Implemented VC unlock paywall system with $5 unlock for verified investors, email-based access tracking, new database schema for VC unlocks, API endpoints for payment processing, and modal components for seamless unlock experience
+- July 13, 2025. Integrated full Stripe payment processing for Cold Investor Scout $1 decision maker unlocks with proper payment flow, confirmation system, and dedicated payment modal component

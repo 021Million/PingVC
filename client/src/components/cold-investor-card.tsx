@@ -5,6 +5,7 @@ import { Globe, Linkedin, Twitter, Lock, Unlock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import DecisionMakerPayment from "./decision-maker-payment";
 
 interface DecisionMaker {
   id: number;
@@ -31,6 +32,8 @@ interface ColdInvestorCardProps {
 export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdInvestorCardProps) {
   const [unlockedDecisionMakers, setUnlockedDecisionMakers] = useState<Set<number>>(new Set());
   const [unlockingDMs, setUnlockingDMs] = useState<Set<number>>(new Set());
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedDecisionMakerId, setSelectedDecisionMakerId] = useState<number | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
     checkUnlockStatus();
   }, [decisionMakers, userEmail]);
 
-  const handleUnlockDecisionMaker = async (decisionMakerId: number) => {
+  const handleUnlockDecisionMaker = (decisionMakerId: number) => {
     if (!userEmail) {
       toast({
         title: "Email Required",
@@ -68,40 +71,14 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
       return;
     }
 
-    setUnlockingDMs(prev => new Set(prev).add(decisionMakerId));
+    setSelectedDecisionMakerId(decisionMakerId);
+    setShowPaymentModal(true);
+  };
 
-    try {
-      const response = await apiRequest("POST", "/api/unlock-decision-maker", {
-        email: userEmail,
-        decisionMakerId,
-      });
-
-      if (response.ok) {
-        setUnlockedDecisionMakers(prev => new Set(prev).add(decisionMakerId));
-        toast({
-          title: "Contact Unlocked!",
-          description: "You now have access to this decision maker's contact information.",
-        });
-      } else {
-        const error = await response.json();
-        toast({
-          title: "Unlock Failed",
-          description: error.message || "Failed to unlock contact information",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setUnlockingDMs(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(decisionMakerId);
-        return newSet;
-      });
+  const handlePaymentSuccess = () => {
+    if (selectedDecisionMakerId) {
+      setUnlockedDecisionMakers(prev => new Set(prev).add(selectedDecisionMakerId));
+      setSelectedDecisionMakerId(null);
     }
   };
 
@@ -164,10 +141,9 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
                     <Button
                       size="sm"
                       onClick={() => handleUnlockDecisionMaker(dm.id)}
-                      disabled={isUnlocking}
                       className="bg-orange-500 hover:bg-orange-600 text-white"
                     >
-                      {isUnlocking ? "Unlocking..." : "🔓 Unlock for $1"}
+                      🔓 Unlock for $1
                     </Button>
                   )}
                 </div>
@@ -197,6 +173,20 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
           })}
         </div>
       </CardContent>
+
+      {/* Payment Modal */}
+      {showPaymentModal && selectedDecisionMakerId && userEmail && (
+        <DecisionMakerPayment
+          isOpen={showPaymentModal}
+          onClose={() => {
+            setShowPaymentModal(false);
+            setSelectedDecisionMakerId(null);
+          }}
+          decisionMakerId={selectedDecisionMakerId}
+          email={userEmail}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </Card>
   );
 }

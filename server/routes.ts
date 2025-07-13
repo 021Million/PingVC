@@ -920,7 +920,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/unlock-decision-maker', async (req, res) => {
+  // Create payment intent for decision maker unlock
+  app.post('/api/create-decision-maker-payment', async (req, res) => {
     try {
       const { email, decisionMakerId } = req.body;
       
@@ -945,23 +946,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
       });
 
-      // Create unlock record (mark as completed for demo)
-      await storage.createDecisionMakerUnlock({
-        email,
-        decisionMakerId,
-        amount: 100,
-        stripePaymentIntentId: paymentIntent.id,
-        status: "completed",
-      });
-
       res.json({ 
         success: true,
         clientSecret: paymentIntent.client_secret,
         paymentIntentId: paymentIntent.id
       });
     } catch (error) {
-      console.error("Error unlocking decision maker:", error);
-      res.status(500).json({ message: "Failed to unlock decision maker" });
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ message: "Failed to create payment intent" });
+    }
+  });
+
+  // Confirm decision maker unlock after successful payment
+  app.post('/api/confirm-decision-maker-unlock', async (req, res) => {
+    try {
+      const { paymentIntentId, email, decisionMakerId } = req.body;
+      
+      if (!paymentIntentId || !email || !decisionMakerId) {
+        return res.status(400).json({ message: "Payment intent ID, email, and decision maker ID are required" });
+      }
+
+      // Verify payment with Stripe
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status !== "succeeded") {
+        return res.status(400).json({ message: "Payment has not been completed" });
+      }
+
+      // Check if unlock record already exists
+      const hasUnlocked = await storage.hasEmailUnlockedDecisionMaker(email, decisionMakerId);
+      if (hasUnlocked) {
+        return res.status(400).json({ message: "Decision maker already unlocked" });
+      }
+
+      // Create unlock record
+      await storage.createDecisionMakerUnlock({
+        email,
+        decisionMakerId,
+        amount: 100,
+        stripePaymentIntentId: paymentIntentId,
+        status: "completed",
+      });
+
+      res.json({ 
+        success: true,
+        message: "Decision maker unlocked successfully"
+      });
+    } catch (error) {
+      console.error("Error confirming unlock:", error);
+      res.status(500).json({ message: "Failed to confirm unlock" });
     }
   });
 
