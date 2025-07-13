@@ -1,0 +1,85 @@
+// PING ME – FOCUSED FUNNEL VERSION
+// This version removes distractions and consolidates all secondary offers into ONE clean path: Book or Browse Verified VCs
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import session from 'express-session';
+import stripePackage from 'stripe';
+
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(session({
+  secret: 'pingmesecret',
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// SIMULATED DATABASE (Use Airtable in production)
+let users = {}; // email-gated users
+let vcs = [];   // verified VC profiles
+
+// EMAIL GATE – only first visit
+function emailGate(req, res, next) {
+  if (req.session.emailEntered) return next();
+  const { email } = req.body;
+  if (!email) return res.status(401).json({ message: 'Email required to continue' });
+  req.session.emailEntered = true;
+  users[email] = true;
+  next();
+}
+
+// ENTRY POINT – email gate
+app.post('/api/enter', emailGate, (req, res) => {
+  res.json({ access: true });
+});
+
+// FETCH Verified VCs
+app.get('/api/vcs', (req, res) => {
+  res.json(vcs);
+});
+
+// VC Profile View + Unlock Contact
+app.post('/api/unlock-vc', async (req, res) => {
+  const { vcId } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [{
+      price_data: {
+        currency: 'usd',
+        product_data: { name: `VC Contact: ${vc.name}` },
+        unit_amount: vc.price || 500,
+      },
+      quantity: 1,
+    }],
+    mode: 'payment',
+    success_url: `${process.env.BASE_URL}/vc/${vcId}?success=true`,
+    cancel_url: `${process.env.BASE_URL}/vc/${vcId}?canceled=true`,
+  });
+  res.json({ url: session.url });
+});
+
+// REDESIGNED NAVIGATION (minimal):
+// [Ping Me] [Browse VCs] [Get Started]
+
+// HOMEPAGE:
+// Headline: Book Verified VCs for Your AI/Web3 Startup
+// Subhead: No spam. No DMs. Just real conversations.
+// CTA: [Browse VCs] → (email gate if 1st time)
+
+// REMOVED FROM THIS VERSION:
+// - Scout listing flow
+// - Cold Investor Directory
+// - Founder Profile builder
+// - All low-conversion micro-offers
+
+// Simple user journey: Discover → Pay → Book
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`PING ME – Focused version live on port ${PORT}`));
