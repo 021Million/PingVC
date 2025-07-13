@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
+import { AirtableVCCard } from "@/components/airtable-vc-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
 import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +21,14 @@ export default function Home() {
   const { data: featuredProjects = [] } = useQuery({
     queryKey: ["/api/scout/featured"],
   });
+
+  // Fetch Airtable VCs for the landing page thumbnails
+  const { data: airtableData, isLoading: airtableLoading } = useQuery({
+    queryKey: ["/api/airtable/vcs"],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const airtableVCs = airtableData?.verifiedVCs || [];
 
   const handleScrollToVCs = () => {
     document.getElementById('vc-grid')?.scrollIntoView({ behavior: 'smooth' });
@@ -60,7 +69,7 @@ export default function Home() {
         </div>
       </section>
       {/* Marketplace Section */}
-      <MarketplaceLanding vcs={vcs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
+      <MarketplaceLanding vcs={airtableVCs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
       {/* Filter Section */}
       <FilterSection 
         stageFilter={stageFilter}
@@ -76,7 +85,7 @@ export default function Home() {
             <p className="text-lg text-gray-600">Curated list of active investment partners looking for quality dealflow</p>
           </div>
           
-          {isLoading ? (
+          {airtableLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <Card key={i} className="p-6">
@@ -90,17 +99,16 @@ export default function Home() {
                 </Card>
               ))}
             </div>
-          ) : (
+          ) : airtableVCs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {vcs.map((vc) => (
-                <VCCard key={vc.id} vc={vc} isAuthenticated={true} />
+              {airtableVCs.slice(0, 6).map((vc: any, index: number) => (
+                <AirtableVCCard key={`airtable-${index}`} vc={vc} />
               ))}
             </div>
-          )}
-          
-          {!isLoading && vcs.length === 0 && (
+          ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500">No VCs or Angels found matching your filters.</p>
+              <p className="text-gray-500">No verified investors available yet.</p>
+              <p className="text-sm text-gray-400 mt-2">Check back soon for curated investor profiles.</p>
             </div>
           )}
         </div>
