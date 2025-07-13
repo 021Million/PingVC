@@ -412,7 +412,7 @@ export default function Ping() {
             {/* VC Scout Section Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Cold Investor Scout</h1>
-              <p className="text-gray-600">Platform VCs available for connection</p>
+              <p className="text-gray-600">Tired of chasing down investor emails, X and LinkedIn profiles? Just pay $1 to unlock decision makers social profiles. </p>
             </div>
 
             {/* Platform VCs Section */}
