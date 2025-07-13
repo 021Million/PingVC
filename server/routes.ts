@@ -873,6 +873,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Cold investor routes
+  app.get('/api/cold-investors', async (req, res) => {
+    try {
+      const investors = await storage.getAllColdInvestors();
+      res.json(investors);
+    } catch (error) {
+      console.error("Error fetching cold investors:", error);
+      res.status(500).json({ message: "Failed to fetch cold investors" });
+    }
+  });
+
+  app.get('/api/cold-investors/:slug', async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const investor = await storage.getColdInvestorBySlug(slug);
+      
+      if (!investor) {
+        return res.status(404).json({ message: "Fund not found" });
+      }
+
+      const decisionMakers = await storage.getDecisionMakersByFund(investor.id);
+      res.json({ fund: investor, decisionMakers });
+    } catch (error) {
+      console.error("Error fetching cold investor details:", error);
+      res.status(500).json({ message: "Failed to fetch fund details" });
+    }
+  });
+
+  app.get('/api/check-decision-maker-unlock', async (req, res) => {
+    try {
+      const { email, decisionMakerId } = req.query;
+      
+      if (!email || !decisionMakerId) {
+        return res.status(400).json({ message: "Email and decision maker ID are required" });
+      }
+
+      const hasUnlocked = await storage.hasEmailUnlockedDecisionMaker(
+        email as string, 
+        parseInt(decisionMakerId as string)
+      );
+      res.json({ hasUnlocked });
+    } catch (error) {
+      console.error("Error checking decision maker unlock:", error);
+      res.status(500).json({ message: "Failed to check unlock status" });
+    }
+  });
+
+  app.post('/api/unlock-decision-maker', async (req, res) => {
+    try {
+      const { email, decisionMakerId } = req.body;
+      
+      if (!email || !decisionMakerId) {
+        return res.status(400).json({ message: "Email and decision maker ID are required" });
+      }
+
+      // Check if already unlocked
+      const hasUnlocked = await storage.hasEmailUnlockedDecisionMaker(email, decisionMakerId);
+      if (hasUnlocked) {
+        return res.status(400).json({ message: "Decision maker already unlocked" });
+      }
+
+      // Create payment intent for $1
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 100, // $1 in cents
+        currency: "usd",
+        metadata: {
+          decisionMakerId: decisionMakerId.toString(),
+          email,
+          paymentType: "cold_scout",
+        },
+      });
+
+      // Create unlock record (mark as completed for demo)
+      await storage.createDecisionMakerUnlock({
+        email,
+        decisionMakerId,
+        amount: 100,
+        stripePaymentIntentId: paymentIntent.id,
+        status: "completed",
+      });
+
+      res.json({ 
+        success: true,
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error) {
+      console.error("Error unlocking decision maker:", error);
+      res.status(500).json({ message: "Failed to unlock decision maker" });
+    }
+  });
+
   // Email submission route
   app.post('/api/submit-email', async (req, res) => {
     try {

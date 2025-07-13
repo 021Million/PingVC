@@ -6,6 +6,9 @@ import {
   projectVotes,
   emailSubmissions,
   vcUnlocks,
+  coldInvestors,
+  decisionMakers,
+  decisionMakerUnlocks,
   type User,
   type UpsertUser,
   type VC,
@@ -18,6 +21,12 @@ import {
   type InsertEmailSubmission,
   type VCUnlock,
   type InsertVCUnlock,
+  type ColdInvestor,
+  type InsertColdInvestor,
+  type DecisionMaker,
+  type InsertDecisionMaker,
+  type DecisionMakerUnlock,
+  type InsertDecisionMakerUnlock,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, sql, gt } from "drizzle-orm";
@@ -68,6 +77,13 @@ export interface IStorage {
   createVCUnlock(unlock: InsertVCUnlock): Promise<VCUnlock>;
   hasEmailUnlockedVC(email: string, vcId: number, vcType: string): Promise<boolean>;
   getVCUnlocksByEmail(email: string): Promise<VCUnlock[]>;
+  
+  // Cold investor operations
+  getAllColdInvestors(): Promise<ColdInvestor[]>;
+  getColdInvestorBySlug(slug: string): Promise<ColdInvestor | undefined>;
+  getDecisionMakersByFund(fundId: number): Promise<DecisionMaker[]>;
+  createDecisionMakerUnlock(unlock: InsertDecisionMakerUnlock): Promise<DecisionMakerUnlock>;
+  hasEmailUnlockedDecisionMaker(email: string, decisionMakerId: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -463,6 +479,56 @@ export class DatabaseStorage implements IStorage {
       .from(vcUnlocks)
       .where(eq(vcUnlocks.email, email))
       .orderBy(desc(vcUnlocks.createdAt));
+  }
+
+  // Cold investor operations
+  async getAllColdInvestors(): Promise<ColdInvestor[]> {
+    return await db
+      .select()
+      .from(coldInvestors)
+      .orderBy(coldInvestors.fundName);
+  }
+
+  async getColdInvestorBySlug(slug: string): Promise<ColdInvestor | undefined> {
+    const [investor] = await db
+      .select()
+      .from(coldInvestors)
+      .where(eq(coldInvestors.fundSlug, slug))
+      .limit(1);
+    return investor;
+  }
+
+  async getDecisionMakersByFund(fundId: number): Promise<DecisionMaker[]> {
+    return await db
+      .select()
+      .from(decisionMakers)
+      .where(and(
+        eq(decisionMakers.fundId, fundId),
+        eq(decisionMakers.isPublic, true)
+      ))
+      .orderBy(decisionMakers.role, decisionMakers.fullName);
+  }
+
+  async createDecisionMakerUnlock(unlockData: InsertDecisionMakerUnlock): Promise<DecisionMakerUnlock> {
+    const [unlock] = await db
+      .insert(decisionMakerUnlocks)
+      .values(unlockData)
+      .returning();
+    return unlock;
+  }
+
+  async hasEmailUnlockedDecisionMaker(email: string, decisionMakerId: number): Promise<boolean> {
+    const [unlock] = await db
+      .select()
+      .from(decisionMakerUnlocks)
+      .where(and(
+        eq(decisionMakerUnlocks.email, email),
+        eq(decisionMakerUnlocks.decisionMakerId, decisionMakerId),
+        eq(decisionMakerUnlocks.status, "completed")
+      ))
+      .limit(1);
+    
+    return !!unlock;
   }
 }
 

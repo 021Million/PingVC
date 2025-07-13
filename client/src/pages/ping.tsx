@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { EmailGate } from "@/components/email-gate";
 import { ImprovedHeader } from "@/components/improved-header";
 import { AirtableVCCard } from "@/components/airtable-vc-card";
+import { ColdInvestorCard } from "@/components/cold-investor-card";
+import { ColdInvestorDetailCard } from "@/components/cold-investor-detail-card";
 
 export default function Ping() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,6 +37,11 @@ export default function Ping() {
 
   const { data: airtableData, isLoading: airtableLoading } = useQuery({
     queryKey: ["/api/airtable/vcs"],
+    enabled: hasEmailAccess,
+  });
+
+  const { data: coldInvestors = [], isLoading: coldInvestorsLoading } = useQuery({
+    queryKey: ["/api/cold-investors"],
     enabled: hasEmailAccess,
   });
 
@@ -409,10 +416,48 @@ export default function Ping() {
           <>
             <div className="border-t border-gray-200 my-12"></div>
             
-            {/* VC Scout Section Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Cold Investor Scout</h1>
-              <p className="text-gray-600">Tired of chasing down investor emails, X and LinkedIn profiles? Just pay $1 to unlock decision makers social profiles. </p>
+            {/* Cold Investor Scout Section */}
+            <div className="mb-12">
+              <div className="flex items-center mb-6">
+                <div className="flex items-center mr-3">
+                  <span className="text-2xl mr-2">🔥</span>
+                  <h2 className="text-2xl font-bold text-gray-900">Cold Investor Scout</h2>
+                </div>
+                <Badge variant="secondary" className="bg-orange-100 text-orange-600 border-orange-200">
+                  {coldInvestors.length} Funds Available
+                </Badge>
+              </div>
+              <p className="text-gray-600 mb-6">
+                Tired of chasing down investor emails, X and LinkedIn profiles? Just pay $1 to unlock decision makers' social profiles.
+              </p>
+              
+              {coldInvestorsLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="bg-gray-200 h-64 rounded-lg"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : coldInvestors.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {coldInvestors.map((investor: any) => {
+                    const userEmail = localStorage.getItem('email_access_ping') || user?.email;
+                    return (
+                      <ColdInvestorDetailCard 
+                        key={investor.id} 
+                        investor={investor}
+                        userEmail={userEmail}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8 bg-white rounded-lg border border-gray-200">
+                  <span className="text-4xl mb-2 block">🔥</span>
+                  <p className="text-gray-600">No cold investors available at the moment.</p>
+                </div>
+              )}
             </div>
 
             {/* Platform VCs Section */}

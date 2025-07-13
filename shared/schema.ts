@@ -172,6 +172,39 @@ export const vcUnlocks = pgTable("vc_unlocks", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Cold Investor tables for new unlock system
+export const coldInvestors = pgTable("cold_investors", {
+  id: serial("id").primaryKey(),
+  fundName: varchar("fund_name").notNull(),
+  fundSlug: varchar("fund_slug").notNull().unique(), // Generated from fund name
+  website: varchar("website"),
+  investmentFocus: text("investment_focus"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const decisionMakers = pgTable("decision_makers", {
+  id: serial("id").primaryKey(),
+  fullName: varchar("full_name").notNull(),
+  role: varchar("role").notNull(),
+  linkedinUrl: varchar("linkedin_url"),
+  twitterUrl: varchar("twitter_url"),
+  fundId: integer("fund_id").references(() => coldInvestors.id),
+  isPublic: boolean("is_public").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const decisionMakerUnlocks = pgTable("decision_maker_unlocks", {
+  id: serial("id").primaryKey(),
+  email: varchar("email").notNull(),
+  decisionMakerId: integer("decision_maker_id").references(() => decisionMakers.id),
+  amount: integer("amount").default(100), // $1 in cents
+  stripePaymentIntentId: varchar("stripe_payment_intent_id"),
+  status: varchar("status").notNull().default("completed"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   vcs: many(vcs),
@@ -202,6 +235,25 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
   vc: one(vcs, {
     fields: [payments.vcId],
     references: [vcs.id],
+  }),
+}));
+
+export const coldInvestorsRelations = relations(coldInvestors, ({ many }) => ({
+  decisionMakers: many(decisionMakers),
+}));
+
+export const decisionMakersRelations = relations(decisionMakers, ({ one, many }) => ({
+  fund: one(coldInvestors, {
+    fields: [decisionMakers.fundId],
+    references: [coldInvestors.id],
+  }),
+  unlocks: many(decisionMakerUnlocks),
+}));
+
+export const decisionMakerUnlocksRelations = relations(decisionMakerUnlocks, ({ one }) => ({
+  decisionMaker: one(decisionMakers, {
+    fields: [decisionMakerUnlocks.decisionMakerId],
+    references: [decisionMakers.id],
   }),
 }));
 
@@ -236,6 +288,23 @@ export const insertVCUnlockSchema = createInsertSchema(vcUnlocks).omit({
   createdAt: true,
 });
 
+export const insertColdInvestorSchema = createInsertSchema(coldInvestors).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertDecisionMakerSchema = createInsertSchema(decisionMakers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertDecisionMakerUnlockSchema = createInsertSchema(decisionMakerUnlocks).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type UpsertUser = z.infer<typeof upsertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -249,3 +318,9 @@ export type EmailSubmission = typeof emailSubmissions.$inferSelect;
 export type InsertEmailSubmission = z.infer<typeof insertEmailSubmissionSchema>;
 export type VCUnlock = typeof vcUnlocks.$inferSelect;
 export type InsertVCUnlock = z.infer<typeof insertVCUnlockSchema>;
+export type ColdInvestor = typeof coldInvestors.$inferSelect;
+export type InsertColdInvestor = z.infer<typeof insertColdInvestorSchema>;
+export type DecisionMaker = typeof decisionMakers.$inferSelect;
+export type InsertDecisionMaker = z.infer<typeof insertDecisionMakerSchema>;
+export type DecisionMakerUnlock = typeof decisionMakerUnlocks.$inferSelect;
+export type InsertDecisionMakerUnlock = z.infer<typeof insertDecisionMakerUnlockSchema>;

@@ -1,0 +1,135 @@
+Ping Me App – Cold Investor Scout Unlock Integration
+📦 1. Update Airtable Structure (ColdInvestorTable + DecisionMakersTable)
+ColdInvestorTable
+Field Name	Type
+Fund Name	Text
+Fund Slug (ID)	Formula (LOWER(SUBSTITUTE({Fund Name}, " ", "-")))
+Website	URL
+Investment Focus	Long Text
+
+DecisionMakersTable
+Field Name	Type
+Full Name	Text
+Role	Text
+LinkedIn	URL
+Twitter/X	URL
+Fund (Linked)	Linked Record (ColdInvestorTable)
+Public?	Checkbox (optional)
+ID	Autonumber or formula
+
+💾 2. Add Unlock Table (UnlocksTable)
+Field Name	Type
+Email	Text
+DecisionMakerID	Linked (to DecisionMakersTable)
+Paid	Checkbox
+
+⚙️ 3. Update Flask Backend (main.py)
+python
+Copy
+Edit
+from flask import Flask, render_template, request, session, redirect
+from pyairtable import Table
+import os
+
+app = Flask(__name__)
+app.secret_key = "super-secret-key"
+
+AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
+BASE_ID = os.getenv("AIRTABLE_BASE_ID")
+
+funds_table = Table(AIRTABLE_API_KEY, BASE_ID, "ColdInvestorTable")
+dm_table = Table(AIRTABLE_API_KEY, BASE_ID, "DecisionMakersTable")
+unlock_table = Table(AIRTABLE_API_KEY, BASE_ID, "UnlocksTable")
+
+@app.route("/cold/<slug>")
+def cold_fund_detail(slug):
+    fund = next((f["fields"] for f in funds_table.all() if f["fields"].get("Fund Slug") == slug), None)
+    if not fund:
+        return "Fund not found", 404
+
+    decision_makers = [
+        dm["fields"] for dm in dm_table.all()
+        if dm["fields"].get("Fund")[0] == fund["Fund Name"]
+    ]
+    return render_template("cold_fund_detail.html", fund=fund, decision_makers=decision_makers)
+
+@app.route("/unlock-dm/<dm_id>", methods=["POST"])
+def unlock_dm(dm_id):
+    email = session.get("email", "guest@pingme.ai")
+    unlock_table.create({"Email": email, "DecisionMakerID": [dm_id], "Paid": True})
+    return redirect(request.referrer)
+
+@app.context_processor
+def inject_unlock_check():
+    def is_unlocked(dm_id):
+        email = session.get("email", "guest@pingme.ai")
+        records = unlock_table.all()
+        for r in records:
+            if r["fields"].get("Email") == email and dm_id in r["fields"].get("DecisionMakerID", []):
+                return True
+        return False
+    return dict(dm_unlocked=is_unlocked)
+🖼️ 4. Template: templates/cold_fund_detail.html
+html
+Copy
+Edit
+<h1>{{ fund['Fund Name'] }}</h1>
+<p><a href="{{ fund['Website'] }}" target="_blank">🌐 Visit Site</a></p>
+<p>{{ fund['Investment Focus'] }}</p>
+
+<h3>🔐 Decision Makers</h3>
+{% for dm in decision_makers %}
+  <div class="card">
+    <p><strong>Role:</strong> {{ dm['Role'] }}</p>
+
+    {% if dm_unlocked(dm['ID']) %}
+      <p><strong>Name:</strong> {{ dm['Full Name'] }}</p>
+      <a href="{{ dm['LinkedIn'] }}" target="_blank">LinkedIn</a> | 
+      <a href="{{ dm['Twitter'] }}" target="_blank">X/Twitter</a>
+    {% else %}
+      <p><strong>Name:</strong> <span class="blurred-text">{{ dm['Full Name'] }}</span></p>
+      <form method="POST" action="/unlock-dm/{{ dm['ID'] }}">
+        <button type="submit">🔓 Unlock Contact for $1</button>
+      </form>
+    {% endif %}
+  </div>
+{% endfor %}
+💅 5. Styling (in /static/style.css)
+css
+Copy
+Edit
+.blurred-text {
+  filter: blur(6px);
+  color: #999;
+  user-select: none;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+🧪 6. Simulated Session (Optional for Demo)
+python
+Copy
+Edit
+@app.before_request
+def simulate_login():
+    if "email" not in session:
+        session["email"] = "demo@pingme.ai"
+✅ Result
+Verified Investors → Paywall to unlock contact info
+
+Cold Investors → Blur full name & social links until unlocked
+
+$1 paywall simulated via button → connected to Airtable unlock table
+
+Flexible and ready to plug into Stripe/Gumroad
+
+Would you like me to:
+
+Add Stripe/Gumroad for real $1 unlocks?
+
+Integrate this into a dropdown filterable /ping page?
