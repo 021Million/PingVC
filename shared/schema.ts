@@ -37,6 +37,7 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   password: varchar("password"), // Hashed password for first-time setup
   hasSetPassword: boolean("has_set_password").default(false),
+  newPassword: varchar("new_password"), // Temporary field for password updates
   userType: varchar("user_type").default("founder"), // 'founder', 'vc', 'angel'
   isAdmin: boolean("is_admin").default(false),
   profileCompleted: boolean("profile_completed").default(false),
@@ -110,7 +111,13 @@ export const founders = pgTable("founders", {
   
   // New fields from Flask template
   revenueGenerating: varchar("revenue_generating"), // Yes/No/Soon
-  stage: varchar("stage"), // Idea, MVP, Beta, Live, Growth, Scale
+  stage: varchar("stage"), // Devnet, Testnet, Mainnet
+  
+  // Additional enhanced fields for expanded dashboard
+  tokenLaunch: boolean("token_launch").default(false), // Yes/No for token launch
+  ticker: varchar("ticker"), // Token ticker symbol (only if tokenLaunch = true)
+  capitalRaisedToDate: integer("capital_raised_to_date"), // Amount in USD
+  dau: integer("dau"), // Daily active users
   
   // Legacy/System fields
   profileImageUrl: varchar("profile_image_url"),

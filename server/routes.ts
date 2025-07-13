@@ -99,11 +99,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { firstName, lastName, ...founderData } = req.body;
+      const { firstName, lastName, email, newPassword, ...founderData } = req.body;
       
-      // Update user profile
-      if (firstName && lastName) {
-        await storage.updateUserProfile(userId, { firstName, lastName });
+      // Handle password update if provided
+      let hashedPassword = undefined;
+      if (newPassword && newPassword.length >= 8) {
+        hashedPassword = await bcrypt.hash(newPassword, 12);
+      }
+      
+      // Update user profile and optionally password
+      if (hashedPassword) {
+        await storage.updateUserAndPassword(userId, { firstName, lastName, email }, hashedPassword);
+      } else if (firstName && lastName) {
+        await storage.updateUserProfile(userId, { firstName, lastName, email });
       }
       
       // Update founder profile if user is a founder and founder data is provided

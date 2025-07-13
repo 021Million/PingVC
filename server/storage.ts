@@ -25,11 +25,12 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
-  updateUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
+  updateUserProfile(id: string, profileData: { firstName: string; lastName: string; email?: string }): Promise<User>;
   
   // Password operations
   setUserPassword(id: string, hashedPassword: string): Promise<User>;
   updateUserPassword(id: string, hashedPassword: string): Promise<User>;
+  updateUserAndPassword(id: string, profileData: { firstName: string; lastName: string; email?: string }, hashedPassword?: string): Promise<User>;
   
   // VC operations
   createVC(vc: InsertVC): Promise<VC>;
@@ -97,14 +98,20 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User> {
+  async updateUserProfile(id: string, profileData: { firstName: string; lastName: string; email?: string }): Promise<User> {
+    const updateData: any = {
+      firstName: profileData.firstName,
+      lastName: profileData.lastName,
+      updatedAt: new Date(),
+    };
+    
+    if (profileData.email) {
+      updateData.email = profileData.email;
+    }
+    
     const [user] = await db
       .update(users)
-      .set({
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(eq(users.id, id))
       .returning();
     return user;
@@ -135,6 +142,34 @@ export class DatabaseStorage implements IStorage {
         password: hashedPassword,
         updatedAt: new Date(),
       })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    return user;
+  }
+
+  async updateUserAndPassword(id: string, profileData: { firstName: string; lastName: string; email?: string }, hashedPassword?: string): Promise<User> {
+    const updateData: any = {
+      firstName: profileData.firstName,
+      lastName: profileData.lastName,
+      updatedAt: new Date(),
+    };
+    
+    if (profileData.email) {
+      updateData.email = profileData.email;
+    }
+    
+    if (hashedPassword) {
+      updateData.password = hashedPassword;
+    }
+    
+    const [user] = await db
+      .update(users)
+      .set(updateData)
       .where(eq(users.id, id))
       .returning();
     
