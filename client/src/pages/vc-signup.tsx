@@ -241,13 +241,13 @@ export default function VCSignup() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <Label htmlFor="twitterUrl">Twitter/X Profile (Optional)</Label>
+                    <Label htmlFor="twitterUrl">X Profile</Label>
                     <Input
                       id="twitterUrl"
                       {...register("twitterUrl")}
-                      placeholder="https://twitter.com/yourhandle"
+                      placeholder="https://x.com/yourhandle"
                       className={errors.twitterUrl ? "border-red-500" : ""}
                     />
                     {errors.twitterUrl && (
@@ -256,7 +256,7 @@ export default function VCSignup() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="linkedinUrl">LinkedIn Profile (Optional)</Label>
+                    <Label htmlFor="linkedinUrl">LinkedIn Profile</Label>
                     <Input
                       id="linkedinUrl"
                       {...register("linkedinUrl")}
@@ -267,10 +267,23 @@ export default function VCSignup() {
                       <p className="text-sm text-red-500 mt-1">{errors.linkedinUrl.message}</p>
                     )}
                   </div>
+
+                  <div>
+                    <Label htmlFor="telegramUrl">Telegram</Label>
+                    <Input
+                      id="telegramUrl"
+                      {...register("telegramUrl")}
+                      placeholder="@yourtelegram"
+                      className={errors.telegramUrl ? "border-red-500" : ""}
+                    />
+                    {errors.telegramUrl && (
+                      <p className="text-sm text-red-500 mt-1">{errors.telegramUrl.message}</p>
+                    )}
+                  </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="meetingUrl">Meeting/Calendly URL (Optional)</Label>
+                  <Label htmlFor="meetingUrl">Meeting/Calendly URL</Label>
                   <Input
                     id="meetingUrl"
                     {...register("meetingUrl")}

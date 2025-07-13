@@ -52,6 +52,7 @@ export const vcs = pgTable("vcs", {
   email: varchar("email").notNull(),
   twitterUrl: varchar("twitter_url"),
   linkedinUrl: varchar("linkedin_url"),
+  telegramUrl: varchar("telegram_url"),
   meetingUrl: varchar("meeting_url"), // Calendly or other meeting link
   stage: varchar("stage").notNull(), // Pre-Seed, Seed, Series A, etc.
   sectors: text("sectors").array().notNull(), // DeFi, Gaming, Infrastructure, etc.
