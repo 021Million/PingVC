@@ -22,7 +22,6 @@ export default function SignupType() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
       <main className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
@@ -60,7 +59,7 @@ export default function SignupType() {
                     <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                     <div className="text-sm">
                       <div className="font-medium">Get Warm Introductions</div>
-                      <div className="text-gray-600">Pay once to unlock contact info and intro templates</div>
+                      <div className="text-gray-600">Pay once to unlock contact info</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
