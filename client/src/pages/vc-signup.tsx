@@ -331,6 +331,7 @@ export default function VCSignup() {
                     value={watch("logoUrl")}
                     onChange={(url) => setValue("logoUrl", url)}
                     label="Fund Logo"
+                    endpoint="/api/upload/vc-logo"
                   />
                 </div>
 

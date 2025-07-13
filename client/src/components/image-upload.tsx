@@ -12,6 +12,7 @@ interface ImageUploadProps {
   accept?: string;
   maxSize?: number;
   className?: string;
+  endpoint?: string; // Allow specifying custom upload endpoint
 }
 
 export function ImageUpload({
@@ -20,7 +21,8 @@ export function ImageUpload({
   label = "Upload Image",
   accept = "image/*",
   maxSize = 5 * 1024 * 1024, // 5MB
-  className = ""
+  className = "",
+  endpoint = "/api/upload/logo"
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +58,7 @@ export function ImageUpload({
       const formData = new FormData();
       formData.append('logo', file);
 
-      const response = await fetch('/api/upload/logo', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
       });

@@ -893,6 +893,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public upload endpoint for VC signup (no authentication required)
+  app.post('/api/upload/vc-logo', upload.single('logo'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      const fileUrl = `/uploads/${req.file.filename}`;
+      
+      res.json({
+        success: true,
+        fileUrl,
+        fileName: req.file.filename,
+        originalName: req.file.originalname,
+        size: req.file.size
+      });
+    } catch (error) {
+      console.error('Error uploading VC logo:', error);
+      res.status(500).json({ message: 'Failed to upload VC logo' });
+    }
+  });
+
   // Support form submission
   app.post('/api/support', async (req, res) => {
     try {
