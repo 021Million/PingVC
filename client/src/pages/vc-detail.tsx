@@ -260,7 +260,7 @@ export function VCDetailPage() {
                     <DollarSign className="h-5 w-5 mr-3 text-green-600" />
                     <div>
                       <p className="font-medium text-gray-900">Unlock Price</p>
-                      <p className="text-gray-600">${vc.price}</p>
+                      <p className="text-gray-600">{vc.price}</p>
                     </div>
                   </div>
                 )}
@@ -274,22 +274,22 @@ export function VCDetailPage() {
                     </div>
                   </div>
                 )}
+
+                {vc['Investment Thesis'] && (
+                  <div className="flex items-start">
+                    <Target className="h-5 w-5 mr-3 text-indigo-600 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-gray-900">Investment Thesis</p>
+                      <p className="text-gray-600 leading-relaxed">
+                        {vc['Investment Thesis']}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
-            {/* Investment Thesis */}
-            {vc['Investment Thesis'] && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Investment Thesis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 leading-relaxed">
-                    {vc['Investment Thesis']}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+
 
             {/* Bio */}
             {vc.bio && (
