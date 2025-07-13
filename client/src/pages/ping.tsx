@@ -398,7 +398,7 @@ export default function Ping() {
               ) : (
                 <div className="text-center py-8 bg-white rounded-lg border border-gray-200">
                   <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-600">No community VCs found matching your criteria.</p>
+                  <p className="text-gray-600">No community VCs, DAOS, or Syndicates found matching your criteria.</p>
                 </div>
               )}
             </div>
