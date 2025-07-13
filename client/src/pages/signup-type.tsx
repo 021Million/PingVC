@@ -182,7 +182,7 @@ export default function SignupType() {
                     onClick={handleAngelSignup}
                   >
                     <Star className="mr-2 h-4 w-4" />
-                    Join as Angel
+                    Apply as Angel
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                   <p className="text-xs text-gray-500 text-center mt-2">
