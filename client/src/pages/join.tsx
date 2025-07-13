@@ -17,7 +17,7 @@ export default function Join() {
               Join the <span className="text-primary">Ping Me</span> Community
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Connect, invest, and grow with the most active community of founders and venture capitalists in web3
+              Connect, invest, and grow with the most active community of founders and venture capitalists in Web3
             </p>
           </div>
 

@@ -143,7 +143,7 @@ export default function Ping() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Connected VCs & Angels
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Connect with top-tier venture capitalists who are actively investing in web3 and blockchain projects. All VCs & Angels are manually verified.</p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Connect with top-tier venture capitalists who are actively investing in Web3 and blockchain projects. All VCs & Angels are manually verified.</p>
         </div>
 
         {/* Search and Filters */}
