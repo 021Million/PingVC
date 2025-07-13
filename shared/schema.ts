@@ -63,6 +63,7 @@ export const vcs = pgTable("vcs", {
   telegramHandle: varchar("telegram_handle"), // Separate telegram handle when both options selected
   meetingLink: varchar("meeting_link"), // Separate meeting link when both options selected
   price: integer("price").notNull(), // Price in cents
+  logoUrl: varchar("logo_url"),
   weeklyIntroLimit: integer("weekly_intro_limit").default(5),
   isVerified: boolean("is_verified").default(false),
   isActive: boolean("is_active").default(true),

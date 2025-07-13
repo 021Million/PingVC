@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckCircle, DollarSign, Shield } from "lucide-react";
 import confetti from "canvas-confetti";
+import { ImageUpload } from "@/components/image-upload";
 
 const vcSignupSchema = insertVCSchema.extend({
   sectors: z.array(z.string()).min(1, "Please select at least one sector"),
@@ -325,6 +326,14 @@ export default function VCSignup() {
                   <p className="text-xs text-gray-500 mt-1">
                     Your dedicated meeting scheduling link (separate from contact preference below)
                   </p>
+                </div>
+
+                <div>
+                  <ImageUpload
+                    value={watch("logoUrl")}
+                    onChange={(url) => setValue("logoUrl", url)}
+                    label="Fund Logo"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

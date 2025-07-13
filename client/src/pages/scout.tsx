@@ -164,7 +164,7 @@ export default function Scout() {
         <a className="block">
           <Card className="border-2 border-primary bg-gradient-to-br from-yellow-50 to-orange-50 hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-[1.02] relative overflow-hidden">
             {/* Trending badge */}
-            <div className="absolute top-3 right-3 z-10">
+            <div className="absolute top-3 left-3 z-10">
               <Badge className="bg-red-500 text-white font-bold">
                 🔥 {rankBadges[rank]}
               </Badge>

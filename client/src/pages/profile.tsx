@@ -35,6 +35,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
+import { ImageUpload } from "@/components/image-upload";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -521,14 +522,11 @@ export default function Profile() {
                                   required
                                 />
                               </div>
-                              <div>
-                                <Label htmlFor="logoUrl">Logo URL</Label>
-                                <Input
-                                  id="logoUrl"
+                              <div className="col-span-2">
+                                <ImageUpload
                                   value={editForm.logoUrl}
-                                  onChange={(e) => setEditForm(prev => ({ ...prev, logoUrl: e.target.value }))}
-                                  placeholder="https://your-logo-url.com/logo.png"
-                                  type="url"
+                                  onChange={(url) => setEditForm(prev => ({ ...prev, logoUrl: url }))}
+                                  label="Project Logo"
                                 />
                               </div>
                             </div>
