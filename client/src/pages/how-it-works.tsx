@@ -119,7 +119,7 @@ export default function HowItWorks() {
                 <CardTitle>2. Pay $1 to Unlock</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Each decision maker contact costs just $1. Get LinkedIn and X (Twitter) profiles instantly after secure payment.</p>
+                <p className="text-gray-600">Each decision maker contact costs just $1. Get LinkedIn and X profiles instantly after secure payment.</p>
               </CardContent>
             </Card>
 
