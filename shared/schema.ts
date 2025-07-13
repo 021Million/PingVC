@@ -56,8 +56,10 @@ export const vcs = pgTable("vcs", {
   stage: varchar("stage").notNull(), // Pre-Seed, Seed, Series A, etc.
   sectors: text("sectors").array().notNull(), // DeFi, Gaming, Infrastructure, etc.
   investmentThesis: text("investment_thesis").notNull(),
-  contactType: varchar("contact_type").notNull(), // 'telegram' or 'meeting'
+  contactType: varchar("contact_type").notNull(), // 'telegram', 'meeting', or 'both'
   contactHandle: varchar("contact_handle").notNull(), // Telegram handle or Calendly link
+  telegramHandle: varchar("telegram_handle"), // Separate telegram handle when both options selected
+  meetingLink: varchar("meeting_link"), // Separate meeting link when both options selected
   price: integer("price").notNull(), // Price in cents
   weeklyIntroLimit: integer("weekly_intro_limit").default(5),
   isVerified: boolean("is_verified").default(false),

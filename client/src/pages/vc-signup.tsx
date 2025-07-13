@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertVCSchema } from "@shared/schema";
@@ -18,7 +18,27 @@ import confetti from "canvas-confetti";
 
 const vcSignupSchema = insertVCSchema.extend({
   sectors: z.string().min(1, "Please specify your investment sectors"),
-}).omit({ userId: true, isVerified: true, isActive: true });
+  telegramHandle: z.string().optional(),
+  meetingLink: z.string().optional(),
+}).omit({ userId: true, isVerified: true, isActive: true })
+.refine((data) => {
+  if (data.contactType === "telegram" || data.contactType === "both") {
+    return data.telegramHandle && data.telegramHandle.length > 0;
+  }
+  return true;
+}, {
+  message: "Telegram handle is required when selected",
+  path: ["telegramHandle"],
+})
+.refine((data) => {
+  if (data.contactType === "meeting" || data.contactType === "both") {
+    return data.meetingLink && data.meetingLink.length > 0;
+  }
+  return true;
+}, {
+  message: "Meeting link is required when selected",
+  path: ["meetingLink"],
+});
 
 type VCSignupForm = z.infer<typeof vcSignupSchema>;
 
@@ -43,13 +63,27 @@ export default function VCSignup() {
 
   const contactType = watch("contactType");
   const price = watch("price");
+  const telegramHandle = watch("telegramHandle");
+  const meetingLink = watch("meetingLink");
 
   const createVCMutation = useMutation({
     mutationFn: async (data: VCSignupForm) => {
       const sectors = data.sectors.split(',').map(s => s.trim());
+      
+      // Set the main contactHandle based on the contactType
+      let contactHandle = data.contactHandle || "";
+      if (data.contactType === "telegram") {
+        contactHandle = data.telegramHandle || "";
+      } else if (data.contactType === "meeting") {
+        contactHandle = data.meetingLink || "";
+      } else if (data.contactType === "both") {
+        contactHandle = `Telegram: ${data.telegramHandle || ""}, Meeting: ${data.meetingLink || ""}`;
+      }
+      
       return await apiRequest("POST", "/api/vcs", {
         ...data,
         sectors,
+        contactHandle,
         price: Math.round(data.price * 100), // Convert to cents
       });
     },
@@ -296,39 +330,69 @@ export default function VCSignup() {
                 </div>
 
                 <div>
-                  <Label>Contact Preference</Label>
-                  <RadioGroup
-                    value={contactType}
-                    onValueChange={(value) => setValue("contactType", value as "telegram" | "meeting")}
-                    className="mt-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="telegram" id="telegram" />
-                      <Label htmlFor="telegram">Telegram Handle (Founders message you directly)</Label>
+                  <Label className="text-base font-medium">How should founders contact you?</Label>
+                  <p className="text-sm text-gray-600 mb-4">Select one or both options below</p>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="telegram-option"
+                        checked={contactType === "telegram" || contactType === "both"}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setValue("contactType", contactType === "meeting" ? "both" : "telegram");
+                          } else {
+                            setValue("contactType", contactType === "both" ? "meeting" : "");
+                          }
+                        }}
+                      />
+                      <div className="space-y-2 flex-1">
+                        <Label htmlFor="telegram-option" className="text-sm font-medium">
+                          Telegram Handle (Direct messaging)
+                        </Label>
+                        <Input
+                          placeholder="@yourtelegram"
+                          {...register("telegramHandle")}
+                          disabled={!(contactType === "telegram" || contactType === "both")}
+                          className={`${!(contactType === "telegram" || contactType === "both") ? "bg-gray-50" : ""} ${errors.telegramHandle ? "border-red-500" : ""}`}
+                        />
+                        {errors.telegramHandle && (
+                          <p className="text-sm text-red-500">{errors.telegramHandle.message}</p>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="meeting" id="meeting" />
-                      <Label htmlFor="meeting">Meeting Link (Founders book time with you)</Label>
+
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="meeting-option"
+                        checked={contactType === "meeting" || contactType === "both"}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setValue("contactType", contactType === "telegram" ? "both" : "meeting");
+                          } else {
+                            setValue("contactType", contactType === "both" ? "telegram" : "");
+                          }
+                        }}
+                      />
+                      <div className="space-y-2 flex-1">
+                        <Label htmlFor="meeting-option" className="text-sm font-medium">
+                          Meeting Link (Scheduled calls)
+                        </Label>
+                        <Input
+                          placeholder="https://calendly.com/yourname"
+                          {...register("meetingLink")}
+                          disabled={!(contactType === "meeting" || contactType === "both")}
+                          className={`${!(contactType === "meeting" || contactType === "both") ? "bg-gray-50" : ""} ${errors.meetingLink ? "border-red-500" : ""}`}
+                        />
+                        {errors.meetingLink && (
+                          <p className="text-sm text-red-500">{errors.meetingLink.message}</p>
+                        )}
+                      </div>
                     </div>
-                  </RadioGroup>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="contactHandle">
-                      {contactType === "telegram" ? "Telegram Handle" : "Calendly/Meeting URL"}
-                    </Label>
-                    <Input
-                      id="contactHandle"
-                      {...register("contactHandle")}
-                      placeholder={contactType === "telegram" ? "@yourtelegram" : "https://calendly.com/yourname"}
-                      className={errors.contactHandle ? "border-red-500" : ""}
-                    />
-                    {errors.contactHandle && (
-                      <p className="text-sm text-red-500 mt-1">{errors.contactHandle.message}</p>
-                    )}
-                  </div>
-                  
                   <div>
                     <Label htmlFor="price">Your Price (USD)</Label>
                     <Input
