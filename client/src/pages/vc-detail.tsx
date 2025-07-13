@@ -210,6 +210,9 @@ export function VCDetailPage() {
                         </CardTitle>
                         <p className="text-lg text-gray-600 mb-2">
                           {vc.name || "Partner Name"}
+                          {vc.title && (
+                            <span className="text-gray-500"> • {vc.title}</span>
+                          )}
                         </p>
                       </div>
                       <Badge variant="secondary" className="bg-green-100 text-green-800">

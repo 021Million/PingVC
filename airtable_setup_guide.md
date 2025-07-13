@@ -6,7 +6,8 @@
 
 ### Required Fields:
 - **Name** (Single line text) - VC/Angel investor name
-- **Fund** (Single line text) - Investment fund name  
+- **Fund** (Single line text) - Investment fund name
+- **Title** (Single line text) - Job title/role (e.g. General Partner, CEO, Managing Director)
 - **Email** (Email) - Contact email address
 - **Verified** (Checkbox) - True for verified investors
 - **Twitter** (URL) - Twitter/X profile URL

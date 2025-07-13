@@ -137,6 +137,9 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
               </CardTitle>
               <p className="text-sm text-gray-600 mt-1">
                 {vc.name || "Partner Name"}
+                {vc.title && (
+                  <span className="text-gray-500"> • {vc.title}</span>
+                )}
               </p>
             </div>
             

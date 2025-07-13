@@ -292,6 +292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: record.id,
           name: fields.Name,
           fund: fields.Fund,
+          title: fields.Title,
           verified: fields.Verified || false,
           twitter: fields.Twitter,
           linkedin: fields.LinkedIn,
