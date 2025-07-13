@@ -44,7 +44,7 @@ export default function SignupType() {
                   <TrendingUp className="h-10 w-10 text-primary" />
                 </div>
                 <CardTitle className="text-2xl mb-3">I'm a Founder</CardTitle>
-                <p className="text-gray-600">Looking to raise funding and connect with VCs</p>
+                <p className="text-gray-600">Looking to raise funding and connect with VCs & Angels</p>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
