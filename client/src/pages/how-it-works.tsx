@@ -109,7 +109,7 @@ export default function HowItWorks() {
                 <div className="text-center">
                   <TrendingUp className="h-12 w-12 mx-auto mb-4 text-primary-200" />
                   <h3 className="text-lg font-semibold mb-2">Featured Projects</h3>
-                  <p className="text-primary-100">Pay to get premium visibility to our VC network</p>
+                  <p className="text-primary-100">Pay to get premium visibility to our VC & Angel network</p>
                 </div>
                 <div className="text-center">
                   <Shield className="h-12 w-12 mx-auto mb-4 text-primary-200" />
@@ -158,7 +158,7 @@ export default function HowItWorks() {
 
         {/* CTA Section */}
         <div className="text-center bg-white rounded-2xl p-12 shadow-lg">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Connect with VCs?</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Connect with VCs & Angels?</h2>
           <p className="text-xl text-gray-600 mb-8">Join hundreds of Web3 founders who have successfully raised funding through Ping Me</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
