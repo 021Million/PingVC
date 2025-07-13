@@ -17,11 +17,8 @@ const sampleInvestors = [
     "Investment Stage": ["Seed", "Series A"],
     "Primary Sector": ["DeFi", "Infrastructure"],
     "Investment Thesis": "Focus on DeFi primitives and infrastructure that enables the next wave of decentralized finance adoption. Looking for teams building the foundational layers of Web3.",
-    "Image URL": "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=150&h=150&fit=crop&crop=face",
-    "Specialties": ["DeFi", "Infrastructure"],
     "Price": 5,
     "Limit": 10,
-    "Contact Link": "https://calendly.com/sarahchen-paradigm",
     "Bio": "Partner at Paradigm focusing on DeFi infrastructure and primitives. Previously built products at Coinbase and advised early DeFi protocols."
   },
   {
@@ -37,11 +34,8 @@ const sampleInvestors = [
     "Investment Stage": ["Series A", "Series B"],
     "Primary Sector": ["AI", "Consumer"],
     "Investment Thesis": "Investing in AI-powered consumer applications and infrastructure that will onboard the next billion users to crypto. Focus on product-market fit and user experience.",
-    "Image URL": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    "Specialties": ["AI", "Consumer"],
     "Price": 7,
     "Limit": 8,
-    "Contact Link": "https://calendly.com/marcus-a16z",
     "Bio": "General Partner at a16z crypto leading consumer and AI investments. Former founder of two successful startups, passionate about user-centric Web3 products."
   },
   {
@@ -57,11 +51,8 @@ const sampleInvestors = [
     "Investment Stage": ["Pre-Seed", "Seed"],
     "Primary Sector": ["Stablecoins", "RWA"],
     "Investment Thesis": "Early-stage investments in real-world asset tokenization and next-generation stablecoin infrastructure. Looking for regulatory-compliant solutions with clear paths to adoption.",
-    "Image URL": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    "Specialties": ["Stablecoins", "RWA"],
     "Price": 4,
     "Limit": 12,
-    "Contact Link": "https://calendly.com/elena-coinbase",
     "Bio": "Investment Partner at Coinbase Ventures specializing in regulatory-compliant Web3 infrastructure. Former Goldman Sachs, expert in traditional finance integration."
   },
   {
@@ -77,11 +68,8 @@ const sampleInvestors = [
     "Investment Stage": ["Seed", "Series A"],
     "Primary Sector": ["Gaming", "Social"],
     "Investment Thesis": "Investing in crypto-native social networks and gaming platforms that leverage token incentives to bootstrap network effects and community engagement.",
-    "Image URL": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    "Specialties": ["Gaming", "Social"],
     "Price": 6,
     "Limit": 15,
-    "Contact Link": "https://calendly.com/james-variant",
     "Bio": "Co-founder and General Partner at Variant Fund. Focus on ownership economies, social tokens, and crypto gaming. Previously at USV and built social gaming companies."
   },
   {
@@ -97,11 +85,8 @@ const sampleInvestors = [
     "Investment Stage": ["Pre-Seed", "Seed", "Series A"],
     "Primary Sector": ["Developer Tools", "Infrastructure"],
     "Investment Thesis": "Supporting developer tools and infrastructure that make Web3 development more accessible. Looking for teams solving real developer pain points with measurable adoption metrics.",
-    "Image URL": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
-    "Specialties": ["Developer Tools", "Infrastructure"],
     "Price": 5,
     "Limit": 20,
-    "Contact Link": "https://calendly.com/priya-electric",
     "Bio": "Partner at Electric Capital investing in developer infrastructure and tools. Former engineering leader at Google and Stripe. PhD in Computer Science from Stanford."
   },
   {
@@ -117,11 +102,8 @@ const sampleInvestors = [
     "Investment Stage": ["Angel", "Pre-Seed"],
     "Primary Sector": ["Enterprise", "Privacy"],
     "Investment Thesis": "Angel investor focused on privacy-preserving enterprise solutions and zero-knowledge applications. Looking for technical founders with deep crypto expertise.",
-    "Image URL": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-    "Specialties": ["Enterprise", "Privacy"],
     "Price": 3,
     "Limit": 5,
-    "Contact Link": "https://calendly.com/alex-thompson",
     "Bio": "Independent angel investor and advisor. Former CTO at privacy-focused startups. Early adopter of ZK technology with 10+ years in crypto."
   }
 ];

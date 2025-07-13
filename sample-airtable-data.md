@@ -14,12 +14,10 @@
 10. **Investment Stage** (Multiple select) - Add options: Pre-Seed, Seed, Series A, Series B, Angel
 11. **Primary Sector** (Multiple select) - Add options: DeFi, AI, Infrastructure, Gaming, Social, Stablecoins, RWA, Developer Tools, Enterprise, Privacy, Consumer
 12. **Investment Thesis** (Long text)
-13. **Image URL** (URL)
-14. **Specialties** (Multiple select) - Same options as Primary Sector
-15. **Price** (Number)
-16. **Limit** (Number)
-17. **Contact Link** (URL)
-18. **Bio** (Long text)
+13. **Image** (Attachment) - For uploading JPEG images
+14. **Price** (Number)
+15. **Limit** (Number)
+16. **Bio** (Long text)
 
 ## Sample Records to Add Manually:
 
@@ -37,11 +35,9 @@ Meeting/Calendly Link: https://calendly.com/sarahchen-paradigm
 Investment Stage: Seed, Series A
 Primary Sector: DeFi, Infrastructure
 Investment Thesis: Focus on DeFi primitives and infrastructure that enables the next wave of decentralized finance adoption. Looking for teams building the foundational layers of Web3.
-Image URL: https://images.unsplash.com/photo-1494790108755-2616b612b647?w=150&h=150&fit=crop&crop=face
-Specialties: DeFi, Infrastructure
+Image: Upload a professional headshot (JPEG format)
 Price: 5
 Limit: 10
-Contact Link: https://calendly.com/sarahchen-paradigm
 Bio: Partner at Paradigm focusing on DeFi infrastructure and primitives. Previously built products at Coinbase and advised early DeFi protocols.
 ```
 
@@ -59,11 +55,9 @@ Meeting/Calendly Link: https://calendly.com/marcus-a16z
 Investment Stage: Series A, Series B
 Primary Sector: AI, Consumer
 Investment Thesis: Investing in AI-powered consumer applications and infrastructure that will onboard the next billion users to crypto. Focus on product-market fit and user experience.
-Image URL: https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face
-Specialties: AI, Consumer
+Image: Upload a professional headshot (JPEG format)
 Price: 7
 Limit: 8
-Contact Link: https://calendly.com/marcus-a16z
 Bio: General Partner at a16z crypto leading consumer and AI investments. Former founder of two successful startups, passionate about user-centric Web3 products.
 ```
 
@@ -81,11 +75,9 @@ Meeting/Calendly Link: https://calendly.com/elena-coinbase
 Investment Stage: Pre-Seed, Seed
 Primary Sector: Stablecoins, RWA
 Investment Thesis: Early-stage investments in real-world asset tokenization and next-generation stablecoin infrastructure. Looking for regulatory-compliant solutions with clear paths to adoption.
-Image URL: https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face
-Specialties: Stablecoins, RWA
+Image: Upload a professional headshot (JPEG format)
 Price: 4
 Limit: 12
-Contact Link: https://calendly.com/elena-coinbase
 Bio: Investment Partner at Coinbase Ventures specializing in regulatory-compliant Web3 infrastructure. Former Goldman Sachs, expert in traditional finance integration.
 ```
 

@@ -79,10 +79,10 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
               </a>
             </div>
           )}
-          {(vc.website || vc['Contact Link']) && (
+          {vc.website && (
             <div className="flex items-center text-sm">
               <Globe className="h-4 w-4 mr-2 text-gray-400" />
-              <a href={vc.website || vc['Contact Link']} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              <a href={vc.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                 Website
               </a>
             </div>
@@ -113,8 +113,25 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
     <>
       <Card className="h-full hover:shadow-lg transition-shadow">
         <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
+          <div className="flex items-start gap-3">
+            {/* Profile Image */}
+            <div className="flex-shrink-0">
+              {vc.Image && Array.isArray(vc.Image) && vc.Image.length > 0 ? (
+                <img 
+                  src={vc.Image[0].url} 
+                  alt={vc.name || "Investor"}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500 text-lg font-medium">
+                    {(vc.name || "?").charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex-1 min-w-0">
               <CardTitle className="text-lg font-semibold text-gray-900">
                 {vc.fund || "Fund Name"}
               </CardTitle>
@@ -122,7 +139,8 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
                 {vc.name || "Partner Name"}
               </p>
             </div>
-            <Badge variant="secondary" className="bg-green-100 text-green-800 ml-2">
+            
+            <Badge variant="secondary" className="bg-green-100 text-green-800 flex-shrink-0">
               <Shield className="h-3 w-3 mr-1" />
               Verified
             </Badge>
@@ -138,11 +156,11 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
                 {Array.isArray(vc['Investment Stage']) ? vc['Investment Stage'].join(", ") : (vc['Investment Stage'] || vc.stage)}
               </div>
             )}
-            {(vc['Primary Sector'] || vc.specialties) && (
+            {vc['Primary Sector'] && (
               <div className="flex items-center text-sm text-gray-600">
                 <Target className="h-4 w-4 mr-2" />
                 {(() => {
-                  const sectors = vc['Primary Sector'] || vc.specialties;
+                  const sectors = vc['Primary Sector'];
                   if (Array.isArray(sectors)) {
                     return sectors.slice(0, 2).join(", ") + (sectors.length > 2 ? ` +${sectors.length - 2} more` : "");
                   }

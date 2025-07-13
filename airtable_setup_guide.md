@@ -17,11 +17,9 @@
 - **Investment Stage** (Multiple select) - Pre-Seed, Seed, Series A, Series B, Angel
 - **Primary Sector** (Multiple select) - DeFi, AI, Infrastructure, Gaming, etc.
 - **Investment Thesis** (Long text) - Investment philosophy and focus areas
-- **Image URL** (URL) - Profile photo URL
-- **Specialties** (Multiple select) - Investment sectors like DeFi, AI, Infrastructure
+- **Image** (Attachment) - Upload professional headshot (JPEG format)
 - **Price** (Number) - Unlock price (e.g. 5 for $5)
 - **Limit** (Number) - Maximum number of unlocks per month
-- **Contact Link** (URL) - General contact link
 - **Bio** (Long text) - Investor bio/description
 
 ## Sample Data Row:
@@ -38,11 +36,9 @@ Meeting/Calendly Link: "https://calendly.com/sarahchen"
 Investment Stage: ["Seed", "Series A"]
 Primary Sector: ["DeFi", "Infrastructure"]
 Investment Thesis: "Focus on DeFi primitives and infrastructure that enables the next wave of decentralized finance adoption..."
-Image URL: "https://example.com/sarah.jpg"
-Specialties: ["DeFi", "Infrastructure"]
+Image: Upload professional headshot (JPEG format)
 Price: 5
 Limit: 10
-Contact Link: "https://calendly.com/sarahchen"
 Bio: "Partner at Paradigm focusing on DeFi infrastructure..."
 ```
 
