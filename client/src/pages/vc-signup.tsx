@@ -70,8 +70,7 @@ const STAGE_OPTIONS = [
   "Pre-Seed",
   "Seed",
   "Series A",
-  "Series B+",
-  "Multi-Stage"
+  "Series B+"
 ];
 
 export default function VCSignup() {
