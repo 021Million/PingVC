@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { ArrowRight, Search, CreditCard, MessageSquare, Users, TrendingUp, Shield } from "lucide-react";
+import { ArrowRight, Search, CreditCard, MessageSquare, Users, TrendingUp, Shield, DollarSign, Eye, Unlock } from "lucide-react";
 import { Header } from "@/components/header";
 
 export default function HowItWorks() {
@@ -88,6 +88,58 @@ export default function HowItWorks() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Cold Investor Scout */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">🔥 Cold Investor Scout</h2>
+            <p className="text-lg text-gray-600">Access decision makers at top crypto funds for just $1 per contact</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Eye className="h-8 w-8 text-orange-600" />
+                </div>
+                <CardTitle>1. Browse Top Funds</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Explore major crypto investment funds like a16z, Paradigm, and Sequoia. See fund details and investment focus areas.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <DollarSign className="h-8 w-8 text-orange-600" />
+                </div>
+                <CardTitle>2. Pay $1 to Unlock</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Each decision maker contact costs just $1. Get LinkedIn and X (Twitter) profiles instantly after secure payment.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Unlock className="h-8 w-8 text-orange-600" />
+                </div>
+                <CardTitle>3. Connect Directly</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Reach out to partners, co-founders, and key decision makers at top-tier crypto funds. No gatekeepers, direct access.</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-8">
+            <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200 text-sm px-4 py-2">
+              Access to 15+ major crypto funds and their decision makers
+            </Badge>
           </div>
         </div>
 
