@@ -375,7 +375,7 @@ export default function Ping() {
             <div className="mb-12">
               <div className="flex items-center mb-6">
                 <Users className="h-6 w-6 text-blue-600 mr-2" />
-                <h2 className="text-2xl font-bold text-gray-900">Community VCs</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Community VCs, DAOS, Syndicates</h2>
                 <Badge variant="outline" className="ml-3">
                   {filteredUnverifiedVCs.length} Available
                 </Badge>
