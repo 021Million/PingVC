@@ -58,6 +58,7 @@ function Router() {
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
+          <Route path="/project/:id" component={ProjectDetails} />
         </>
       ) : (
         <>

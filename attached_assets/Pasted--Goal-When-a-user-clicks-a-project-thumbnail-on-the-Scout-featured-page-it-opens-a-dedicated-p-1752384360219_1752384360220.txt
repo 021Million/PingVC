@@ -1,0 +1,78 @@
+🧠 Goal: When a user clicks a project thumbnail on the Scout (featured) page, it opens a dedicated project detail page, populated with the founder-submitted project data.
+
+Let’s break this down into the Flask route, logic, and template updates you’ll need.
+
+✅ Step 1: Set Up a Project Detail Route in main.py
+We'll assume each project has a unique project_id (could be a slug or UUID):
+
+python
+Copy
+Edit
+@app.route("/project/<project_id>")
+def project_detail(project_id):
+    project = founder_projects.get(project_id)  # this dict should store founder submissions
+    if not project:
+        return "Project not found", 404
+    return render_template("project_detail.html", project=project)
+✅ Step 2: Update the Scout Page (scout.html) to Link to Detail Page
+Where you're rendering the featured projects (e.g., inside a loop), add a link:
+
+html
+Copy
+Edit
+{% for id, project in featured_projects.items() %}
+  <div class="project-card">
+    <a href="/project/{{ id }}">
+      <img src="{{ project['logo_url'] }}" alt="{{ project['name'] }}" style="width: 100px; height: 100px;" />
+      <h3>{{ project['name'] }}</h3>
+    </a>
+  </div>
+{% endfor %}
+✅ Step 3: Create /templates/project_detail.html
+This will display the full project data from the founder submission:
+
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ project.name }} | Ping Me</title>
+</head>
+<body>
+  <h1>{{ project.name }}</h1>
+  <img src="{{ project.logo_url }}" alt="{{ project.name }}" style="width: 120px;">
+  <p><strong>Founder:</strong> {{ project.founder_name }}</p>
+  <p><strong>Website:</strong> <a href="{{ project.website }}">{{ project.website }}</a></p>
+  <p><strong>Vertical:</strong> {{ project.vertical }}</p>
+  <p><strong>Ecosystem:</strong> {{ project.ecosystem }}</p>
+  <p><strong>Stage:</strong> {{ project.stage }}</p>
+  <p><strong>Fundraising:</strong> {{ project.fundraising_amount }}</p>
+  <p><strong>Traction:</strong> {{ project.traction }}</p>
+  <p><strong>Description:</strong></p>
+  <p>{{ project.description }}</p>
+  <p><strong>Pitch Deck:</strong> <a href="{{ project.pitch_deck_url }}">View Deck</a></p>
+</body>
+</html>
+✅ Example founder_projects dictionary (mock data for now)
+In your app, you’d have something like:
+
+python
+Copy
+Edit
+founder_projects = {
+    "project-123": {
+        "name": "AI LeadBot",
+        "logo_url": "https://example.com/logo.png",
+        "founder_name": "Jules Vega",
+        "website": "https://aileadbot.com",
+        "vertical": "Sales Automation",
+        "ecosystem": "AI",
+        "stage": "Seed",
+        "fundraising_amount": "$500K",
+        "traction": "10 paying customers, 25% MoM growth",
+        "description": "AI LeadBot automates outbound sales for early-stage startups.",
+        "pitch_deck_url": "https://notion.so/aileadbot-pitch"
+    },
+    ...
+}
