@@ -124,7 +124,7 @@ export default function ColdScoutDetail() {
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Decision Makers</h2>
             <p className="text-gray-600">
               Unlock contact information for key decision makers at {fund.fundName}. 
-              Each unlock costs $1 and provides LinkedIn and Twitter profiles.
+              Each unlock costs $1 and provides LinkedIn and X profiles.
             </p>
           </div>
 
