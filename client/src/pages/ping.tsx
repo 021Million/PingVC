@@ -341,7 +341,7 @@ export default function Ping() {
             <div className="mb-12">
               <div className="flex items-center mb-6">
                 <Shield className="h-6 w-6 text-green-600 mr-2" />
-                <h2 className="text-2xl font-bold text-gray-900">Verified Investors</h2>
+                <h2 className="text-2xl font-bold text-gray-900">VC & Angel</h2>
                 <Badge variant="secondary" className="ml-3 bg-green-100 text-green-800">
                   {filteredVerifiedVCs.length} Available
                 </Badge>
