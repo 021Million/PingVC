@@ -421,7 +421,7 @@ export default function Ping() {
               <div className="flex items-center mb-6">
                 <div className="flex items-center mr-3">
                   <span className="text-2xl mr-2">🔥</span>
-                  <h2 className="text-2xl font-bold text-gray-900">Cold Investor Scout</h2>
+                  <h1 className="text-3xl font-bold text-gray-900">Cold Investor Scout</h1>
                 </div>
                 <Badge variant="secondary" className="bg-orange-100 text-orange-600 border-orange-200">
                   {coldInvestors.length} Funds Available
