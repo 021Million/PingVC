@@ -179,9 +179,7 @@ export default function Landing() {
                 </div>
                 <span className="text-xl font-bold">Ping Me</span>
               </div>
-              <p className="text-gray-300 mb-4 max-w-md">
-                The fastest way for Web3 founders to connect with VCs and Angels. No middlemen, no spam, just warm intros that work.
-              </p>
+              <p className="text-gray-300 mb-4 max-w-md">The fastest way for Web3 founders to connect with VCs & Angels. No middlemen, no spam, just warm intros that work.</p>
             </div>
             
             <div>
