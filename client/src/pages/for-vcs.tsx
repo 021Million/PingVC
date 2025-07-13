@@ -3,12 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowRight, Users, DollarSign, Clock, Shield, Target, Zap } from "lucide-react";
-import { ImprovedHeader } from "@/components/improved-header";
+import { Header } from "@/components/header";
 
 export default function ForVCs() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <ImprovedHeader />
+      <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16">

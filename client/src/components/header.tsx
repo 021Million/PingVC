@@ -49,8 +49,8 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">P</span>
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">P</span>
               </div>
               <span className="ml-3 text-xl font-bold text-gray-900">Ping Me</span>
             </Link>
@@ -104,8 +104,8 @@ export function Header() {
                   Sign In
                 </Button>
                 <Button 
-                  onClick={() => window.location.href = '/signup'}
-                  className="bg-primary text-white hover:bg-primary/90"
+                  onClick={() => window.location.href = '/signup-type'}
+                  className="bg-primary text-white hover:bg-primary/90 rounded-full px-6"
                 >
                   Get Started
                 </Button>
