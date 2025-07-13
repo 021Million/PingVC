@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUp, ExternalLink, Users, DollarSign, TrendingUp, Globe, Linkedin, X } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { ArrowUp, ExternalLink, Users, DollarSign, TrendingUp, Globe, Linkedin, X, Trophy, Award, Medal } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -17,8 +17,7 @@ export default function Scout() {
   const [selectedEcosystem, setSelectedEcosystem] = useState("All");
   const [selectedVertical, setSelectedVertical] = useState("All");
   const [hasEmailAccess, setHasEmailAccess] = useState(false);
-  const [activeTab, setActiveTab] = useState("featured");
-  const [showAllFeatured, setShowAllFeatured] = useState(false);
+  const [showAllProjects, setShowAllProjects] = useState(false);
   
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -32,16 +31,16 @@ export default function Scout() {
     }
   }, []);
 
-  // Move ALL hooks before conditional return to follow hooks rules
-  const { data: featuredProjects = [], isLoading: loadingFeatured } = useQuery({
-    queryKey: ["/api/scout/featured"],
-    enabled: hasEmailAccess, // Only fetch when user has access
-  });
-
+  // Fetch all projects and calculate top voted projects
   const { data: allProjects = [], isLoading: loadingAll } = useQuery({
     queryKey: ["/api/scout/projects", { ecosystem: selectedEcosystem, vertical: selectedVertical }],
     enabled: hasEmailAccess, // Only fetch when user has access
   });
+
+  // Sort projects by vote count and separate top 3 from the rest
+  const sortedProjects = [...allProjects].sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+  const topProjects = sortedProjects.slice(0, 3);
+  const remainingProjects = sortedProjects.slice(3);
 
   // Function to create animated rocket ship emojis
   const createRocketAnimation = () => {
@@ -150,10 +149,117 @@ export default function Scout() {
     });
   };
 
-  const ProjectCard = ({ project, featured = false }: { project: any; featured?: boolean }) => (
+  const TopProjectCard = ({ project, rank }: { project: any; rank: number }) => {
+    const rankIcons = [
+      <Trophy className="h-6 w-6 text-yellow-500" />,
+      <Medal className="h-6 w-6 text-gray-400" />,
+      <Award className="h-6 w-6 text-amber-600" />
+    ];
+    
+    const rankBadges = ["🥇 #1", "🥈 #2", "🥉 #3"];
+    
+    return (
+      <Link href={`/project/${project.id}`}>
+        <a className="block">
+          <Card className="border-2 border-primary bg-gradient-to-br from-yellow-50 to-orange-50 hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-[1.02] relative overflow-hidden">
+            {/* Trending badge */}
+            <div className="absolute top-3 right-3 z-10">
+              <Badge className="bg-red-500 text-white font-bold">
+                🔥 {rankBadges[rank]}
+              </Badge>
+            </div>
+            
+            <CardHeader className="pb-3">
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0">
+                  {rankIcons[rank]}
+                </div>
+                
+                {project.logoUrl && (
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative group">
+                    <img 
+                      src={project.logoUrl} 
+                      alt={`${project.companyName} logo`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
+                
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-xl font-bold text-gray-900 truncate">
+                    {project.companyName || "Stealth Startup"}
+                  </CardTitle>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <Badge variant="secondary">{project.ecosystem || "Multi-chain"}</Badge>
+                    <Badge variant="outline">{project.vertical || "General"}</Badge>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col items-end gap-2">
+                  <div className="flex items-center gap-2 bg-white rounded-full px-3 py-1 border">
+                    <ArrowUp className="h-4 w-4 text-primary" />
+                    <span className="font-bold text-lg">{project.voteCount || 0}</span>
+                  </div>
+                  <span className="text-xs text-gray-500">votes</span>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="pt-0">
+              <div className="space-y-3">
+                {project.traction && (
+                  <div>
+                    <p className="text-sm text-gray-700 line-clamp-2">{project.traction}</p>
+                  </div>
+                )}
+                
+                {project.amountRaising && (
+                  <div className="flex items-center space-x-2 text-sm">
+                    <DollarSign className="h-4 w-4 text-green-600" />
+                    <span className="text-gray-600 font-medium">
+                      Raising ${(project.amountRaising / 1000000).toFixed(1)}M
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-2">
+                  {project.websiteUrl && (
+                    <Button size="sm" variant="ghost" asChild>
+                      <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                        <Globe className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                  {project.linkedinUrl && (
+                    <Button size="sm" variant="ghost" asChild>
+                      <a href={project.linkedinUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                        <Linkedin className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                  {project.twitterUrl && (
+                    <Button size="sm" variant="ghost" asChild>
+                      <a href={project.twitterUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                        <X className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </a>
+      </Link>
+    );
+  };
+
+  const ProjectCard = ({ project }: { project: any }) => (
     <Link href={`/project/${project.id}`}>
       <a className="block">
-        <Card className={`${featured ? 'border-2 border-primary' : ''} hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]`}>
+        <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]">
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex items-start space-x-3">
@@ -199,7 +305,6 @@ export default function Scout() {
               <div className="flex flex-wrap gap-2 mt-2">
                 <Badge variant="secondary">{project.ecosystem || "Multi-chain"}</Badge>
                 <Badge variant="outline">{project.vertical || "General"}</Badge>
-                {featured && <Badge className="bg-primary">Featured</Badge>}
               </div>
             </div>
           </div>
@@ -276,7 +381,7 @@ export default function Scout() {
     </Link>
   );
 
-  const filteredProjects = allProjects.filter((project: any) =>
+  const filteredRemainingProjects = remainingProjects.filter((project: any) =>
     project.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     project.traction?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -399,103 +504,98 @@ export default function Scout() {
           </div>
         </div>
 
-        <Tabs defaultValue="featured" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-8">
-            <TabsTrigger value="featured">Featured Projects</TabsTrigger>
-            <TabsTrigger value="all">All Projects</TabsTrigger>
-          </TabsList>
+        {/* Top 3 Projects Section */}
+        <div className="mb-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2">
+              <Trophy className="h-8 w-8 text-yellow-500" />
+              🔥 Most Upvoted Projects
+            </h2>
+            <p className="text-lg text-gray-600">Top community favorites this week</p>
+          </div>
           
-          <TabsContent value="featured">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Featured Projects</h2>
-              <p className="text-gray-600">Premium projects this week. Click to vote for your favourite. One vote every 24 hours. </p>
+          {loadingAll ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 h-64 rounded-lg"></div>
+                </div>
+              ))}
             </div>
-            
-            {loadingFeatured ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="bg-gray-200 h-48 rounded-lg"></div>
-                  </div>
-                ))}
-              </div>
-            ) : featuredProjects.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {(showAllFeatured ? featuredProjects : featuredProjects.slice(0, 9)).map((project: any) => (
-                    <ProjectCard key={project.id} project={project} featured={true} />
-                  ))}
-                </div>
-                
-                {/* Show View More button if there are more than 9 featured projects */}
-                {!showAllFeatured && featuredProjects.length > 9 && (
-                  <div className="text-center mt-8">
-                    <Button 
-                      onClick={() => setShowAllFeatured(true)}
-                      variant="outline"
-                      className="px-8 py-2"
-                    >
-                      View All Featured Projects ({featuredProjects.length})
-                    </Button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-center py-12">
-                <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No featured projects yet</p>
-              </div>
-            )}
-            
-            {/* Visual indicator to view all projects */}
-            <div className="text-center mt-12 py-8 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white rounded-lg">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="flex items-center space-x-2 text-gray-700">
-                  <Users className="h-5 w-5" />
-                  <p className="font-medium">Discover More Amazing Projects</p>
-                </div>
-                <Button 
-                  onClick={() => setActiveTab("all")}
-                  className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg font-medium"
-                >
-                  View All Projects
-                  <ArrowUp className="ml-2 h-5 w-5 rotate-90" />
-                </Button>
-                <div className="text-sm text-gray-500">
-                  Browse all {allProjects.length} projects
-                </div>
-              </div>
+          ) : topProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {topProjects.map((project: any, index: number) => (
+                <TopProjectCard key={project.id} project={project} rank={index} />
+              ))}
             </div>
-          </TabsContent>
+          ) : (
+            <div className="text-center py-12">
+              <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No projects yet. Be the first to submit!</p>
+            </div>
+          )}
+        </div>
+
+        {/* Separator */}
+        <div className="flex items-center my-12">
+          <Separator className="flex-1" />
+          <div className="px-6">
+            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              📁 All Projects
+            </h3>
+          </div>
+          <Separator className="flex-1" />
+        </div>
+
+        {/* All Projects Section */}
+        <div>
+          <div className="text-center mb-8">
+            <p className="text-gray-600">
+              Discover more amazing Web3 projects from the community. One vote every 24 hours.
+            </p>
+          </div>
           
-          <TabsContent value="all">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">All Projects</h2>
-              <p className="text-gray-600">Browse all projects by community</p>
+          {loadingAll ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 h-48 rounded-lg"></div>
+                </div>
+              ))}
             </div>
-            
-            {loadingAll ? (
+          ) : filteredRemainingProjects.length > 0 ? (
+            <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(9)].map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="bg-gray-200 h-48 rounded-lg"></div>
-                  </div>
-                ))}
-              </div>
-            ) : filteredProjects.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProjects.map((project: any) => (
+                {(showAllProjects ? filteredRemainingProjects : filteredRemainingProjects.slice(0, 9)).map((project: any) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
               </div>
-            ) : (
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No projects found matching your filters</p>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+              
+              {/* Show More button if there are more projects */}
+              {!showAllProjects && filteredRemainingProjects.length > 9 && (
+                <div className="text-center mt-8">
+                  <Button 
+                    onClick={() => setShowAllProjects(true)}
+                    variant="outline"
+                    className="px-8 py-2"
+                  >
+                    View All Projects ({filteredRemainingProjects.length})
+                  </Button>
+                </div>
+              )}
+            </>
+          ) : remainingProjects.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">All projects are in the top 3! Check back later for more.</p>
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No projects found matching your search</p>
+            </div>
+          )}
+        </div>
       </div>
       {/* Footer CTA */}
       {isAuthenticated && (
