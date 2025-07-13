@@ -19,6 +19,7 @@ import confetti from "canvas-confetti";
 
 const vcSignupSchema = insertVCSchema.extend({
   sectors: z.array(z.string()).min(1, "Please select at least one sector"),
+  stage: z.array(z.string()).min(1, "Please select at least one investment stage"),
   telegramHandle: z.string().optional(),
   meetingLink: z.string().optional(),
 }).omit({ userId: true, isVerified: true, isActive: true })
@@ -64,6 +65,15 @@ const VERTICAL_OPTIONS = [
   "Stablecoins"
 ];
 
+const STAGE_OPTIONS = [
+  "Angel",
+  "Pre-Seed",
+  "Seed",
+  "Series A",
+  "Series B+",
+  "Multi-Stage"
+];
+
 export default function VCSignup() {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -81,6 +91,7 @@ export default function VCSignup() {
       price: 4900, // $49 in cents
       weeklyIntroLimit: 5,
       sectors: [],
+      stage: [],
     },
   });
 
@@ -89,6 +100,7 @@ export default function VCSignup() {
   const telegramHandle = watch("telegramHandle");
   const meetingLink = watch("meetingLink");
   const sectors = watch("sectors") || [];
+  const stages = watch("stage") || [];
 
   const createVCMutation = useMutation({
     mutationFn: async (data: VCSignupForm) => {
@@ -319,20 +331,42 @@ export default function VCSignup() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="stage">Investment Stage</Label>
-                    <Select onValueChange={(value) => setValue("stage", value)}>
-                      <SelectTrigger className={errors.stage ? "border-red-500" : ""}>
-                        <SelectValue placeholder="Select stage" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Pre-Seed">Pre-Seed</SelectItem>
-                        <SelectItem value="Seed">Seed</SelectItem>
-                        <SelectItem value="Series A">Series A</SelectItem>
-                        <SelectItem value="Series B+">Series B+</SelectItem>
-                        <SelectItem value="Multi-Stage">Multi-Stage</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <p className="text-sm text-gray-600 mb-3">Select all stages you invest in</p>
+                    <div className="grid grid-cols-1 gap-3 p-4 border border-gray-200 rounded-lg">
+                      {STAGE_OPTIONS.map((stage) => (
+                        <div key={stage} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`stage-${stage}`}
+                            checked={Array.isArray(stages) && stages.includes(stage)}
+                            onCheckedChange={(checked) => {
+                              const currentStages = Array.isArray(stages) ? stages : [];
+                              if (checked) {
+                                setValue("stage", [...currentStages, stage]);
+                              } else {
+                                setValue("stage", currentStages.filter(s => s !== stage));
+                              }
+                            }}
+                          />
+                          <Label htmlFor={`stage-${stage}`} className="text-sm font-normal cursor-pointer">
+                            {stage}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                    {Array.isArray(stages) && stages.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-600 mb-2">Selected stages:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {stages.map((stage) => (
+                            <Badge key={stage} variant="secondary" className="text-xs">
+                              {stage}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {errors.stage && (
-                      <p className="text-sm text-red-500 mt-1">{errors.stage.message}</p>
+                      <p className="text-sm text-red-500 mt-2">{errors.stage.message}</p>
                     )}
                   </div>
                   
