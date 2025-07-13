@@ -59,6 +59,21 @@ export default function Landing() {
             Pay once. Chat with the partner who writes the checks. No middlemen, no spam, pure signal.
           </p>
           
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg" asChild>
+              <Link href="/vcs">
+                Browse VCs
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="px-8 py-4 text-lg" asChild>
+              <Link href="/scout">
+                View Scout
+              </Link>
+            </Button>
+          </div>
+          
           {/* Email Capture */}
           <div className="max-w-md mx-auto mb-8">
             <form onSubmit={handleEmailSubmit} className="flex gap-3">
@@ -70,12 +85,12 @@ export default function Landing() {
                 className="flex-1"
                 required
               />
-              <Button type="submit" className="bg-primary text-white px-6">
+              <Button type="submit" className="bg-gray-800 text-white px-6">
                 <Mail className="mr-2 h-4 w-4" />
                 Unlock
               </Button>
             </form>
-            <p className="text-sm text-gray-500 mt-2">Get access to that alpha today</p>
+            <p className="text-sm text-gray-500 mt-2">Get access to verified VCs today</p>
           </div>
           
           
