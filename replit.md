@@ -131,3 +131,6 @@ Changelog:
 - July 13, 2025. Updated Ping page Investment Stage filter to include Angel option and remove Series C+ option
 - July 13, 2025. Completed Ping button integration across all page headers for consistent navigation
 - July 13, 2025. Implemented uniform shared header component across all pages with consistent styling, navigation, and authentication controls
+- July 13, 2025. Added comprehensive image upload functionality for both founders (project logos) and VCs (fund logos) with multer file handling
+- July 13, 2025. Moved ranking badge from top-right to top-left in Scout project thumbnails
+- July 13, 2025. Updated landing page to display top 3 projects from Scout with community upvote counts and removed trending arrows
