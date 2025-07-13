@@ -153,7 +153,7 @@ export default function ForVCs() {
             <CardHeader>
               <div className="flex items-center space-x-2 mb-2">
                 <Badge className="bg-primary">Exclusive</Badge>
-                <span className="text-sm text-gray-500">For Verified VCs</span>
+                <span className="text-sm text-gray-500">For Verified VCs & Angles</span>
               </div>
               <CardTitle className="text-2xl">Access to Scout Projects</CardTitle>
             </CardHeader>
