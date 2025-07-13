@@ -107,6 +107,10 @@ export const founders = pgTable("founders", {
   githubUrl: varchar("github_url"),
   lookingFor: text("looking_for"), // What are you looking for
   
+  // New fields from Flask template
+  revenueGenerating: varchar("revenue_generating"), // Yes/No/Soon
+  stage: varchar("stage"), // Idea, MVP, Beta, Live, Growth, Scale
+  
   // Legacy/System fields
   profileImageUrl: varchar("profile_image_url"),
   isVisible: boolean("is_visible").default(false), // Paid visibility

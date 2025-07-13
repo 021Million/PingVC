@@ -75,7 +75,11 @@ export default function Profile() {
     dataRoomUrl: "",
     linkedinUrl: "",
     githubUrl: "",
-    lookingFor: ""
+    lookingFor: "",
+    
+    // New fields from Flask template
+    revenueGenerating: "",
+    stage: ""
   });
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -142,7 +146,11 @@ export default function Profile() {
         dataRoomUrl: founderProfile.dataRoomUrl || "",
         linkedinUrl: founderProfile.linkedinUrl || "",
         githubUrl: founderProfile.githubUrl || "",
-        lookingFor: founderProfile.lookingFor || ""
+        lookingFor: founderProfile.lookingFor || "",
+        
+        // New fields from Flask template
+        revenueGenerating: founderProfile.revenueGenerating || "",
+        stage: founderProfile.stage || ""
       });
     } else if (user) {
       setEditForm(prev => ({
@@ -231,7 +239,11 @@ export default function Profile() {
         dataRoomUrl: editForm.dataRoomUrl,
         linkedinUrl: editForm.linkedinUrl,
         githubUrl: editForm.githubUrl,
-        lookingFor: editForm.lookingFor
+        lookingFor: editForm.lookingFor,
+        
+        // New fields from Flask template
+        revenueGenerating: editForm.revenueGenerating,
+        stage: editForm.stage
       })
     };
 
@@ -785,6 +797,38 @@ export default function Profile() {
                                   onChange={(e) => setEditForm(prev => ({ ...prev, githubUrl: e.target.value }))}
                                   placeholder="https://github.com/..."
                                 />
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="stage">Development Stage</Label>
+                                <Select value={editForm.stage} onValueChange={(value) => setEditForm(prev => ({ ...prev, stage: value }))}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Stage" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Idea">Idea</SelectItem>
+                                    <SelectItem value="MVP">MVP</SelectItem>
+                                    <SelectItem value="Beta">Beta</SelectItem>
+                                    <SelectItem value="Live">Live Product</SelectItem>
+                                    <SelectItem value="Growth">Growth Stage</SelectItem>
+                                    <SelectItem value="Scale">Scale Stage</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div>
+                                <Label htmlFor="revenueGenerating">Revenue Generating?</Label>
+                                <Select value={editForm.revenueGenerating} onValueChange={(value) => setEditForm(prev => ({ ...prev, revenueGenerating: value }))}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Revenue Status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Yes">Yes</SelectItem>
+                                    <SelectItem value="No">No</SelectItem>
+                                    <SelectItem value="Soon">Soon (within 6 months)</SelectItem>
+                                  </SelectContent>
+                                </Select>
                               </div>
                             </div>
                             

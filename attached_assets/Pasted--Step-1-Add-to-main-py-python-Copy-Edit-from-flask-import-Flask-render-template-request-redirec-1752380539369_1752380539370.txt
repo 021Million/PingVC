@@ -1,0 +1,75 @@
+✅ Step 1: Add to main.py
+python
+Copy
+Edit
+from flask import Flask, render_template, request, redirect, session
+import os
+
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "supersecret")
+
+# In-memory store for demo purposes
+founder_profiles = {}
+investor_profiles = {}
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    role = request.args.get("role", "founder")  # founder or investor
+
+    if request.method == "POST":
+        data = request.form.to_dict()
+
+        if role == "founder":
+            founder_profiles[data["email"]] = data
+        else:
+            investor_profiles[data["email"]] = data
+
+        return redirect("/profile?role=" + role)
+
+    if role == "founder":
+        profile_data = founder_profiles.get("demo@example.com", {})  # use session['email'] in real version
+    else:
+        profile_data = investor_profiles.get("demo@example.com", {})
+
+    return render_template("profile.html", role=role, profile=profile_data)
+✅ Step 2: Create templates/profile.html
+Here’s a simple HTML form that switches based on founder or investor role:
+
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html>
+<head><title>Update Your Profile</title></head>
+<body>
+  <h1>{{ 'Founder' if role == 'founder' else 'Investor' }} Profile</h1>
+
+  <form method="POST">
+    <input type="email" name="email" placeholder="Email" value="{{ profile.get('email', '') }}" required><br>
+
+    {% if role == 'founder' %}
+      <input type="text" name="startup" placeholder="Startup Name" value="{{ profile.get('startup', '') }}"><br>
+      <input type="text" name="website" placeholder="Website" value="{{ profile.get('website', '') }}"><br>
+      <input type="text" name="ecosystem" placeholder="Ecosystem (e.g. AI, Web3)" value="{{ profile.get('ecosystem', '') }}"><br>
+      <input type="text" name="vertical" placeholder="Vertical/Niche" value="{{ profile.get('vertical', '') }}"><br>
+      <textarea name="description" placeholder="Describe your startup">{{ profile.get('description', '') }}</textarea><br>
+      <input type="text" name="raise" placeholder="Amount Raising (e.g. $100K)" value="{{ profile.get('raise', '') }}"><br>
+      <input type="text" name="stage" placeholder="Stage (MVP, Seed, etc)" value="{{ profile.get('stage', '') }}"><br>
+      <input type="text" name="deck" placeholder="Pitch Deck URL" value="{{ profile.get('deck', '') }}"><br>
+      <input type="text" name="revenue" placeholder="Revenue Generating? Yes/No" value="{{ profile.get('revenue', '') }}"><br>
+
+    {% else %}
+      <input type="text" name="fund" placeholder="Fund Name" value="{{ profile.get('fund', '') }}"><br>
+      <input type="text" name="telegram" placeholder="Telegram" value="{{ profile.get('telegram', '') }}"><br>
+      <input type="text" name="calendly" placeholder="Calendly Link" value="{{ profile.get('calendly', '') }}"><br>
+      <input type="text" name="price" placeholder="Intro Price ($)" value="{{ profile.get('price', '') }}"><br>
+      <input type="text" name="limit" placeholder="Weekly Intro Limit" value="{{ profile.get('limit', '') }}"><br>
+      <input type="text" name="stage" placeholder="Investment Stage" value="{{ profile.get('stage', '') }}"><br>
+      <input type="text" name="sectors" placeholder="Primary Sectors" value="{{ profile.get('sectors', '') }}"><br>
+      <input type="text" name="thesis" placeholder="Investment Thesis" value="{{ profile.get('thesis', '') }}"><br>
+    {% endif %}
+
+    <button type="submit">Save Profile</button>
+  </form>
+</body>
+</html>
