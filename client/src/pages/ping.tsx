@@ -86,7 +86,6 @@ export default function Ping() {
           </div>
           <div className="text-right">
             <div className="flex items-center space-x-1 text-green-600 font-semibold">
-              <DollarSign className="h-4 w-4" />
               <span>${(vc.price / 100).toFixed(0)}</span>
             </div>
             <p className="text-xs text-gray-500 mt-1">per intro</p>
@@ -142,7 +141,7 @@ export default function Ping() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Discover Verified VCs
+            Connected VCs & Angels
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">Connect with top-tier venture capitalists who are actively investing in web3 and blockchain projects. All VCs & Angels are manually verified.</p>
         </div>

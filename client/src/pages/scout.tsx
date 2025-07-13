@@ -216,7 +216,6 @@ export default function Scout() {
               className="flex items-center space-x-1"
             >
               <ArrowUp className="h-4 w-4" />
-              <span>{project.upvotes || 0}</span>
             </Button>
           </div>
         </div>
@@ -463,7 +462,7 @@ export default function Scout() {
                   <ArrowUp className="ml-2 h-5 w-5 rotate-90" />
                 </Button>
                 <div className="text-sm text-gray-500">
-                  Browse all {allProjects.length} projects ranked by community votes
+                  Browse all {allProjects.length} projects
                 </div>
               </div>
             </div>
@@ -472,7 +471,7 @@ export default function Scout() {
           <TabsContent value="all">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">All Projects</h2>
-              <p className="text-gray-600">Browse all projects ranked by community votes</p>
+              <p className="text-gray-600">Browse all projects by community</p>
             </div>
             
             {loadingAll ? (

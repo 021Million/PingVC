@@ -33,7 +33,6 @@ export function MarketplaceLanding({ vcs, projects }: MarketplaceLandingProps) {
                     <CardTitle className="text-lg">{project.companyName}</CardTitle>
                     <div className="flex items-center space-x-1">
                       <TrendingUp className="h-4 w-4 text-orange-500" />
-                      <span className="text-sm font-medium">{project.votes || 0}</span>
                     </div>
                   </div>
                 </CardHeader>

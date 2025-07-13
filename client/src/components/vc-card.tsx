@@ -39,6 +39,10 @@ export function VCCard({ vc, isAuthenticated }: VCCardProps) {
     return `$${(cents / 100).toFixed(0)}`;
   };
 
+  const formatPriceNoDollar = (cents: number) => {
+    return `${(cents / 100).toFixed(0)}`;
+  };
+
   return (
     <>
       <Card className="hover:shadow-xl transition-shadow duration-200 border border-gray-200">
@@ -59,7 +63,7 @@ export function VCCard({ vc, isAuthenticated }: VCCardProps) {
               </div>
             </div>
             <Badge variant="secondary" className="bg-warning text-warning-foreground">
-              {formatPrice(vc.price)}
+              {formatPriceNoDollar(vc.price)}
             </Badge>
           </div>
           

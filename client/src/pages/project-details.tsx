@@ -243,11 +243,7 @@ export default function ProjectDetails() {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <TrendingUp className="h-5 w-5 text-primary" />
-                      <span className="font-semibold text-gray-900">{project.votes} votes</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <ArrowUp className="h-5 w-5 text-green-600" />
-                      <span className="font-semibold text-gray-900">{project.upvotes} upvotes</span>
+                      <span className="font-semibold text-gray-900">Community project</span>
                     </div>
                   </div>
                   
@@ -408,12 +404,8 @@ export default function ProjectDetails() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Votes</span>
-                  <span className="font-semibold">{project.votes}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Upvotes</span>
-                  <span className="font-semibold text-green-600">{project.upvotes}</span>
+                  <span className="text-gray-600">Community Project</span>
+                  <span className="font-semibold">Featured</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
