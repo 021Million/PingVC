@@ -28,6 +28,7 @@ import ProjectDetails from "@/pages/project-details";
 import VCDetails from "@/pages/vc-details";
 import Settings from "@/pages/settings";
 import PasswordSetupPage from "@/pages/password-setup";
+import ColdScoutDetail from "@/pages/cold-scout-detail";
 
 
 function Router() {
@@ -61,6 +62,7 @@ function Router() {
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
           <Route path="/project/:id" component={ProjectDetails} />
+          <Route path="/cold-scout/:slug" component={ColdScoutDetail} />
         </>
       ) : (
         <>
@@ -85,6 +87,7 @@ function Router() {
           <Route path="/project-payment" component={ProjectVisibilityPayment} />
           <Route path="/settings" component={Settings} />
           <Route path="/password-setup" component={PasswordSetupPage} />
+          <Route path="/cold-scout/:slug" component={ColdScoutDetail} />
         </>
       )}
       <Route component={NotFound} />

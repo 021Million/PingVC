@@ -11,8 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { EmailGate } from "@/components/email-gate";
 import { ImprovedHeader } from "@/components/improved-header";
 import { AirtableVCCard } from "@/components/airtable-vc-card";
-import { ColdInvestorCard } from "@/components/cold-investor-card";
-import { ColdInvestorDetailCard } from "@/components/cold-investor-detail-card";
+import { ColdInvestorPreviewCard } from "@/components/cold-investor-preview-card";
 
 export default function Ping() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -441,16 +440,12 @@ export default function Ping() {
                 </div>
               ) : coldInvestors.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {coldInvestors.map((investor: any) => {
-                    const userEmail = localStorage.getItem('email_access_ping') || user?.email;
-                    return (
-                      <ColdInvestorDetailCard 
-                        key={investor.id} 
-                        investor={investor}
-                        userEmail={userEmail}
-                      />
-                    );
-                  })}
+                  {coldInvestors.map((investor: any) => (
+                    <ColdInvestorPreviewCard 
+                      key={investor.id} 
+                      investor={investor}
+                    />
+                  ))}
                 </div>
               ) : (
                 <div className="text-center py-8 bg-white rounded-lg border border-gray-200">

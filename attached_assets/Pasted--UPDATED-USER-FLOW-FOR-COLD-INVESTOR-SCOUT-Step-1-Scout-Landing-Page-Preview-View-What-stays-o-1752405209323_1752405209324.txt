@@ -1,0 +1,87 @@
+ UPDATED USER FLOW FOR COLD INVESTOR SCOUT
+🔹 Step 1: Scout Landing Page (Preview View)
+What stays on the main /cold-scout page:
+
+Fund Name (e.g., Paradigm, a16z)
+
+Mini Description (e.g., “Crypto-native fund backing early-stage infra”)
+
+Fund Website Link (🌐 icon)
+
+“View Details” button — this replaces the list of decision makers here
+
+Optional: Keep the 🔥 “Cold Scout” badge
+
+👉 This page should NOT show decision makers or unlock buttons anymore.
+
+🔹 Step 2: Fund Detail Page (Expanded View)
+When a user clicks "View Details", they are routed to /cold-scout/[fund-name] which includes:
+
+Full Fund Profile
+
+Fund Name
+
+Full description
+
+Website link
+
+Investment thesis
+
+Sectors
+
+Stages
+
+Decision Makers Section (Below Fund Info)
+
+Roles visible (e.g., “Partner”, “Co-Founder”)
+
+Names + social links = blurred or hidden
+
+Each decision maker has:
+
+🔒 "Unlock for $1" button
+
+Unlock reveals Name + LinkedIn + X profile
+
+💻 PASTE THIS INTO REPLIT AS A FEATURE UPDATE INSTRUCTIONS
+ts
+Copy
+Edit
+// 🔧 FEATURE: Cold Scout Layout Redesign
+
+// 1. On /cold-scout (main page):
+//    - Display: Fund Name, Short Description, Website icon/link
+//    - Remove visible Decision Makers from this page
+//    - Add "View Details" button linking to `/cold-scout/[fundId]`
+
+// Example Card Component:
+<Card>
+  <h3>Paradigm</h3>
+  <p>Crypto-native investments supporting the next generation of protocols</p>
+  <a href="https://paradigm.xyz" target="_blank">🌐</a>
+  <button onClick={() => router.push("/cold-scout/paradigm")}>View Details</button>
+</Card>
+
+// 2. On /cold-scout/[fundId] page:
+//    - Fetch full fund data from Airtable by fundId
+//    - Display Fund Name, Description, Investment Thesis, etc.
+//    - Section: Decision Makers
+//      - Show Role: e.g., "General Partner"
+//      - Blur Name & Hide Socials
+//      - Show 🔒 Unlock for $1 button
+
+// On Unlock:
+//    - Trigger /api/unlock-decision-maker [POST]
+//    - If paid, unblur name and display socials
+
+// Optional UX: Use CSS blur filter on name (e.g., `filter: blur(6px)`), reveal on unlock
+
+✨ Resulting UX
+Clean, professional scout layout
+
+Easier to browse funds at-a-glance
+
+Smooth funnel into unlocking key decision maker info
+
+Better experience for founders, better data structure for you
+
