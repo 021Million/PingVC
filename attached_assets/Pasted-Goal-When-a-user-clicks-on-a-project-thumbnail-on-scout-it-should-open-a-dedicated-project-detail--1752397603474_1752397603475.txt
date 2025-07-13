@@ -1,0 +1,107 @@
+Goal
+When a user clicks on a project thumbnail on /scout, it should open a dedicated project detail page (/project/<id>) that displays all the info the founder submitted in their profile.
+
+🧱 Airtable Setup
+Your FounderProjects table in Airtable should include fields like:
+
+ID (Auto-generated or UUID)
+
+Project Name
+
+Description
+
+Traction
+
+Stage (Devnet, Testnet, Mainnet)
+
+Token (Yes/No + Ticker)
+
+Vertical
+
+Ecosystem
+
+Valuation
+
+Amount Raising
+
+Website
+
+Deck Link
+
+Capital Raised
+
+DAU
+
+Revenue Generating
+
+Votes (Number)
+
+⚙️ Step 1: Add Project Route to Flask (main.py)
+python
+Copy
+Edit
+from flask import Flask, render_template
+from pyairtable import Table
+import os
+
+app = Flask(__name__)
+
+AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
+AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
+PROJECT_TABLE_NAME = "FounderProjects"
+
+project_table = Table(AIRTABLE_API_KEY, AIRTABLE_BASE_ID, PROJECT_TABLE_NAME)
+
+@app.route("/project/<project_id>")
+def project_detail(project_id):
+    # Fetch project data from Airtable
+    record = project_table.get(project_id)
+    project = record.get("fields", {})
+    
+    return render_template("project_detail.html", project=project)
+🖼 Step 2: On the /scout Page — Link Thumbnails
+In scout.html, update each thumbnail card:
+
+html
+Copy
+Edit
+<a href="/project/{{ project['id'] }}">
+  <div class="project-card">
+    <img src="{{ project['logo_url'] }}">
+    <h4>{{ project['Project Name'] }}</h4>
+  </div>
+</a>
+📄 Step 3: Create project_detail.html Template
+Create a new file: templates/project_detail.html
+
+html
+Copy
+Edit
+<h1>{{ project['Project Name'] }}</h1>
+<p><strong>Description:</strong> {{ project['Description'] }}</p>
+<p><strong>Traction:</strong> {{ project['Traction'] }}</p>
+<p><strong>Stage:</strong> {{ project['Stage'] }}</p>
+
+{% if project['Token'] == 'Yes' %}
+  <p><strong>Ticker:</strong> {{ project['Ticker'] }}</p>
+{% endif %}
+
+<p><strong>Vertical:</strong> {{ project['Vertical'] }}</p>
+<p><strong>Ecosystem:</strong> {{ project['Ecosystem'] }}</p>
+<p><strong>Valuation:</strong> ${{ project['Valuation'] }}</p>
+<p><strong>Amount Raising:</strong> ${{ project['Amount Raising'] }}</p>
+<p><strong>Capital Raised:</strong> ${{ project['Capital Raised To-Date'] }}</p>
+<p><strong>DAU:</strong> {{ project['DAU'] }}</p>
+<p><strong>Revenue Generating:</strong> {{ project['Revenue Generating'] }}</p>
+
+{% if project['Website'] %}
+  <p><a href="{{ project['Website'] }}" target="_blank">🌐 Visit Website</a></p>
+{% endif %}
+
+{% if project['Deck'] %}
+  <p><a href="{{ project['Deck'] }}" target="_blank">📄 View Deck</a></p>
+{% endif %}
+💡 Optional Enhancements
+Add a Back to Scout button at the top
+
+Show badges for Stage, Revenue, Token

@@ -135,3 +135,4 @@ Changelog:
 - July 13, 2025. Moved ranking badge from top-right to top-left in Scout project thumbnails
 - July 13, 2025. Updated landing page to display top 3 projects from Scout with community upvote counts and removed trending arrows
 - July 13, 2025. Integrated Airtable to display verified and unverified VCs on /ping page with dedicated sections for "Verified Investors" and "Community Curated VCs"
+- July 13, 2025. Implemented dedicated project detail pages (/project/:id) that display complete founder information when clicking Scout thumbnails
