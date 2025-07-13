@@ -23,7 +23,7 @@ export default function Pricing() {
             <p className="text-lg text-gray-600">Pay per VC or Angel intro - no subscriptions, no hidden fees</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Basic Access */}
             <Card className="border-gray-200">
               <CardHeader>
@@ -119,6 +119,41 @@ export default function Pricing() {
                 </ul>
                 <Button className="w-full mt-6" variant="outline" asChild>
                   <Link href="/scout">View Scout</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Cold Investor Scout */}
+            <Card className="border-orange-200 bg-orange-50">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl">🔥 Cold Scout</CardTitle>
+                  <Badge variant="outline" className="bg-orange-100 text-orange-600 border-orange-200">New</Badge>
+                </div>
+                <div className="text-3xl font-bold text-orange-600">$1</div>
+                <p className="text-gray-600">Per decision maker contact</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500 mr-2" />
+                    <span className="text-sm">Top crypto fund contacts</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500 mr-2" />
+                    <span className="text-sm">LinkedIn & X profiles</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500 mr-2" />
+                    <span className="text-sm">Partners & co-founders</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500 mr-2" />
+                    <span className="text-sm">15+ major funds</span>
+                  </li>
+                </ul>
+                <Button className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white" asChild>
+                  <Link href="/ping">Try Cold Scout</Link>
                 </Button>
               </CardContent>
             </Card>
