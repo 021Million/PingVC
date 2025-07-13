@@ -56,7 +56,7 @@ export default function Ping() {
     return matchesSearch && matchesStage && matchesSector && vc.isVerified;
   });
 
-  const stages = ["All", "Pre-Seed", "Seed", "Series A", "Series B", "Series C+"];
+  const stages = ["All", "Angel", "Pre-Seed", "Seed", "Series A", "Series B"];
   const sectors = ["All", "DeFi", "Gaming", "NFTs", "Infrastructure", "Social", "Enterprise", "AI/ML", "RWA", "Stablecoins"];
 
   const VCCard = ({ vc }: { vc: any }) => (
