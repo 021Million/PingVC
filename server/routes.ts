@@ -231,6 +231,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Airtable test endpoint
+  app.get('/api/airtable/test', async (req, res) => {
+    try {
+      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+        return res.status(500).json({ 
+          message: "Airtable credentials not configured",
+          hasApiKey: !!process.env.AIRTABLE_API_KEY,
+          hasBaseId: !!process.env.AIRTABLE_BASE_ID,
+          baseIdFormat: process.env.AIRTABLE_BASE_ID?.substring(0, 3) + "..." 
+        });
+      }
+
+      console.log("Testing Airtable connection...");
+      console.log("API Key format:", process.env.AIRTABLE_API_KEY?.substring(0, 10) + "...");
+      console.log("Base ID format:", process.env.AIRTABLE_BASE_ID);
+
+      const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+      
+      // First, try to get base metadata
+      try {
+        const tables = await base.table('VCs').select({ maxRecords: 1 }).firstPage();
+        console.log("Successfully connected to Airtable!");
+        res.json({ 
+          success: true, 
+          message: "Airtable connection successful",
+          recordCount: tables.length 
+        });
+      } catch (error: any) {
+        console.log("Airtable error details:", error);
+        res.status(400).json({ 
+          success: false,
+          error: error.message,
+          statusCode: error.statusCode,
+          details: "Check that your API key has proper permissions and base ID is correct"
+        });
+      }
+    } catch (error: any) {
+      console.error("Airtable test error:", error);
+      res.status(500).json({ message: "Failed to test Airtable connection", error: error.message });
+    }
+  });
+
   // Airtable VCs route
   app.get('/api/airtable/vcs', async (req, res) => {
     try {
