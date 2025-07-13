@@ -62,9 +62,7 @@ export function VCCard({ vc, isAuthenticated }: VCCardProps) {
                 </div>
               </div>
             </div>
-            <Badge variant="secondary" className="bg-warning text-warning-foreground">
-              {formatPriceNoDollar(vc.price)}
-            </Badge>
+
           </div>
           
           <p className="text-sm text-gray-600 mb-4 line-clamp-3">
