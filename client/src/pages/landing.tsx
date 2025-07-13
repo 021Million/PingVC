@@ -39,18 +39,6 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-gray-50">
       <ImprovedHeader />
-                Sign In
-              </Button>
-              <Button 
-                onClick={() => window.location.href = '/vc-signup'}
-                className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
-              >
-                Join as VC
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
