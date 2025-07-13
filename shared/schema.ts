@@ -133,8 +133,6 @@ export const payments = pgTable("payments", {
   stripePaymentIntentId: varchar("stripe_payment_intent_id"),
   status: varchar("status").notNull().default("pending"), // pending, completed, failed
   introTemplate: text("intro_template"),
-  rating: integer("rating"), // 1-5 star rating for the VC
-  feedback: text("feedback"), // Optional feedback text
   createdAt: timestamp("created_at").defaultNow(),
 });
 

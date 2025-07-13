@@ -227,9 +227,7 @@ export class DatabaseStorage implements IStorage {
         currency: paymentData.currency,
         stripePaymentIntentId: paymentData.stripePaymentIntentId,
         status: paymentData.status,
-        introTemplate: paymentData.introTemplate,
-        rating: paymentData.rating,
-        feedback: paymentData.feedback
+        introTemplate: paymentData.introTemplate
       })
       .returning();
     return payment;
