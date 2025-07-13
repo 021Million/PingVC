@@ -307,9 +307,9 @@ export default function Ping() {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Verified Investors</h2>
+        {/* Verified Investors Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Verified Investors</h1>
           <p className="text-gray-600">All investors are manually verified and actively reviewing projects</p>
         </div>
 
@@ -337,7 +337,7 @@ export default function Ping() {
           </div>
         ) : (
           <>
-            {/* Verified Investors Section */}
+            {/* VC & Angel Section */}
             <div className="mb-12">
               <div className="flex items-center mb-6">
                 <Shield className="h-6 w-6 text-green-600 mr-2" />
@@ -369,12 +369,12 @@ export default function Ping() {
               )}
             </div>
 
-            {/* Community Curated VCs Section */}
+            {/* Community VCs, DAOs, Syndicates Section */}
             <div className="mb-12">
               <div className="flex items-center mb-6">
                 <Users className="h-6 w-6 text-blue-600 mr-2" />
-                <h2 className="text-2xl font-bold text-gray-900">Community VCs, DAOS, & Syndicates</h2>
-                <Badge variant="outline" className="ml-3">
+                <h2 className="text-2xl font-bold text-gray-900">Community VCs, DAOs, Syndicates</h2>
+                <Badge variant="secondary" className="ml-3 bg-green-100 text-green-800">
                   {filteredUnverifiedVCs.length} Available
                 </Badge>
               </div>
@@ -400,25 +400,36 @@ export default function Ping() {
                 </div>
               )}
             </div>
+          </>
+        )}
 
-            {/* Legacy Platform VCs Section (Optional) */}
-            {filteredVCs.length > 0 && (
-              <div className="mb-12">
-                <div className="flex items-center mb-6">
-                  <Star className="h-6 w-6 text-orange-600 mr-2" />
-                  <h2 className="text-2xl font-bold text-gray-900">Platform VCs</h2>
-                  <Badge variant="outline" className="ml-3">
-                    {filteredVCs.length} Available
-                  </Badge>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredVCs.map((vc: any) => (
-                    <VCCard key={vc.id} vc={vc} />
-                  ))}
-                </div>
+        {/* Separator between Verified and Platform VCs */}
+        {filteredVCs.length > 0 && (
+          <>
+            <div className="border-t border-gray-200 my-12"></div>
+            
+            {/* VC Scout Section Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">VC Scout</h1>
+              <p className="text-gray-600">Platform VCs available for connection</p>
+            </div>
+
+            {/* Platform VCs Section */}
+            <div className="mb-12">
+              <div className="flex items-center mb-6">
+                <Star className="h-6 w-6 text-orange-600 mr-2" />
+                <h2 className="text-2xl font-bold text-gray-900">Platform VCs</h2>
+                <Badge variant="outline" className="ml-3">
+                  {filteredVCs.length} Available
+                </Badge>
               </div>
-            )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredVCs.map((vc: any) => (
+                  <VCCard key={vc.id} vc={vc} />
+                ))}
+              </div>
+            </div>
           </>
         )}
       </div>

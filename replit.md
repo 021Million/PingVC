@@ -137,3 +137,4 @@ Changelog:
 - July 13, 2025. Integrated Airtable to display verified and unverified VCs on /ping page with dedicated sections for "Verified Investors" and "Community Curated VCs"
 - July 13, 2025. Implemented dedicated project detail pages (/project/:id) that display complete founder information when clicking Scout thumbnails
 - July 13, 2025. Updated sector filters changing "NFTs" to "Stablecoins" and "Gaming" to "RWA" across all components and seed data
+- July 13, 2025. Restructured Ping page to clearly separate "Verified Investors" section (including VCs, Angels, and Community VCs/DAOs/Syndicates verified by ping team) from "VC Scout" section (platform VCs)
