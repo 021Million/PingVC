@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, Lock, Calendar, MessageCircle, Mail } from "lucide-react";
+import { CheckCircle, Lock, Calendar, MessageCircle, Mail, ArrowRight } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
 import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Link } from "wouter";
 
 export default function Landing() {
   const [stageFilter, setStageFilter] = useState("All");
@@ -131,6 +132,19 @@ export default function Landing() {
               <p className="text-gray-500">No VCs found matching your filters.</p>
             </div>
           )}
+          
+          {/* View All Investors Button */}
+          <div className="text-center mt-12">
+            <Link href="/ping">
+              <Button 
+                size="lg"
+                className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
+              >
+                View All Investors
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
       {/* VC Signup Section */}
