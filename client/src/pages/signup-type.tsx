@@ -116,7 +116,7 @@ export default function SignupType() {
                     <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                     <div className="text-sm">
                       <div className="font-medium">Tailored Dealflow</div>
-                      <div className="text-gray-600">Get verified and build trust with founders</div>
+                      <div className="text-gray-600">Matched to your thesis, sectors, and stage</div>
                     </div>
                   </div>
 
