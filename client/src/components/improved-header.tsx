@@ -48,59 +48,45 @@ export function ImprovedHeader() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/">
-              <a className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">P</span>
-                </div>
-                <span className="ml-3 text-xl font-bold text-gray-900">Ping Me</span>
-              </a>
+            <Link href="/" className="flex items-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">P</span>
+              </div>
+              <span className="ml-3 text-xl font-bold text-gray-900">Ping Me</span>
             </Link>
           </div>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/">
-              <a className={`transition-colors font-medium ${
-                isActive("/") ? "text-primary" : "text-gray-700 hover:text-primary"
-              }`}>
-                Home
-              </a>
+            <Link href="/" className={`transition-colors font-medium ${
+              isActive("/") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              Home
             </Link>
-            <Link href="/scout">
-              <a className={`transition-colors font-medium ${
-                isActive("/scout") ? "text-primary" : "text-gray-700 hover:text-primary"
-              }`}>
-                Scout
-              </a>
+            <Link href="/scout" className={`transition-colors font-medium ${
+              isActive("/scout") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              Scout
             </Link>
-            <Link href="/ping">
-              <a className={`transition-colors font-medium ${
-                isActive("/ping") ? "text-primary" : "text-gray-700 hover:text-primary"
-              }`}>
-                Ping
-              </a>
+            <Link href="/ping" className={`transition-colors font-medium ${
+              isActive("/ping") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              Ping
             </Link>
-            <Link href="/how-it-works">
-              <a className={`transition-colors font-medium ${
-                isActive("/how-it-works") ? "text-primary" : "text-gray-700 hover:text-primary"
-              }`}>
-                For Founders
-              </a>
+            <Link href="/how-it-works" className={`transition-colors font-medium ${
+              isActive("/how-it-works") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              For Founders
             </Link>
-            <Link href="/for-vcs">
-              <a className={`transition-colors font-medium ${
-                isActive("/for-vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
-              }`}>
-                For VCs
-              </a>
+            <Link href="/for-vcs" className={`transition-colors font-medium ${
+              isActive("/for-vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              For VCs
             </Link>
-            <Link href="/pricing">
-              <a className={`transition-colors font-medium ${
-                isActive("/pricing") ? "text-primary" : "text-gray-700 hover:text-primary"
-              }`}>
-                Pricing
-              </a>
+            <Link href="/pricing" className={`transition-colors font-medium ${
+              isActive("/pricing") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              Pricing
             </Link>
           </nav>
 

@@ -161,7 +161,7 @@ export default function VCSignup() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="shadow-xl">
             <CardHeader>
-              <CardTitle className="text-2xl text-center">VC Application Form</CardTitle>
+              <CardTitle className="text-2xl text-center">VC & Angel Application Form</CardTitle>
             </CardHeader>
             <CardContent className="p-8">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

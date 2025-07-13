@@ -43,7 +43,7 @@ export default function Landing() {
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Where <span className="text-green-600">Founders</span> meet the <span className="text-primary">VC</span>
+            Where <span className="text-green-600">Founders</span> meet <span className="text-primary">VCs & Angels</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Pay once. Chat with the partner who writes the checks. No middlemen, no spam, pure signal.
@@ -180,24 +180,24 @@ export default function Landing() {
                 <span className="text-xl font-bold">Ping Me</span>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">
-                The fastest way for web3 founders to connect with VCs. No middlemen, no spam, just warm intros that work.
+                The fastest way for Web3 founders to connect with VCs and Angels. No middlemen, no spam, just warm intros that work.
               </p>
             </div>
             
             <div>
               <h3 className="text-lg font-semibold mb-4">For Founders</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Scout</a></li>
+                <li><a href="/ping" className="hover:text-white transition-colors">Ping</a></li>
                 <li><a href="/how-it-works" className="hover:text-white transition-colors">Join as Founder</a></li>
-                
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">For VCs</h3>
+              <h3 className="text-lg font-semibold mb-4">For VCs & Angel</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC</a></li>
+                <li><a href="/scout" className="hover:text-white transition-colors">Scout</a></li>
+                <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC or Angel</a></li>
               </ul>
             </div>
           </div>
