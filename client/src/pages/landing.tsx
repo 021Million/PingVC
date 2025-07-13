@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { CheckCircle, Lock, Calendar, MessageCircle, Mail, ArrowRight } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
-import { AirtableVCCard } from "@/components/airtable-vc-card";
+import { AirtableVCPreviewCard } from "@/components/airtable-vc-preview-card";
 import { MarketplaceLanding } from "@/components/marketplace-landing";
 import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
@@ -131,7 +131,7 @@ export default function Landing() {
           ) : airtableVCs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {airtableVCs.slice(0, 6).map((vc: any, index: number) => (
-                <AirtableVCCard key={`airtable-${index}`} vc={vc} />
+                <AirtableVCPreviewCard key={`airtable-${index}`} vc={vc} />
               ))}
             </div>
           ) : (

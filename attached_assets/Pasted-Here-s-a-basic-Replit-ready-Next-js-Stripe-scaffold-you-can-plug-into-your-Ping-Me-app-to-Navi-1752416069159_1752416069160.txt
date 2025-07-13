@@ -1,0 +1,156 @@
+Here’s a basic Replit-ready Next.js + Stripe scaffold you can plug into your Ping Me app to:
+
+✅ Navigate from the VC card thumbnail
+✅ Show a VC detail page with locked contact info
+✅ Trigger a Stripe Checkout session to unlock access
+✅ Reveal contact info after successful payment
+
+🧩 Assumptions:
+You’re using Next.js on the frontend
+
+Backend is handled via API routes (serverless-style)
+
+You're using Stripe (replace with your API keys)
+
+You store VC data (name, bio, contact info, unlocked status) in Airtable
+
+📁 1. /pages/vc/[id].tsx – VC Detail Page
+tsx
+Copy
+Edit
+// pages/vc/[id].tsx
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+
+export default function VCDetailPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [vc, setVC] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      fetch(`/api/vc/${id}`)
+        .then(res => res.json())
+        .then(setVC);
+    }
+  }, [id]);
+
+  if (!vc) return <div>Loading...</div>;
+
+  const handleUnlock = async () => {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vcId: id }),
+    });
+    const data = await res.json();
+    window.location.href = data.url;
+  };
+
+  return (
+    <div className="p-6 max-w-xl mx-auto">
+      <h1 className="text-3xl font-bold mb-2">{vc.fundName}</h1>
+      <p className="text-gray-600 mb-4">{vc.bio}</p>
+
+      {vc.unlocked ? (
+        <div className="bg-green-100 p-4 rounded">
+          <p><strong>Email:</strong> {vc.email}</p>
+          <p><strong>Telegram:</strong> {vc.telegram}</p>
+          <p><strong>Calendly:</strong> {vc.calendly}</p>
+        </div>
+      ) : (
+        <div className="bg-yellow-50 p-4 rounded text-center">
+          <p className="mb-2">🔒 This investor’s contact details are locked.</p>
+          <button
+            onClick={handleUnlock}
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+          >
+            Unlock Access – $4.90
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+📁 2. /pages/api/create-checkout-session.ts
+ts
+Copy
+Edit
+// pages/api/create-checkout-session.ts
+import Stripe from "stripe";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-08-16",
+});
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { vcId } = req.body;
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    line_items: [{
+      price_data: {
+        currency: "usd",
+        product_data: { name: "VC Contact Unlock" },
+        unit_amount: 490, // $4.90
+      },
+      quantity: 1,
+    }],
+    success_url: `${req.headers.origin}/vc/${vcId}?success=true`,
+    cancel_url: `${req.headers.origin}/vc/${vcId}?canceled=true`,
+    metadata: { vcId },
+  });
+
+  res.status(200).json({ url: session.url });
+}
+📁 3. /pages/api/vc/[id].ts – Get VC Details
+ts
+Copy
+Edit
+// pages/api/vc/[id].ts
+import type { NextApiRequest, NextApiResponse } from "next";
+
+// Dummy database
+const VCs = {
+  "1": {
+    fundName: "Future Capital",
+    bio: "Invests in early-stage Web3 tools.",
+    email: "vc@example.com",
+    telegram: "@futurevc",
+    calendly: "https://calendly.com/futurevc",
+    unlocked: false,
+  },
+};
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
+  const vc = VCs[id as string];
+
+  if (!vc) {
+    return res.status(404).json({ error: "VC not found" });
+  }
+
+  // TEMP: Auto-unlock if query ?success=true
+  if (req.query.success === "true") {
+    vc.unlocked = true;
+  }
+
+  res.status(200).json(vc);
+}
+✅ Stripe Setup
+Go to https://dashboard.stripe.com/apikeys
+
+Copy the Secret Key and add to Replit .env file:
+
+ini
+Copy
+Edit
+STRIPE_SECRET_KEY=sk_test_***
+📌 To Do
+Replace dummy data with real Airtable fetches
+
+Store unlock state tied to user session/email
+
+Log successful unlocks (in Stripe webhook or frontend)

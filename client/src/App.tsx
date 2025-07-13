@@ -29,6 +29,7 @@ import VCDetails from "@/pages/vc-details";
 import Settings from "@/pages/settings";
 import PasswordSetupPage from "@/pages/password-setup";
 import ColdScoutDetail from "@/pages/cold-scout-detail";
+import { VCDetailPage } from "@/pages/vc-detail";
 
 
 function Router() {
@@ -52,7 +53,7 @@ function Router() {
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
-          <Route path="/vc/:id" component={VCDetails} />
+          <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
@@ -74,7 +75,7 @@ function Router() {
           <Route path="/profile" component={Profile} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
-          <Route path="/vc/:id" component={VCDetails} />
+          <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/for-vcs" component={ForVCs} />

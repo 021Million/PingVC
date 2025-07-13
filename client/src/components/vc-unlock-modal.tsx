@@ -16,9 +16,10 @@ interface VCUnlockModalProps {
   onClose: () => void;
   vcType: "airtable" | "platform";
   userEmail?: string;
+  onSuccess?: () => void;
 }
 
-export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail }: VCUnlockModalProps) {
+export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSuccess }: VCUnlockModalProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
 
@@ -78,8 +79,10 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail }: VCUnlo
       
       onClose();
       
-      // Refresh the page to show unlocked content
-      window.location.reload();
+      // Call success callback to refresh unlock status
+      if (onSuccess) {
+        onSuccess();
+      }
       
     } catch (error: any) {
       console.error("Payment error:", error);
