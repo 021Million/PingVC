@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertVCSchema } from "@shared/schema";
@@ -17,7 +18,7 @@ import { CheckCircle, DollarSign, Shield } from "lucide-react";
 import confetti from "canvas-confetti";
 
 const vcSignupSchema = insertVCSchema.extend({
-  sectors: z.string().min(1, "Please specify your investment sectors"),
+  sectors: z.array(z.string()).min(1, "Please select at least one sector"),
   telegramHandle: z.string().optional(),
   meetingLink: z.string().optional(),
 }).omit({ userId: true, isVerified: true, isActive: true })
@@ -42,6 +43,27 @@ const vcSignupSchema = insertVCSchema.extend({
 
 type VCSignupForm = z.infer<typeof vcSignupSchema>;
 
+const VERTICAL_OPTIONS = [
+  "DeFi",
+  "Gaming", 
+  "NFTs",
+  "Infrastructure",
+  "Supply Chain",
+  "Payments",
+  "Identity",
+  "DAO",
+  "Healthcare", 
+  "Meme",
+  "Energy",
+  "Compute",
+  "SocialFi",
+  "Data",
+  "Education",
+  "Privacy",
+  "RWA",
+  "Stablecoins"
+];
+
 export default function VCSignup() {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -58,6 +80,7 @@ export default function VCSignup() {
       contactType: "telegram",
       price: 4900, // $49 in cents
       weeklyIntroLimit: 5,
+      sectors: [],
     },
   });
 
@@ -65,11 +88,10 @@ export default function VCSignup() {
   const price = watch("price");
   const telegramHandle = watch("telegramHandle");
   const meetingLink = watch("meetingLink");
+  const sectors = watch("sectors") || [];
 
   const createVCMutation = useMutation({
     mutationFn: async (data: VCSignupForm) => {
-      const sectors = data.sectors.split(',').map(s => s.trim());
-      
       // Set the main contactHandle based on the contactType
       let contactHandle = data.contactHandle || "";
       if (data.contactType === "telegram") {
@@ -82,7 +104,7 @@ export default function VCSignup() {
       
       return await apiRequest("POST", "/api/vcs", {
         ...data,
-        sectors,
+        sectors: data.sectors, // Already an array
         contactHandle,
         price: Math.round(data.price * 100), // Convert to cents
       });
@@ -315,15 +337,43 @@ export default function VCSignup() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="sectors">Primary Sectors (comma-separated)</Label>
-                    <Input
-                      id="sectors"
-                      {...register("sectors")}
-                      placeholder="DeFi, Infrastructure, Gaming"
-                      className={errors.sectors ? "border-red-500" : ""}
-                    />
+                    <Label htmlFor="sectors">Primary Sectors</Label>
+                    <p className="text-sm text-gray-600 mb-3">Select all sectors you invest in</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 border border-gray-200 rounded-lg">
+                      {VERTICAL_OPTIONS.map((sector) => (
+                        <div key={sector} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`sector-${sector}`}
+                            checked={Array.isArray(sectors) && sectors.includes(sector)}
+                            onCheckedChange={(checked) => {
+                              const currentSectors = Array.isArray(sectors) ? sectors : [];
+                              if (checked) {
+                                setValue("sectors", [...currentSectors, sector]);
+                              } else {
+                                setValue("sectors", currentSectors.filter(s => s !== sector));
+                              }
+                            }}
+                          />
+                          <Label htmlFor={`sector-${sector}`} className="text-sm font-normal cursor-pointer">
+                            {sector}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                    {Array.isArray(sectors) && sectors.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-600 mb-2">Selected sectors:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {sectors.map((sector) => (
+                            <Badge key={sector} variant="secondary" className="text-xs">
+                              {sector}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {errors.sectors && (
-                      <p className="text-sm text-red-500 mt-1">{errors.sectors.message}</p>
+                      <p className="text-sm text-red-500 mt-2">{errors.sectors.message}</p>
                     )}
                   </div>
                 </div>
