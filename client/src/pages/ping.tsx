@@ -85,7 +85,7 @@ export default function Ping() {
   });
 
   const stages = ["All", "Angel", "Pre-Seed", "Seed", "Series A", "Series B"];
-  const sectors = ["All", "DeFi", "Gaming", "NFTs", "Infrastructure", "Social", "Enterprise", "AI/ML", "RWA", "Stablecoins", "AI", "Infra"];
+  const sectors = ["All", "DeFi", "Stablecoins", "RWA", "Infrastructure", "Social", "Enterprise", "AI/ML", "AI", "Infra"];
 
   const AirtableVCCard = ({ vc }: { vc: any }) => (
     <Card className="hover:shadow-lg transition-shadow">

@@ -451,11 +451,9 @@ export default function Scout() {
                 <option value="Education">Education</option>
                 <option value="Privacy">Privacy</option>
                 <option value="DeFi">DeFi</option>
-                <option value="Gaming">Gaming</option>
-                <option value="NFTs">NFTs</option>
-                <option value="Infrastructure">Infrastructure</option>
-                <option value="Stablecoins">Stablecoins</option>
                 <option value="RWA">RWA</option>
+                <option value="Stablecoins">Stablecoins</option>
+                <option value="Infrastructure">Infrastructure</option>
                 <option value="AI/ML">AI/ML</option>
                 <option value="Social">Social</option>
                 <option value="Other">Other</option>

@@ -8,7 +8,7 @@ interface FilterSectionProps {
 }
 
 const stages = ["All", "Pre-Seed", "Seed", "Series A", "Series B+"];
-const sectors = ["DeFi", "NFTs", "Gaming", "Infrastructure", "AI/ML"];
+const sectors = ["DeFi", "Stablecoins", "RWA", "Infrastructure", "AI/ML"];
 
 export function FilterSection({ stageFilter, sectorFilter, onStageChange, onSectorChange }: FilterSectionProps) {
   return (

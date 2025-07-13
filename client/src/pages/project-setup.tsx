@@ -174,11 +174,9 @@ export default function ProjectSetup() {
                         <SelectItem value="Education">Education</SelectItem>
                         <SelectItem value="Privacy">Privacy</SelectItem>
                         <SelectItem value="DeFi">DeFi</SelectItem>
-                        <SelectItem value="Gaming">Gaming</SelectItem>
-                        <SelectItem value="NFTs">NFTs</SelectItem>
-                        <SelectItem value="Infrastructure">Infrastructure</SelectItem>
-                        <SelectItem value="Stablecoins">Stablecoins</SelectItem>
                         <SelectItem value="RWA">RWA</SelectItem>
+                        <SelectItem value="Stablecoins">Stablecoins</SelectItem>
+                        <SelectItem value="Infrastructure">Infrastructure</SelectItem>
                         <SelectItem value="AI/ML">AI/ML</SelectItem>
                         <SelectItem value="Social">Social</SelectItem>
                         <SelectItem value="Enterprise">Enterprise</SelectItem>

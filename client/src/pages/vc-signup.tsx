@@ -47,8 +47,8 @@ type VCSignupForm = z.infer<typeof vcSignupSchema>;
 
 const VERTICAL_OPTIONS = [
   "DeFi",
-  "Gaming", 
-  "NFTs",
+  "RWA", 
+  "Stablecoins",
   "Infrastructure",
   "Supply Chain",
   "Payments",
@@ -61,9 +61,7 @@ const VERTICAL_OPTIONS = [
   "SocialFi",
   "Data",
   "Education",
-  "Privacy",
-  "RWA",
-  "Stablecoins"
+  "Privacy"
 ];
 
 const STAGE_OPTIONS = [
