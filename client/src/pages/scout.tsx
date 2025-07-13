@@ -161,33 +161,31 @@ export default function Scout() {
     
     return (
       <Link href={`/project/${project.id}`}>
-        <a className="block">
-          <Card className="border-2 border-primary bg-gradient-to-br from-yellow-50 to-orange-50 hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-[1.02] relative overflow-hidden">
-            {/* Trending badge */}
-            <div className="absolute top-0 left-0 z-10">
-              <Badge className="bg-red-500 text-white font-bold rounded-tl-lg rounded-br-lg rounded-tr-none rounded-bl-none">
-                🔥 {rankBadges[rank]}
-              </Badge>
-            </div>
-            
-            <CardHeader className="pb-3">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  {rankIcons[rank]}
-                </div>
-                
-                {project.logoUrl && (
-                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative group">
-                    <img 
-                      src={project.logoUrl} 
-                      alt={`${project.companyName} logo`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+        <Card className="border-2 border-primary bg-gradient-to-br from-yellow-50 to-orange-50 hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-[1.02] relative overflow-hidden">
+          <CardHeader className="pb-3">
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0">
+                {rankIcons[rank]}
+              </div>
+              
+              {project.logoUrl && (
+                <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative group">
+                  <img 
+                    src={project.logoUrl} 
+                    alt={`${project.companyName} logo`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  {/* Trending badge positioned half on/off thumbnail */}
+                  <div className="absolute -top-2 -left-2 z-10">
+                    <Badge className="bg-red-500 text-white font-bold rounded-lg px-2 py-1 text-xs shadow-lg">
+                      🔥 {rankBadges[rank]}
+                    </Badge>
                   </div>
-                )}
+                </div>
+              )}
                 
                 <div className="flex-1 min-w-0">
                   <CardTitle className="text-xl font-bold text-gray-900 truncate">
@@ -252,15 +250,13 @@ export default function Scout() {
               </div>
             </CardContent>
           </Card>
-        </a>
       </Link>
     );
   };
 
   const ProjectCard = ({ project }: { project: any }) => (
     <Link href={`/project/${project.id}`}>
-      <a className="block">
-        <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]">
+      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]">
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex items-start space-x-3">
@@ -378,7 +374,6 @@ export default function Scout() {
         </div>
       </CardContent>
         </Card>
-      </a>
     </Link>
   );
 
