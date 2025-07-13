@@ -1,0 +1,82 @@
+GOAL
+Update the /ping page so it:
+
+Displays Verified VCs from Airtable where Verified = True
+
+Displays Unverified VCs from Airtable where Verified = False
+
+Renders both sections with clear styling: "Verified Investors" + "Community Curated VCs"
+
+🔧 STEP 1: Airtable Schema (Suggested Table: VCs)
+Field Name	Type	Example Value
+Name	Text	Jane Orbit
+Fund	Text	Deep AI Capital
+Verified	Checkbox	✅
+Twitter	URL	https://twitter.com/janeorbit
+LinkedIn	URL	https://linkedin.com/in/janeorbit
+Image URL	URL	https://example.com/jane.jpg
+Specialties	Multi-select	AI, Infra, Gaming
+Price	Number	200
+Contact Link	URL	https://cal.com/janeorbit
+Bio	Long text	"Invests in infra, tooling, and Web3 edges."
+
+🔌 STEP 2: Install Airtable SDK in Replit
+bash
+Copy
+Edit
+pip install pyairtable
+🧠 STEP 3: Python Code (Ping Page Query)
+In main.py:
+
+python
+Copy
+Edit
+from pyairtable import Table
+import os
+
+AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
+AIRTABLE_BASE_ID = "appXXXXXXXX"   # Replace with your base ID
+VC_TABLE_NAME = "VCs"
+
+vc_table = Table(AIRTABLE_API_KEY, AIRTABLE_BASE_ID, VC_TABLE_NAME)
+
+@app.route("/ping")
+def ping():
+    all_vcs = vc_table.all()
+
+    verified_vcs = []
+    unverified_vcs = []
+
+    for record in all_vcs:
+        data = record["fields"]
+        vc = {
+            "name": data.get("Name"),
+            "fund": data.get("Fund"),
+            "verified": data.get("Verified", False),
+            "twitter": data.get("Twitter"),
+            "linkedin": data.get("LinkedIn"),
+            "image_url": data.get("Image URL"),
+            "specialties": data.get("Specialties", []),
+            "price": data.get("Price"),
+            "contact_link": data.get("Contact Link"),
+            "bio": data.get("Bio")
+        }
+
+        if vc["verified"]:
+            verified_vcs.append(vc)
+        else:
+            unverified_vcs.append(vc)
+
+    return render_template("ping.html", verified_vcs=verified_vcs, unverified_vcs=unverified_vcs)
+🎨 STEP 4: Update templates/ping.html
+Keep the same HTML structure I gave earlier. It will now be populated from live Airtable data.
+
+💡 STEP 5: Add .env File to Replit
+Inside your Replit environment variables:
+
+ini
+Copy
+Edit
+AIRTABLE_API_KEY=keyXXXXXXXXXXXX
+Keep this secret!
+

@@ -32,6 +32,11 @@ export default function Ping() {
     enabled: hasEmailAccess,
   });
 
+  const { data: airtableData, isLoading: airtableLoading } = useQuery({
+    queryKey: ["/api/airtable/vcs"],
+    enabled: hasEmailAccess,
+  });
+
   // Show email gate if user doesn't have access
   if (!hasEmailAccess) {
     return (
@@ -56,8 +61,117 @@ export default function Ping() {
     return matchesSearch && matchesStage && matchesSector && vc.isVerified;
   });
 
+  // Filter Airtable VCs
+  const filteredVerifiedVCs = (airtableData?.verifiedVCs || []).filter((vc: any) => {
+    const matchesSearch = !searchTerm || 
+      vc.fund?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vc.bio?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSector = selectedSector === "All" || (vc.specialties && vc.specialties.includes(selectedSector));
+    
+    return matchesSearch && matchesSector;
+  });
+
+  const filteredUnverifiedVCs = (airtableData?.unverifiedVCs || []).filter((vc: any) => {
+    const matchesSearch = !searchTerm || 
+      vc.fund?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vc.bio?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSector = selectedSector === "All" || (vc.specialties && vc.specialties.includes(selectedSector));
+    
+    return matchesSearch && matchesSector;
+  });
+
   const stages = ["All", "Angel", "Pre-Seed", "Seed", "Series A", "Series B"];
-  const sectors = ["All", "DeFi", "Gaming", "NFTs", "Infrastructure", "Social", "Enterprise", "AI/ML", "RWA", "Stablecoins"];
+  const sectors = ["All", "DeFi", "Gaming", "NFTs", "Infrastructure", "Social", "Enterprise", "AI/ML", "RWA", "Stablecoins", "AI", "Infra"];
+
+  const AirtableVCCard = ({ vc }: { vc: any }) => (
+    <Card className="hover:shadow-lg transition-shadow">
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <div className="flex items-start space-x-3">
+            {vc.imageUrl && (
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                <img 
+                  src={vc.imageUrl} 
+                  alt={`${vc.name} photo`}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-2">
+                <CardTitle className="text-lg">{vc.fund}</CardTitle>
+                {vc.verified && (
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    <Shield className="h-3 w-3 mr-1" />
+                    Verified
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-gray-600 mb-2">{vc.name}</p>
+              {vc.bio && (
+                <p className="text-sm text-gray-700 line-clamp-2">{vc.bio}</p>
+              )}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="flex items-center space-x-1 mb-2">
+              <DollarSign className="h-4 w-4 text-green-600" />
+              <span className="font-bold text-lg">${vc.price || 200}</span>
+            </div>
+            <p className="text-xs text-gray-500">per intro</p>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {vc.specialties && vc.specialties.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {vc.specialties.map((specialty: string, index: number) => (
+                <Badge key={index} variant="outline" className="text-xs">
+                  {specialty}
+                </Badge>
+              ))}
+            </div>
+          )}
+          
+          <div className="flex items-center justify-between">
+            <div className="flex space-x-2">
+              {vc.twitter && (
+                <Button size="sm" variant="ghost" asChild>
+                  <a href={vc.twitter} target="_blank" rel="noopener noreferrer">
+                    <X className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+              {vc.linkedin && (
+                <Button size="sm" variant="ghost" asChild>
+                  <a href={vc.linkedin} target="_blank" rel="noopener noreferrer">
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+            </div>
+            
+            {vc.contactLink && (
+              <Button size="sm" asChild>
+                <a href={vc.contactLink} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Connect
+                </a>
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   const VCCard = ({ vc }: { vc: any }) => (
     <Card className="hover:shadow-lg transition-shadow">
@@ -226,11 +340,90 @@ export default function Ping() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVCs.map((vc: any) => (
-              <VCCard key={vc.id} vc={vc} />
-            ))}
-          </div>
+          <>
+            {/* Verified Investors Section */}
+            <div className="mb-12">
+              <div className="flex items-center mb-6">
+                <Shield className="h-6 w-6 text-green-600 mr-2" />
+                <h2 className="text-2xl font-bold text-gray-900">Verified Investors</h2>
+                <Badge variant="secondary" className="ml-3 bg-green-100 text-green-800">
+                  {filteredVerifiedVCs.length} Available
+                </Badge>
+              </div>
+              
+              {airtableLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="bg-gray-200 h-64 rounded-lg"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredVerifiedVCs.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredVerifiedVCs.map((vc) => (
+                    <AirtableVCCard key={vc.id} vc={vc} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 bg-white rounded-lg border border-gray-200">
+                  <Shield className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600">No verified investors found matching your criteria.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Community Curated VCs Section */}
+            <div className="mb-12">
+              <div className="flex items-center mb-6">
+                <Users className="h-6 w-6 text-blue-600 mr-2" />
+                <h2 className="text-2xl font-bold text-gray-900">Community Curated VCs</h2>
+                <Badge variant="outline" className="ml-3">
+                  {filteredUnverifiedVCs.length} Available
+                </Badge>
+              </div>
+              
+              {airtableLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="bg-gray-200 h-64 rounded-lg"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredUnverifiedVCs.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredUnverifiedVCs.map((vc) => (
+                    <AirtableVCCard key={vc.id} vc={vc} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 bg-white rounded-lg border border-gray-200">
+                  <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600">No community curated VCs found matching your criteria.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Legacy Platform VCs Section (Optional) */}
+            {filteredVCs.length > 0 && (
+              <div className="mb-12">
+                <div className="flex items-center mb-6">
+                  <Star className="h-6 w-6 text-orange-600 mr-2" />
+                  <h2 className="text-2xl font-bold text-gray-900">Platform VCs</h2>
+                  <Badge variant="outline" className="ml-3">
+                    {filteredVCs.length} Available
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredVCs.map((vc: any) => (
+                    <VCCard key={vc.id} vc={vc} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

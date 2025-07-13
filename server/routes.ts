@@ -4,6 +4,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import Airtable from "airtable";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertVCSchema, insertPaymentSchema, insertEmailSubmissionSchema } from "@shared/schema";
@@ -227,6 +228,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching VCs:", error);
       res.status(500).json({ message: "Failed to fetch VCs" });
+    }
+  });
+
+  // Airtable VCs route
+  app.get('/api/airtable/vcs', async (req, res) => {
+    try {
+      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+        return res.status(500).json({ message: "Airtable credentials not configured" });
+      }
+
+      const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+      const records = await base('VCs').select().all();
+
+      const verifiedVCs: any[] = [];
+      const unverifiedVCs: any[] = [];
+
+      records.forEach(record => {
+        const fields = record.fields;
+        const vc = {
+          id: record.id,
+          name: fields.Name,
+          fund: fields.Fund,
+          verified: fields.Verified || false,
+          twitter: fields.Twitter,
+          linkedin: fields.LinkedIn,
+          imageUrl: fields['Image URL'],
+          specialties: fields.Specialties || [],
+          price: fields.Price,
+          contactLink: fields['Contact Link'],
+          bio: fields.Bio
+        };
+
+        if (vc.verified) {
+          verifiedVCs.push(vc);
+        } else {
+          unverifiedVCs.push(vc);
+        }
+      });
+
+      res.json({ verifiedVCs, unverifiedVCs });
+    } catch (error) {
+      console.error("Error fetching Airtable VCs:", error);
+      res.status(500).json({ message: "Failed to fetch VCs from Airtable" });
     }
   });
 
