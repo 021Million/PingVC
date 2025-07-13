@@ -312,9 +312,7 @@ export default function Ping() {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             {isLoading ? "Loading..." : `${filteredVCs.length} Verified VCs & Angels`}
           </h2>
-          <p className="text-gray-600">
-            All VCs are manually verified and actively reviewing projects
-          </p>
+          <p className="text-gray-600">All VCs & Angels are manually verified and actively reviewing projects</p>
         </div>
 
         {/* VC Grid */}
@@ -400,7 +398,7 @@ export default function Ping() {
               ) : (
                 <div className="text-center py-8 bg-white rounded-lg border border-gray-200">
                   <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-600">No community curated VCs found matching your criteria.</p>
+                  <p className="text-gray-600">No community VCs found matching your criteria.</p>
                 </div>
               )}
             </div>
