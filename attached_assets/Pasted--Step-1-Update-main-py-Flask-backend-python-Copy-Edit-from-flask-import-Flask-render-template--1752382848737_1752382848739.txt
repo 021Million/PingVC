@@ -1,0 +1,86 @@
+✅ Step 1: Update main.py (Flask backend)
+python
+Copy
+Edit
+from flask import Flask, render_template, request, redirect, session, url_for
+from datetime import datetime, timedelta
+import os
+
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
+
+# In-memory stores
+projects = {
+    "project_1": {"name": "AI Pitch Tool", "votes": 3},
+    "project_2": {"name": "Web3 Wallet Builder", "votes": 7},
+    "project_3": {"name": "Growth Tracker", "votes": 2}
+}
+
+user_last_vote = {}  # key: session_id or email → timestamp
+
+@app.route("/")
+def home():
+    return render_template("vote.html", projects=projects)
+
+@app.route("/vote/<project_id>")
+def vote(project_id):
+    user_id = session.get("user_id")
+    if not user_id:
+        user_id = os.urandom(8).hex()
+        session["user_id"] = user_id
+
+    now = datetime.now()
+    last_vote = user_last_vote.get(user_id)
+
+    if not last_vote or now.date() > last_vote.date():
+        projects[project_id]["votes"] += 1
+        user_last_vote[user_id] = now
+        message = f"✅ You upvoted {projects[project_id]['name']}!"
+    else:
+        message = "⚠️ You’ve already voted today. Come back tomorrow!"
+
+    return redirect(url_for("home", message=message))
+✅ Step 2: Create or update templates/vote.html
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html>
+<head><title>Vote for a Project</title></head>
+<body>
+  <h1>🔥 Vote for Your Favorite Project</h1>
+
+  {% for id, proj in projects.items() %}
+    <div style="margin-bottom: 20px;">
+      <h3>{{ proj.name }}</h3>
+      <p>🔥 Votes: {{ proj.votes }}</p>
+      <a href="/vote/{{ id }}">🔺 Upvote</a>
+    </div>
+  {% endfor %}
+
+  <p style="margin-top: 30px;">* You can vote once per day. Votes reset daily at midnight.</p>
+</body>
+</html>
+✅ Optional: Show feedback message
+To show vote confirmation, update the route + template to pass a message:
+
+Update /vote return:
+python
+Copy
+Edit
+return redirect(url_for("home", message=message))
+Update / route:
+python
+Copy
+Edit
+@app.route("/")
+def home():
+    message = request.args.get("message")
+    return render_template("vote.html", projects=projects, message=message)
+Add to vote.html:
+html
+Copy
+Edit
+{% if message %}
+  <p style="color: green;"><strong>{{ message }}</strong></p>
+{% endif %}
