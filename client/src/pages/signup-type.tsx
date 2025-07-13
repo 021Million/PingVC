@@ -69,13 +69,7 @@ export default function SignupType() {
                       <div className="text-gray-600">Feature your project and get community votes</div>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Profile & Analytics</div>
-                      <div className="text-gray-600">Track your fundraising progress</div>
-                    </div>
-                  </div>
+
                 </div>
                 
                 <div className="pt-4">
@@ -125,13 +119,7 @@ export default function SignupType() {
                       <div className="text-gray-600">Get verified and build trust with founders</div>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Control Your Flow</div>
-                      <div className="text-gray-600">Set weekly intro limits and preferences</div>
-                    </div>
-                  </div>
+
                 </div>
                 
                 <div className="pt-4">
@@ -184,13 +172,7 @@ export default function SignupType() {
                       <div className="text-gray-600">Vote on emerging projects and trends</div>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Investment Tracking</div>
-                      <div className="text-gray-600">Track your portfolio and returns</div>
-                    </div>
-                  </div>
+
                 </div>
                 
                 <div className="pt-4">
@@ -203,6 +185,9 @@ export default function SignupType() {
                     Join as Angel
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    Subject to verification process
+                  </p>
                 </div>
               </CardContent>
             </Card>
