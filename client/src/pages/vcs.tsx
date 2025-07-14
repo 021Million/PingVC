@@ -137,17 +137,18 @@ export default function VCs() {
         </div>
       </Link>
       
-      {/* Social Links - Outside the main link to avoid nesting */}
-      {(vc.linkedin || vc['X Profile'] || vc.twitter || vc.website) && (
-        <div className="absolute top-3 right-12 flex items-center space-x-2 z-10">
+      {/* Social Links - Positioned outside Link to avoid nesting */}
+      {(vc.linkedin || vc['X Profile'] || vc.twitter || vc.website || vc['Fund Website']) && (
+        <div className="absolute bottom-4 left-4 flex items-center space-x-2 z-10">
           {vc.linkedin && (
             <a 
               href={vc.linkedin} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full p-1 shadow-sm"
+              className="text-blue-600 hover:text-blue-800 transition-colors"
+              title="LinkedIn"
             >
-              <Linkedin className="h-3 w-3" />
+              <Linkedin className="h-4 w-4" />
             </a>
           )}
           {(vc['X Profile'] || vc.twitter) && (
@@ -155,9 +156,10 @@ export default function VCs() {
               href={vc['X Profile'] || vc.twitter} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-600 hover:text-gray-800 transition-colors bg-white rounded-full p-1 shadow-sm"
+              className="text-gray-600 hover:text-gray-800 transition-colors"
+              title="X (Twitter)"
             >
-              <X className="h-3 w-3" />
+              <X className="h-4 w-4" />
             </a>
           )}
           {vc.website && (
@@ -165,13 +167,26 @@ export default function VCs() {
               href={vc.website} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-600 hover:text-gray-800 transition-colors bg-white rounded-full p-1 shadow-sm"
+              className="text-gray-600 hover:text-gray-800 transition-colors"
+              title="Personal Website"
             >
-              <Globe className="h-3 w-3" />
+              <Globe className="h-4 w-4" />
+            </a>
+          )}
+          {vc['Fund Website'] && (
+            <a 
+              href={vc['Fund Website']} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-purple-600 hover:text-purple-800 transition-colors"
+              title="Fund Website"
+            >
+              <ExternalLink className="h-4 w-4" />
             </a>
           )}
         </div>
       )}
+
     </Card>
   );
 
