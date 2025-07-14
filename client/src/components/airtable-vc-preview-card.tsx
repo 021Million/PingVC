@@ -82,7 +82,7 @@ export function AirtableVCPreviewCard({ vc }: AirtableVCPreviewCardProps) {
           {vc.price && (
             <div className="flex items-center text-sm text-gray-600">
               <DollarSign className="h-4 w-4 mr-2" />
-              Unlock for $${vc.price}
+              Unlock for ${vc.price}
             </div>
           )}
           {vc.limit && (
