@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Shield, DollarSign, Users, Target, TrendingUp } from "lucide-react";
 
 interface AirtableVCPreviewCardProps {
@@ -111,9 +112,17 @@ export function AirtableVCPreviewCard({ vc }: AirtableVCPreviewCardProps) {
           </div>
         )}
 
-        {/* Click indicator */}
-        <div className="pt-2 border-t">
-          <p className="text-xs text-blue-600 font-medium">Click to view full details →</p>
+        {/* Book Now Button */}
+        <div className="pt-4 border-t">
+          <Button 
+            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.location.href = '/browse-vcs';
+            }}
+          >
+            Book Now
+          </Button>
         </div>
       </CardContent>
     </Card>
