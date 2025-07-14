@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter, Users, TrendingUp, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { EmailGate } from "@/components/email-gate";
 import { ImprovedHeader } from "@/components/improved-header";
 import { VCGridCard } from "@/components/vc-grid-card";
 
@@ -12,37 +11,14 @@ export default function VCs() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("All");
   const [selectedSector, setSelectedSector] = useState("All");
-  const [hasEmailAccess, setHasEmailAccess] = useState(false);
-  
-  // Check if user already has email access
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('email_access_ping');
-    if (storedEmail) {
-      setHasEmailAccess(true);
-    }
-  }, []);
 
   const { data: airtableData, isLoading: airtableLoading } = useQuery({
     queryKey: ["/api/airtable/vcs"],
-    enabled: hasEmailAccess,
   });
 
   const { data: vcs = [], isLoading: vcsLoading } = useQuery({
     queryKey: ["/api/vcs"],
-    enabled: hasEmailAccess,
   });
-
-  // Show email gate if user doesn't have access
-  if (!hasEmailAccess) {
-    return (
-      <EmailGate
-        title="Book Verified VCs for Your Startup"
-        description="Get instant access to verified VC profiles and book meetings with top-tier investors. No spam, no DMs - just real conversations."
-        source="vcs"
-        onSuccess={() => setHasEmailAccess(true)}
-      />
-    );
-  }
 
   // Filter logic
   const filteredVerifiedVCs = (airtableData?.verifiedVCs || []).filter((vc: any) => {

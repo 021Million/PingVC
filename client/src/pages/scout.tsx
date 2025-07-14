@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,32 +10,21 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { EmailGate } from "@/components/email-gate";
 import { Header } from "@/components/header";
 
 export default function Scout() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEcosystem, setSelectedEcosystem] = useState("All");
   const [selectedVertical, setSelectedVertical] = useState("All");
-  const [hasEmailAccess, setHasEmailAccess] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
   
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Check if user already has email access on component mount
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('email_access_scout');
-    if (storedEmail) {
-      setHasEmailAccess(true);
-    }
-  }, []);
-
   // Fetch all projects and calculate top voted projects
   const { data: allProjects = [], isLoading: loadingAll } = useQuery({
     queryKey: ["/api/scout/projects", { ecosystem: selectedEcosystem, vertical: selectedVertical }],
-    enabled: hasEmailAccess, // Only fetch when user has access
   });
 
   // Sort projects by vote count and separate top 3 from the rest
@@ -89,8 +78,7 @@ export default function Scout() {
   };
 
   const voteMutation = useMutation({
-    mutationFn: async ({ founderId, action }: { founderId: number; action: 'vote' | 'unvote' }) => {
-      const email = localStorage.getItem('email_access_scout');
+    mutationFn: async ({ founderId, action, email }: { founderId: number; action: 'vote' | 'unvote'; email: string }) => {
       await apiRequest("POST", `/api/scout/projects/${founderId}/${action}`, { email });
       return { action }; // Return the action so we can access it in onSuccess
     },
@@ -121,32 +109,16 @@ export default function Scout() {
     },
   });
 
-  // Show email gate if user doesn't have access
-  if (!hasEmailAccess) {
-    return (
-      <EmailGate
-        title="Access Scout"
-        description="To unlock instant access to the Scout page and discover emerging Web3 projects, please provide your email address. This helps us maintain a quality community of founders and investors."
-        source="scout"
-        onSuccess={() => setHasEmailAccess(true)}
-      />
-    );
-  }
+
 
   const handleVote = (founderId: number, hasVoted: boolean) => {
-    const email = localStorage.getItem('email_access_scout');
-    if (!email) {
-      toast({
-        title: "Email Required",
-        description: "Please provide your email to vote for projects",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Use a default email for anonymous voting or user's email if available
+    const email = user?.email || 'anonymous@example.com';
     
     voteMutation.mutate({
       founderId,
-      action: hasVoted ? 'unvote' : 'vote'
+      action: hasVoted ? 'unvote' : 'vote',
+      email
     });
   };
 

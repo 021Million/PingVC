@@ -1063,44 +1063,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Email submission route
-  app.post('/api/submit-email', async (req, res) => {
-    try {
-      const { email, source } = req.body;
-      
-      if (!email || !source) {
-        return res.status(400).json({ message: "Email and source are required" });
-      }
 
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: "Invalid email format" });
-      }
-
-      const submission = await storage.submitEmail({ email, source });
-      res.json({ success: true, submission });
-    } catch (error) {
-      console.error("Error submitting email:", error);
-      res.status(500).json({ message: "Failed to submit email" });
-    }
-  });
-
-  app.get('/api/check-email-access', async (req, res) => {
-    try {
-      const { email, source } = req.query;
-      
-      if (!email || !source) {
-        return res.status(400).json({ message: "Email and source are required" });
-      }
-
-      const hasAccess = await storage.hasEmailAccess(email as string, source as string);
-      res.json({ hasAccess });
-    } catch (error) {
-      console.error("Error checking email access:", error);
-      res.status(500).json({ message: "Failed to check email access" });
-    }
-  });
 
   // VC unlock payment endpoint
   app.post('/api/create-vc-unlock-payment', async (req: any, res) => {

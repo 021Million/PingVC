@@ -37,13 +37,13 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!userEmail) return;
+    const email = userEmail || 'anonymous@example.com';
 
     // Check unlock status for all decision makers
     const checkUnlockStatus = async () => {
       const promises = decisionMakers.map(async (dm) => {
         try {
-          const response = await fetch(`/api/check-decision-maker-unlock?email=${encodeURIComponent(userEmail)}&decisionMakerId=${dm.id}`);
+          const response = await fetch(`/api/check-decision-maker-unlock?email=${encodeURIComponent(email)}&decisionMakerId=${dm.id}`);
           const data = await response.json();
           return { dmId: dm.id, hasUnlocked: data.hasUnlocked };
         } catch (error) {
@@ -62,15 +62,6 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
   }, [decisionMakers, userEmail]);
 
   const handleUnlockDecisionMaker = (decisionMakerId: number) => {
-    if (!userEmail) {
-      toast({
-        title: "Email Required",
-        description: "Please provide your email to unlock contact details",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setSelectedDecisionMakerId(decisionMakerId);
     setShowPaymentModal(true);
   };
@@ -175,7 +166,7 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
       </CardContent>
 
       {/* Payment Modal */}
-      {showPaymentModal && selectedDecisionMakerId && userEmail && (
+      {showPaymentModal && selectedDecisionMakerId && (
         <DecisionMakerPayment
           isOpen={showPaymentModal}
           onClose={() => {
@@ -183,7 +174,7 @@ export function ColdInvestorCard({ investor, decisionMakers, userEmail }: ColdIn
             setSelectedDecisionMakerId(null);
           }}
           decisionMakerId={selectedDecisionMakerId}
-          email={userEmail}
+          email={userEmail || 'anonymous@example.com'}
           onSuccess={handlePaymentSuccess}
         />
       )}

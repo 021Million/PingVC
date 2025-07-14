@@ -15,7 +15,8 @@ interface AirtableVCCardProps {
 export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   
-  const email = userEmail || localStorage.getItem('email_access_ping');
+  // Use provided email or a default email for anonymous access
+  const email = userEmail || 'anonymous@example.com';
 
   // Check if VC is unlocked for this email
   const { data: unlockStatus, isLoading: checkingUnlock } = useQuery({
@@ -26,10 +27,6 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
   const isUnlocked = unlockStatus?.hasUnlocked || false;
 
   const handleUnlockClick = () => {
-    if (!email) {
-      // This shouldn't happen since email gate blocks access
-      return;
-    }
     setShowUnlockModal(true);
   };
 

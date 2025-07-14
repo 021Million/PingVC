@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +8,6 @@ import { DollarSign, Users, Star, Shield, Globe, Linkedin, X, ExternalLink } fro
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { EmailGate } from "@/components/email-gate";
 import { ImprovedHeader } from "@/components/improved-header";
 import { AirtableVCCard } from "@/components/airtable-vc-card";
 import { ColdInvestorPreviewCard } from "@/components/cold-investor-preview-card";
@@ -17,44 +16,20 @@ export default function Ping() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("All");
   const [selectedSector, setSelectedSector] = useState("All");
-  const [hasEmailAccess, setHasEmailAccess] = useState(false);
   
   const { user, isAuthenticated } = useAuth();
 
-  // Check if user already has email access on component mount
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('email_access_ping');
-    if (storedEmail) {
-      setHasEmailAccess(true);
-    }
-  }, []);
-
   const { data: vcs = [], isLoading } = useQuery({
     queryKey: ["/api/vcs", { stage: selectedStage, sector: selectedSector }],
-    enabled: hasEmailAccess,
   });
 
   const { data: airtableData, isLoading: airtableLoading } = useQuery({
     queryKey: ["/api/airtable/vcs"],
-    enabled: hasEmailAccess,
   });
 
   const { data: coldInvestors = [], isLoading: coldInvestorsLoading } = useQuery({
     queryKey: ["/api/cold-investors"],
-    enabled: hasEmailAccess,
   });
-
-  // Show email gate if user doesn't have access
-  if (!hasEmailAccess) {
-    return (
-      <EmailGate
-        title="Access Ping"
-        description="To unlock instant access to our verified VC directory and connect with top-tier investors, please provide your email address. This helps us maintain a quality community of founders and investors."
-        source="ping"
-        onSuccess={() => setHasEmailAccess(true)}
-      />
-    );
-  }
 
   const filteredVCs = vcs.filter(vc => {
     const matchesSearch = !searchTerm || 
