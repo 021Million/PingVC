@@ -58,7 +58,8 @@ export default function Landing() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">✅</div>
-              <div className="text-sm text-gray-600">Skip the dance.</div>
+              <div className="text-sm text-gray-600">Skip the cold DM.
+              Save time. </div>
             </div>
           </div>
         </div>
