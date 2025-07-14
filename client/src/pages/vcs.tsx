@@ -42,8 +42,24 @@ export default function VCs() {
       <Link href={`/vc/${vc.id}`}>
         <CardHeader className="pb-3">
           <div className="flex items-start space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-              {vc.name ? vc.name.charAt(0) : 'V'}
+            <div className="flex-shrink-0">
+              {vc.Image && vc.Image[0] ? (
+                <img
+                  src={vc.Image[0].url}
+                  alt={vc.name}
+                  className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                />
+              ) : vc.profileImageUrl ? (
+                <img
+                  src={vc.profileImageUrl}
+                  alt={vc.name}
+                  className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                />
+              ) : (
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                  {vc.name ? vc.name.charAt(0) : 'V'}
+                </div>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
