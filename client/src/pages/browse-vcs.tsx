@@ -315,10 +315,10 @@ export default function BrowseVCs() {
                         <img
                           src={vc.Image[0].url}
                           alt={vc.name}
-                          className="w-16 h-16 rounded-full object-cover"
+                          className="w-16 h-16 rounded-full object-cover border-2 border-gray-100"
                         />
                       ) : (
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center border-2 border-gray-100">
                           <span className="text-white font-semibold text-lg">
                             {vc.name ? vc.name.substring(0, 2).toUpperCase() : 'VC'}
                           </span>
