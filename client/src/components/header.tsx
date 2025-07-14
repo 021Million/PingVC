@@ -73,17 +73,7 @@ export function Header() {
             }`}>
               Ping
             </Link>
-            <Link href="/how-it-works" className={`transition-colors font-medium ${
-              isActive("/how-it-works") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              For Founders
-            </Link>
 
-            <Link href="/pricing" className={`transition-colors font-medium ${
-              isActive("/pricing") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              Pricing
-            </Link>
           </nav>
 
           {/* Auth Section */}

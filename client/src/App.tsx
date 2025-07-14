@@ -15,8 +15,6 @@ import ProjectSetup from "@/pages/project-setup";
 import Profile from "@/pages/profile";
 import Scout from "@/pages/scout";
 import Ping from "@/pages/ping";
-import HowItWorks from "@/pages/how-it-works";
-import Pricing from "@/pages/pricing";
 import Join from "@/pages/join";
 import SignupType from "@/pages/signup-type";
 import PrivacyPolicy from "@/pages/privacy-policy";
@@ -53,8 +51,6 @@ function Router() {
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
           <Route path="/vc/:id" component={VCDetailPage} />
-          <Route path="/how-it-works" component={HowItWorks} />
-          <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
@@ -75,8 +71,6 @@ function Router() {
           <Route path="/ping" component={Ping} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/project/:id" component={ProjectDetails} />
-          <Route path="/how-it-works" component={HowItWorks} />
-          <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
