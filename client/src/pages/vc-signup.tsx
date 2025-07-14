@@ -550,7 +550,7 @@ export default function VCSignup() {
                   {createVCMutation.isPending ? "Submitting..." : "Apply to Join Ping Me"}
                 </Button>
 
-                <p className="text-sm text-gray-500 text-center">Applications are reviewed within 24 - 48 hours. You'll receive an email with next steps.</p>
+                <p className="text-sm text-gray-500 text-center">Applications are reviewed within 48 hours. You'll receive an email with next steps.</p>
               </form>
             </CardContent>
           </Card>
