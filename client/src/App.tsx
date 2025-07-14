@@ -3,7 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, AuthProvider } from "@/hooks/use-auth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import Home from "@/pages/home";
@@ -29,6 +29,7 @@ import Settings from "@/pages/settings";
 import PasswordSetupPage from "@/pages/password-setup";
 import ColdScoutDetail from "@/pages/cold-scout-detail";
 import { VCDetailPage } from "@/pages/vc-detail";
+import Auth from "@/pages/auth";
 
 
 function Router() {
@@ -54,6 +55,7 @@ function Router() {
           <Route path="/vcs" component={VCs} />
           <Route path="/directory" component={Directory} />
           <Route path="/vc/:id" component={VCDetailPage} />
+          <Route path="/auth" component={Auth} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
@@ -74,6 +76,7 @@ function Router() {
           <Route path="/vcs" component={VCs} />
           <Route path="/directory" component={Directory} />
           <Route path="/vc/:id" component={VCDetailPage} />
+          <Route path="/auth" component={Auth} />
           <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
@@ -94,10 +97,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
-        <Toaster />
-        <Router />
-      </div>
+      <AuthProvider>
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

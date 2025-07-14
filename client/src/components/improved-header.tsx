@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,7 +13,7 @@ import {
 import { User, Settings, LogOut, ChevronDown } from "lucide-react";
 
 export function ImprovedHeader() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, logoutMutation } = useAuth();
   const [location] = useLocation();
 
   const isActive = (path: string) => {
@@ -87,13 +87,13 @@ export function ImprovedHeader() {
               <div className="flex items-center space-x-3">
                 <Button 
                   variant="ghost"
-                  onClick={() => window.location.href = '/api/login'}
+                  onClick={() => window.location.href = '/auth'}
                   className="text-gray-700 hover:text-primary"
                 >
                   Login
                 </Button>
                 <Button 
-                  onClick={() => window.location.href = '/vc-signup'}
+                  onClick={() => window.location.href = '/auth'}
                   className="bg-primary text-white hover:bg-primary/90"
                 >
                   Sign Up
@@ -138,7 +138,7 @@ export function ImprovedHeader() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
-                    onClick={() => window.location.href = '/api/logout'}
+                    onClick={() => logoutMutation.mutate()}
                     className="text-red-600 focus:text-red-600"
                   >
                     <LogOut className="mr-2 h-4 w-4" />

@@ -7,6 +7,7 @@ import fs from "fs";
 import Airtable from "airtable";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupEmailAuth } from "./emailAuth";
 import { insertVCSchema, insertPaymentSchema, insertEmailSubmissionSchema } from "@shared/schema";
 import Stripe from "stripe";
 import OpenAI from "openai";
@@ -67,6 +68,7 @@ const upload = multer({
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+  setupEmailAuth(app);
 
   // Serve uploaded files statically
   app.use('/uploads', (req, res, next) => {
