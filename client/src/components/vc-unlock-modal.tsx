@@ -31,11 +31,14 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
       // For Airtable VCs, convert price to cents if it's a dollar amount
       const price = vc.price;
       if (typeof price === 'string' && price.startsWith('$')) {
-        return Math.round(parseFloat(price.substring(1)) * 100);
+        const cents = Math.round(parseFloat(price.substring(1)) * 100);
+        return Math.max(cents, 50); // Minimum 50 cents for Stripe
       } else if (typeof price === 'number') {
-        return price < 100 ? price * 100 : price; // Assume dollars if < 100, cents if >= 100
+        // Ensure minimum 50 cents for Stripe
+        const cents = price < 100 ? price * 100 : price;
+        return Math.max(cents, 50); // Minimum 50 cents
       }
-      return 500; // Default $5 for verified Airtable VCs
+      return 50; // Default $0.50 for verified Airtable VCs (minimum Stripe amount)
     }
   };
 

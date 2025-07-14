@@ -178,7 +178,7 @@ export function VCDetailPage() {
             size="lg"
           >
             <DollarSign className="h-4 w-4 mr-2" />
-            Unlock Access for $${vc.price || '0.1'}
+            Unlock Access for $${vc.price || '0.50'}
           </Button>
         </CardContent>
       </Card>
@@ -293,7 +293,7 @@ export function VCDetailPage() {
                     <div>
                       <p className="font-medium text-gray-900">Unlock Price</p>
                       <p className="text-gray-600">
-                        $${vc.price || '0.1'}
+                        $${vc.price || '0.50'}
                       </p>
                     </div>
                   </div>
