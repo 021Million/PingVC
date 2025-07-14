@@ -1,0 +1,140 @@
+What This Code Does
+🧠 Pulls VC data from Airtable
+
+🟢 Shows “Book Call” button if verified = true
+
+🔵 Shows “Send Request” button if not verified
+
+🔗 Always shows LinkedIn + Website links
+
+🔧 Step 1: Airtable Setup
+In Airtable, make sure each VC record has the following fields:
+
+Field Name	Type
+name	Single line text
+fund	Single line text
+tags	Multiple select
+verified	Checkbox or boolean
+price	Number (in USD)
+linkedin	URL
+website	URL
+image	Attachment (optional)
+
+✅ Step 2: Backend Code (Express + Airtable)
+Install Airtable:
+bash
+Copy
+Edit
+npm install airtable
+In main.js or server.js:
+js
+Copy
+Edit
+import Airtable from 'airtable';
+
+const airtable = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+
+// GET: All VCs from Airtable
+app.get('/api/vcs', async (req, res) => {
+  const vcs = [];
+
+  try {
+    await airtable('VCs').select().eachPage((records, fetchNextPage) => {
+      records.forEach(record => {
+        vcs.push({
+          id: record.id,
+          name: record.get('name'),
+          fund: record.get('fund'),
+          tags: record.get('tags') || [],
+          verified: record.get('verified') || false,
+          price: record.get('price') || 0,
+          linkedin: record.get('linkedin'),
+          website: record.get('website'),
+          image: record.get('image') ? record.get('image')[0].url : null
+        });
+      });
+      fetchNextPage();
+    });
+
+    res.json(vcs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch VCs' });
+  }
+});
+🖥️ Step 3: Frontend HTML/JS (Basic Dynamic UI Example)
+html
+Copy
+Edit
+<div id="vcList"></div>
+
+<script>
+fetch('/api/vcs')
+  .then(res => res.json())
+  .then(vcs => {
+    const container = document.getElementById('vcList');
+    vcs.forEach(vc => {
+      const card = document.createElement('div');
+      card.className = 'vc-card';
+
+      card.innerHTML = `
+        <img src="${vc.image}" alt="${vc.name}" width="100" />
+        <h3>${vc.name}</h3>
+        <p><strong>${vc.fund}</strong></p>
+        <p>${vc.tags.join(', ')}</p>
+        <a href="${vc.linkedin}" target="_blank">LinkedIn</a> |
+        <a href="${vc.website}" target="_blank">Website</a><br/><br/>
+        ${vc.verified
+          ? `<button onclick="bookVC('${vc.id}', ${vc.price})">Book Call</button>`
+          : `<button onclick="requestVC('${vc.name}')">Send Request</button>`}
+      `;
+
+      container.appendChild(card);
+    });
+  });
+
+function bookVC(vcId, price) {
+  alert(`Redirecting to Stripe booking for VC ID ${vcId} at $${price}`);
+  // Trigger Stripe flow here
+}
+
+function requestVC(vcName) {
+  alert(`We'll notify ${vcName} that a founder is interested.`);
+  fetch('/api/request-call', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ vcName })
+  });
+}
+</script>
+🔁 Optional Endpoint for Requests
+js
+Copy
+Edit
+app.post('/api/request-call', (req, res) => {
+  const { vcName } = req.body;
+  console.log(`📩 Request sent for: ${vcName}`);
+  // TODO: send Slack/email alert
+  res.json({ message: 'Request recorded!' });
+});
+✨ Bonus Styling (Optional)
+css
+Copy
+Edit
+.vc-card {
+  border: 1px solid #eee;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 10px;
+  width: 250px;
+}
+✅ Recap
+This code gives you:
+
+Real-time VC listings from Airtable
+
+Conditional booking vs. request buttons
+
+Full links to LinkedIn + Website
+
+Frontend-ready and expandable
