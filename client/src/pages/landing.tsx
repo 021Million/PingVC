@@ -27,7 +27,7 @@ export default function Landing() {
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Connect with real investors. <span className="text-primary">Instantly.</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Ping Me helps startup founders access verified VCs and angels — no intros needed.</p>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Ping Me helps startup founders access verified VCs and angels, no intros needed.</p>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -63,7 +63,6 @@ export default function Landing() {
           </div>
         </div>
       </section>
-
       {/* VC Grid */}
       <section className="py-16 bg-gray-50" id="vc-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
