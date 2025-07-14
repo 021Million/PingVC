@@ -420,7 +420,7 @@ export default function VCSignup() {
                 </div>
 
                 <div>
-                  <Label htmlFor="investmentThesis">Investment Thesis (One-liner)</Label>
+                  <Label htmlFor="investmentThesis">Investment Thesis</Label>
                   <Textarea
                     id="investmentThesis"
                     {...register("investmentThesis")}
