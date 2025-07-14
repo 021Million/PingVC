@@ -21,8 +21,20 @@ export default function VCs() {
     queryKey: ["/api/airtable/vcs"],
   });
 
-  // Filter Airtable VCs
+  // Filter Airtable VCs - both verified and unverified
   const filteredVerifiedVCs = (airtableData?.verifiedVCs || []).filter((vc: any) => {
+    const matchesSearch = !searchTerm || 
+      vc.fund?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vc.bio?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStage = selectedStage === "All" || (vc.stages && vc.stages.includes(selectedStage));
+    const matchesSector = selectedSector === "All" || (vc.specialties && vc.specialties.includes(selectedSector));
+    
+    return matchesSearch && matchesStage && matchesSector;
+  });
+
+  const filteredUnverifiedVCs = (airtableData?.unverifiedVCs || []).filter((vc: any) => {
     const matchesSearch = !searchTerm || 
       vc.fund?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -37,7 +49,7 @@ export default function VCs() {
   const stages = ["All", "Angel", "Pre-Seed", "Seed", "Series A", "Series B"];
   const sectors = ["All", "DeFi", "Stablecoins", "RWA", "Infrastructure", "Social", "Enterprise", "AI/ML", "Gaming"];
 
-  const VCCard = ({ vc }: { vc: any }) => (
+  const VCCard = ({ vc, isVerified = true }: { vc: any; isVerified?: boolean }) => (
     <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
       <Link href={`/vc/${vc.id}`}>
         <CardHeader className="pb-3">
@@ -66,9 +78,15 @@ export default function VCs() {
                 <h3 className="font-semibold text-gray-900 truncate group-hover:text-primary transition-colors">
                   {vc.name || 'Unknown VC'}
                 </h3>
-                <Badge variant="secondary" className="ml-2 bg-green-100 text-green-800 border-green-200">
+                <Badge 
+                  variant="secondary" 
+                  className={`ml-2 ${isVerified 
+                    ? 'bg-green-100 text-green-800 border-green-200' 
+                    : 'bg-orange-100 text-orange-800 border-orange-200'
+                  }`}
+                >
                   <Shield className="w-3 h-3 mr-1" />
-                  Verified
+                  {isVerified ? 'Verified' : 'Unverified'}
                 </Badge>
               </div>
               <p className="text-sm text-gray-600 font-medium">{vc.fund || 'Unknown Fund'}</p>
@@ -187,21 +205,45 @@ export default function VCs() {
                 </Card>
               ))}
             </div>
-          ) : filteredVerifiedVCs.length > 0 ? (
+          ) : filteredVerifiedVCs.length > 0 || filteredUnverifiedVCs.length > 0 ? (
             <>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  {filteredVerifiedVCs.length} verified investors found
-                </h2>
-                <p className="text-gray-600">
-                  Connect directly with top-tier VCs and Angels. No cold outreach needed.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredVerifiedVCs.map((vc: any, index: number) => (
-                  <VCCard key={`verified-${index}`} vc={vc} />
-                ))}
-              </div>
+              {/* Verified VCs Section */}
+              {filteredVerifiedVCs.length > 0 && (
+                <div className="mb-12">
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      Verified Investors ({filteredVerifiedVCs.length})
+                    </h2>
+                    <p className="text-gray-600">
+                      Connect directly with top-tier VCs and Angels. Instant booking available.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredVerifiedVCs.map((vc: any, index: number) => (
+                      <VCCard key={`verified-${index}`} vc={vc} isVerified={true} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Unverified VCs Section */}
+              {filteredUnverifiedVCs.length > 0 && (
+                <div>
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      Community Investors ({filteredUnverifiedVCs.length})
+                    </h2>
+                    <p className="text-gray-600">
+                      Request connections with emerging VCs and Angels. Our team will facilitate introductions.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredUnverifiedVCs.map((vc: any, index: number) => (
+                      <VCCard key={`unverified-${index}`} vc={vc} isVerified={false} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           ) : (
             <div className="text-center py-16">

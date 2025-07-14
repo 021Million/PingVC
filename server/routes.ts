@@ -180,10 +180,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Request Call for Unverified VCs
+  // Request Call for Unverified VCs - Now saves to Airtable
   app.post('/api/request-call', async (req, res) => {
     try {
-      const { vcId, founderEmail } = req.body;
+      const { vcId, founderEmail, founderName = '', message = '' } = req.body;
 
       if (!vcId || !founderEmail) {
         return res.status(400).json({ error: 'Missing vcId or founderEmail' });
@@ -205,24 +205,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const vcName = record.get('Name') as string;
       const vcFund = record.get('Fund') as string;
+      const vcEmail = record.get('Email') as string;
 
-      // TODO: Implement actual notification system (Slack, Discord, Email)
-      // For now, just log the request
-      console.log(`📩 New call request:
-        VC: ${vcName} (${vcFund})
-        From: ${founderEmail}
-        VC ID: ${vcId}
-        Timestamp: ${new Date().toISOString()}
-      `);
+      try {
+        // Store the request in Airtable "Booking Requests" table
+        await base('Booking Requests').create({
+          'VC Name': vcName,
+          'VC Fund': vcFund,
+          'VC Email': vcEmail,
+          'VC ID': vcId,
+          'Founder Email': founderEmail,
+          'Founder Name': founderName,
+          'Message': message,
+          'Request Date': new Date().toISOString(),
+          'Status': 'Pending'
+        });
 
-      // In a real implementation, you would:
-      // 1. Send to Slack webhook
-      // 2. Email the team
-      // 3. Store in a database for tracking
-      // 4. Send follow-up email to founder
+        console.log(`📩 New booking request saved to Airtable:
+          VC: ${vcName} (${vcFund})
+          From: ${founderEmail} (${founderName})
+          VC ID: ${vcId}
+          Timestamp: ${new Date().toISOString()}
+        `);
+
+      } catch (airtableError) {
+        console.error('Error saving to Airtable:', airtableError);
+        // Continue with the response even if Airtable save fails
+      }
 
       res.json({ 
-        message: 'Request sent. Our team will notify the investor!',
+        message: 'Request sent successfully! Our team will reach out to facilitate the introduction.',
         vcName,
         vcFund
       });

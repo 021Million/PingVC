@@ -3,8 +3,9 @@ import { useLocation, useRoute } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Shield, DollarSign, Users, Lock, Unlock, Globe, Linkedin, X, Mail, MessageCircle, Calendar, Target, TrendingUp, ArrowLeft } from "lucide-react";
+import { Shield, DollarSign, Users, Lock, Unlock, Globe, Linkedin, X, Mail, MessageCircle, Calendar, Target, TrendingUp, ArrowLeft, AlertTriangle } from "lucide-react";
 import { VCUnlockModal } from "@/components/vc-unlock-modal";
+import { RequestCallModal } from "@/components/request-call-modal";
 import { useQuery } from "@tanstack/react-query";
 import { ImprovedHeader } from "@/components/improved-header";
 
@@ -12,6 +13,7 @@ export function VCDetailPage() {
   const [, params] = useRoute("/vc/:id");
   const [, setLocation] = useLocation();
   const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
   
   const vcId = params?.id;
   const email = localStorage.getItem('email_access_ping');
@@ -30,6 +32,7 @@ export function VCDetailPage() {
   const vc = airtableData?.verifiedVCs?.find((v: any) => v.id === vcId) || 
             airtableData?.unverifiedVCs?.find((v: any) => v.id === vcId);
   
+  const isVerified = airtableData?.verifiedVCs?.find((v: any) => v.id === vcId) ? true : false;
   const isUnlocked = unlockStatus?.hasUnlocked || false;
 
   const handleUnlockClick = () => {
@@ -152,6 +155,42 @@ export function VCDetailPage() {
       );
     }
 
+    if (!isVerified) {
+      // Unverified VC - show request call option
+      return (
+        <Card className="border-orange-200 bg-orange-50">
+          <CardHeader>
+            <CardTitle className="flex items-center text-orange-700">
+              <AlertTriangle className="h-5 w-5 mr-2" />
+              Unverified Investor
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <p className="text-orange-700">
+                This investor hasn't been verified by our team yet. You can request an introduction:
+              </p>
+              <ul className="text-sm text-orange-600 space-y-1 ml-4">
+                <li>• Our team will reach out to the investor</li>
+                <li>• We'll facilitate the introduction manually</li>
+                <li>• No immediate payment required</li>
+                <li>• We'll invite them to join our platform</li>
+              </ul>
+            </div>
+            <Button 
+              onClick={() => setShowRequestModal(true)}
+              className="w-full bg-orange-600 hover:bg-orange-700"
+              size="lg"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Request Introduction
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    // Verified VC - show unlock option
     return (
       <Card className="border-yellow-200 bg-yellow-50">
         <CardHeader>
@@ -247,9 +286,15 @@ export function VCDetailPage() {
                           )}
                         </div>
                       </div>
-                      <Badge variant="secondary" className="bg-green-100 text-green-800">
+                      <Badge 
+                        variant="secondary" 
+                        className={isVerified 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-orange-100 text-orange-800"
+                        }
+                      >
                         <Shield className="h-3 w-3 mr-1" />
-                        Verified
+                        {isVerified ? "Verified" : "Unverified"}
                       </Badge>
                     </div>
                   </div>
@@ -386,6 +431,15 @@ export function VCDetailPage() {
         vcType="airtable"
         userEmail={email}
         onSuccess={handleUnlockSuccess}
+      />
+      
+      <RequestCallModal
+        vc={vc}
+        isOpen={showRequestModal}
+        onClose={() => setShowRequestModal(false)}
+        onSuccess={() => {
+          setShowRequestModal(false);
+        }}
       />
     </div>
   );
