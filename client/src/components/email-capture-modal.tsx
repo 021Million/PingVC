@@ -99,7 +99,7 @@ export function EmailCaptureModal() {
             <div>
               <Input
                 type="email"
-                placeholder="you@email.com"
+                placeholder="Enter your email here"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-12 text-center text-base"
