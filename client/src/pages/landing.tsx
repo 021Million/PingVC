@@ -1,29 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { CheckCircle, Lock, Calendar, MessageCircle, Mail, ArrowRight } from "lucide-react";
-import { FilterSection } from "@/components/filter-section";
-import { VCCard } from "@/components/vc-card";
 import { AirtableVCPreviewCard } from "@/components/airtable-vc-preview-card";
-import { MarketplaceLanding } from "@/components/marketplace-landing";
 import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "wouter";
 
 export default function Landing() {
-  const [stageFilter, setStageFilter] = useState("All");
-  const [sectorFilter, setSectorFilter] = useState("");
-  const [email, setEmail] = useState("");
-
-  const { data: vcs = [], isLoading } = useQuery({
-    queryKey: ["/api/vcs", { stage: stageFilter, sector: sectorFilter, verified: true }],
-  });
-
-  const { data: featuredProjects = [] } = useQuery({
-    queryKey: ["/api/scout/featured"],
-  });
 
   // Fetch Airtable VCs for the landing page thumbnails
   const { data: airtableData, isLoading: airtableLoading } = useQuery({
@@ -32,19 +17,6 @@ export default function Landing() {
   });
 
   const airtableVCs = airtableData?.verifiedVCs || [];
-
-  const handleScrollToVCs = () => {
-    document.getElementById('vc-grid')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // Store email and redirect to sign up
-      localStorage.setItem('signup_email', email);
-      window.location.href = '/api/login';
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -91,15 +63,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
-      {/* Marketplace Section */}
-      <MarketplaceLanding vcs={airtableVCs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
-      {/* Filter Section */}
-      <FilterSection 
-        stageFilter={stageFilter}
-        sectorFilter={sectorFilter}
-        onStageChange={setStageFilter}
-        onSectorChange={setSectorFilter}
-      />
+
       {/* VC Grid */}
       <section className="py-16 bg-gray-50" id="vc-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
