@@ -165,10 +165,7 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <div className="flex items-center text-sm text-gray-600">
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  {vcType === "platform" ? vc.stage : (vc.stage || "Various stages")}
-                </div>
+
                 <div className="flex items-center text-sm text-gray-600">
                   <Users className="h-4 w-4 mr-2" />
                   {vcType === "platform" ? vc.sectors?.join(", ") : vc.specialties?.join(", ")}
