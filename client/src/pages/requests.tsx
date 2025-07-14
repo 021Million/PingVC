@@ -6,9 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { MessageSquare, Send, Lightbulb, Bug, Users } from "lucide-react";
+import { MessageSquare, Send, Lightbulb, Bug, Users, ArrowLeft } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function RequestsPage() {
+  const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -67,6 +69,16 @@ export default function RequestsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <div className="container mx-auto px-6 py-12 max-w-4xl">
+        {/* Back Button */}
+        <Button 
+          onClick={() => setLocation('/')} 
+          variant="outline" 
+          className="mb-8"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
+        
         <div className="text-center mb-12">
           <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
