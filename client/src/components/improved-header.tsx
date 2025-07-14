@@ -87,10 +87,10 @@ export function ImprovedHeader() {
                   Sign In
                 </Button>
                 <Button 
-                  onClick={() => window.location.href = '/signup'}
+                  onClick={() => window.location.href = '/vc-signup'}
                   className="bg-primary text-white hover:bg-primary/90"
                 >
-                  Get Started
+                  Sign Up
                 </Button>
               </div>
             ) : (
