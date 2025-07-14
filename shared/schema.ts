@@ -67,6 +67,8 @@ export const vcs = pgTable("vcs", {
   weeklyIntroLimit: integer("weekly_intro_limit").default(5),
   isVerified: boolean("is_verified").default(false),
   isActive: boolean("is_active").default(true),
+  donateToCharity: boolean("donate_to_charity").default(false),
+  charityOfChoice: varchar("charity_of_choice"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

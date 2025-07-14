@@ -23,6 +23,8 @@ const vcSignupSchema = insertVCSchema.extend({
   stage: z.array(z.string()).min(1, "Please select at least one investment stage"),
   telegramHandle: z.string().optional(),
   meetingLink: z.string().optional(),
+  donateToCharity: z.boolean().optional(),
+  charityOfChoice: z.string().optional(),
 }).omit({ userId: true, isVerified: true, isActive: true })
 .refine((data) => {
   if (data.contactType === "telegram" || data.contactType === "both") {
@@ -90,6 +92,8 @@ export default function VCSignup() {
       weeklyIntroLimit: 5,
       sectors: [],
       stage: [],
+      donateToCharity: false,
+      charityOfChoice: "",
     },
   });
 
@@ -99,6 +103,8 @@ export default function VCSignup() {
   const meetingLink = watch("meetingLink");
   const sectors = watch("sectors") || [];
   const stages = watch("stage") || [];
+  const donateToCharity = watch("donateToCharity");
+  const charityOfChoice = watch("charityOfChoice");
 
   const createVCMutation = useMutation({
     mutationFn: async (data: VCSignupForm) => {
@@ -510,7 +516,46 @@ export default function VCSignup() {
                     {errors.price && (
                       <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
                     )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      You earn 85% of each unlock fee {donateToCharity ? "(donated to your chosen charity)" : ""}
+                    </p>
                   </div>
+                </div>
+
+                {/* Charity Donation Section */}
+                <div className="space-y-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="donateToCharity"
+                      {...register("donateToCharity")}
+                      checked={donateToCharity}
+                      onCheckedChange={(checked) => setValue("donateToCharity", checked as boolean)}
+                    />
+                    <div className="space-y-2 flex-1">
+                      <Label htmlFor="donateToCharity" className="text-sm font-medium text-green-800">
+                        🎯 Donate earnings to charity (Optional)
+                      </Label>
+                      <p className="text-sm text-green-700">
+                        Choose to have your 85% earnings donated to a charity of your choice instead of receiving payment.
+                      </p>
+                    </div>
+                  </div>
+
+                  {donateToCharity && (
+                    <div className="mt-4">
+                      <Label htmlFor="charityOfChoice">Charity of Choice</Label>
+                      <Input
+                        id="charityOfChoice"
+                        {...register("charityOfChoice")}
+                        placeholder="e.g., Red Cross, Doctors Without Borders, Local Food Bank..."
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-green-600 mt-2">
+                        💡 <strong>Note:</strong> Ping Me will organize the donation to your charity of choice in your name. 
+                        Official receipts will be issued for tax purposes and proof of donation will be provided.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div>
