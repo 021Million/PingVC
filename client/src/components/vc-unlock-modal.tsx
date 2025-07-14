@@ -185,7 +185,6 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
           <Card className="border-primary/20">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
-                <DollarSign className="h-5 w-5" />
                 Unlock for {getPriceDisplay()}
               </CardTitle>
             </CardHeader>
@@ -198,8 +197,8 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                   {vcType === "platform" 
-                    ? (vc.contactType === "telegram" ? "Telegram handle" : "Meeting booking link")
-                    : "Professional contact details"
+                    ? (vc.contactType === "telegram" ? "Telegram handle" : "Calendar booking link")
+                    : "Calendar booking link reveal"
                   }
                 </li>
                 <li className="flex items-center">
