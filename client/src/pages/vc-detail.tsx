@@ -269,19 +269,42 @@ export function VCDetailPage() {
                         <CardTitle className="text-2xl font-bold text-gray-900 mb-1">
                           {vc.name || "Partner Name"}
                         </CardTitle>
-                        <p className="text-lg text-gray-600 mb-2">
+                        <p className="text-lg text-gray-600 mb-3">
                           {vc.title || "Position"} at {vc.fund || "Fund Name"}
                         </p>
-                        {/* Social Links Preview */}
-                        <div className="flex items-center space-x-3 mt-2">
-                          {(vc.twitter || vc['X Profile']) && (
-                            <a href={vc.twitter || vc['X Profile']} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600">
-                              <X className="h-4 w-4" />
+                        {/* Enhanced Social Links */}
+                        <div className="space-y-2">
+                          {vc.linkedin && (
+                            <a 
+                              href={vc.linkedin} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                            >
+                              <Linkedin className="h-4 w-4 mr-2" />
+                              <span>LinkedIn</span>
                             </a>
                           )}
-                          {vc.linkedin && (
-                            <a href={vc.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
-                              <Linkedin className="h-4 w-4" />
+                          {(vc.twitter || vc['X Profile']) && (
+                            <a 
+                              href={vc.twitter || vc['X Profile']} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                            >
+                              <X className="h-4 w-4 mr-2" />
+                              <span>X (Twitter)</span>
+                            </a>
+                          )}
+                          {vc.website && (
+                            <a 
+                              href={vc.website} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                            >
+                              <Globe className="h-4 w-4 mr-2" />
+                              <span>Website</span>
                             </a>
                           )}
                         </div>
