@@ -206,14 +206,24 @@ export function VCDetailPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <CardTitle className="text-2xl font-bold text-gray-900 mb-1">
-                          {vc.fund || "Fund Name"}
+                          {vc.name || "Partner Name"}
                         </CardTitle>
                         <p className="text-lg text-gray-600 mb-2">
-                          {vc.name || "Partner Name"}
-                          {vc.title && (
-                            <span className="text-gray-500"> • {vc.title}</span>
-                          )}
+                          {vc.title || "Position"} at {vc.fund || "Fund Name"}
                         </p>
+                        {/* Social Links Preview */}
+                        <div className="flex items-center space-x-3 mt-2">
+                          {(vc.twitter || vc['X Profile']) && (
+                            <a href={vc.twitter || vc['X Profile']} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600">
+                              <X className="h-4 w-4" />
+                            </a>
+                          )}
+                          {vc.linkedin && (
+                            <a href={vc.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                              <Linkedin className="h-4 w-4" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
                         <Shield className="h-3 w-3 mr-1" />
@@ -298,12 +308,62 @@ export function VCDetailPage() {
                   <CardTitle>About {vc.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {vc.bio}
                   </p>
                 </CardContent>
               </Card>
             )}
+
+            {/* Professional Background & Social Links */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Professional Background</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="font-medium text-gray-900 mb-1">Fund</p>
+                    <p className="text-gray-600">{vc.fund || "Fund Name"}</p>
+                  </div>
+                  {vc.title && (
+                    <div>
+                      <p className="font-medium text-gray-900 mb-1">Position</p>
+                      <p className="text-gray-600">{vc.title}</p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Social Links */}
+                <div className="border-t pt-4">
+                  <p className="font-medium text-gray-900 mb-3">Connect</p>
+                  <div className="flex flex-wrap gap-3">
+                    {(vc.twitter || vc['X Profile']) && (
+                      <a 
+                        href={vc.twitter || vc['X Profile']} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        X Profile
+                      </a>
+                    )}
+                    {vc.linkedin && (
+                      <a 
+                        href={vc.linkedin} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                      >
+                        <Linkedin className="h-4 w-4 mr-2" />
+                        LinkedIn
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar */}

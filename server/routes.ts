@@ -296,9 +296,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           verified: fields.Verified || false,
           twitter: fields.Twitter,
           linkedin: fields.LinkedIn,
+          email: fields.Email,
+          telegram: fields.Telegram,
+          'Meeting/Calendly Link': fields['Meeting/Calendly Link'],
+          'X Profile': fields['X Profile'],
+          'Investment Stage': fields['Investment Stage'],
+          'Primary Sector': fields['Primary Sector'],
+          'Investment Thesis': fields['Investment Thesis'],
+          Image: fields.Image,
           imageUrl: fields['Image URL'],
           specialties: fields.Specialties || [],
           price: fields.Price,
+          limit: fields.Limit,
           contactLink: fields['Contact Link'],
           bio: fields.Bio
         };
