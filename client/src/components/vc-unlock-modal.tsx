@@ -166,10 +166,7 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
             <CardContent>
               <div className="space-y-2">
 
-                <div className="flex items-center text-sm text-gray-600">
-                  <Users className="h-4 w-4 mr-2" />
-                  {vcType === "platform" ? vc.sectors?.join(", ") : vc.specialties?.join(", ")}
-                </div>
+
                 <div className="flex items-center text-sm text-gray-500">
                   <ExternalLink className="h-4 w-4 mr-2" />
                   {getContactPreview()}
