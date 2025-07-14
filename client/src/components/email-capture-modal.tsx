@@ -91,10 +91,7 @@ export function EmailCaptureModal() {
             ✨ Join Miss AI Early
           </DialogTitle>
           
-          <p className="text-gray-600 leading-relaxed">
-            Be the first to access AI tools, founder insights, and exclusive community drops. 
-            Join our early bird list for premium content.
-          </p>
+          <p className="text-gray-600 leading-relaxed">Be the first to access AI tools, founder insights, VC  alpha and exclusive community drops. Join our early bird list today.</p>
         </DialogHeader>
 
         <div className="space-y-4 mt-6">
