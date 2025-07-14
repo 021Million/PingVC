@@ -204,7 +204,6 @@ export default function HowItWorks() {
             </div>
             <div className="flex space-x-6">
               <Link href="/how-it-works"><a className="text-gray-600 hover:text-primary transition-colors">For Founders</a></Link>
-              <Link href="/for-vcs"><a className="text-gray-600 hover:text-primary transition-colors">For VCs</a></Link>
               <Link href="/pricing"><a className="text-gray-600 hover:text-primary transition-colors">Pricing</a></Link>
             </div>
           </div>

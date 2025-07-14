@@ -51,7 +51,7 @@ export default function Pricing() {
                   </li>
                 </ul>
                 <Button className="w-full mt-6" variant="outline" asChild>
-                  <Link href="/vcs">Start Browsing</Link>
+                  <Link href="/ping">Start Browsing</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -86,7 +86,7 @@ export default function Pricing() {
                   </li>
                 </ul>
                 <Button className="w-full mt-6" asChild>
-                  <Link href="/vcs">Browse VCs <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link href="/ping">Browse VCs <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </CardContent>
             </Card>
@@ -153,7 +153,7 @@ export default function Pricing() {
                   </li>
                 </ul>
                 <Button className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white" asChild>
-                  <Link href="/vcs">Try Cold Scout</Link>
+                  <Link href="/ping">Try Cold Scout</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -330,7 +330,7 @@ export default function Pricing() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/vcs">Browse VCs <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link href="/ping">Browse VCs <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/vc-signup">Join as VC</Link>
@@ -350,7 +350,6 @@ export default function Pricing() {
             </div>
             <div className="flex space-x-6">
               <Link href="/how-it-works" className="text-gray-600 hover:text-primary transition-colors">For Founders</Link>
-              <Link href="/for-vcs" className="text-gray-600 hover:text-primary transition-colors">For VCs</Link>
               <Link href="/pricing" className="text-gray-600 hover:text-primary transition-colors">Pricing</Link>
             </div>
           </div>

@@ -78,11 +78,7 @@ export function Header() {
             }`}>
               For Founders
             </Link>
-            <Link href="/for-vcs" className={`transition-colors font-medium ${
-              isActive("/for-vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              For VCs
-            </Link>
+
             <Link href="/pricing" className={`transition-colors font-medium ${
               isActive("/pricing") ? "text-primary" : "text-gray-700 hover:text-primary"
             }`}>

@@ -16,7 +16,6 @@ import Profile from "@/pages/profile";
 import Scout from "@/pages/scout";
 import Ping from "@/pages/ping";
 import HowItWorks from "@/pages/how-it-works";
-import ForVCs from "@/pages/for-vcs";
 import Pricing from "@/pages/pricing";
 import Join from "@/pages/join";
 import SignupType from "@/pages/signup-type";
@@ -30,7 +29,6 @@ import Settings from "@/pages/settings";
 import PasswordSetupPage from "@/pages/password-setup";
 import ColdScoutDetail from "@/pages/cold-scout-detail";
 import { VCDetailPage } from "@/pages/vc-detail";
-import VCs from "@/pages/vcs";
 
 
 function Router() {
@@ -54,10 +52,8 @@ function Router() {
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
-          <Route path="/vcs" component={VCs} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/how-it-works" component={HowItWorks} />
-          <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
@@ -77,11 +73,9 @@ function Router() {
           <Route path="/profile" component={Profile} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
-          <Route path="/vcs" component={VCs} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/how-it-works" component={HowItWorks} />
-          <Route path="/for-vcs" component={ForVCs} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />

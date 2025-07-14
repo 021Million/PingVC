@@ -63,11 +63,7 @@ export function ImprovedHeader() {
             }`}>
               Home
             </Link>
-            <Link href="/vcs" className={`transition-colors font-medium ${
-              isActive("/vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              Browse VCs
-            </Link>
+
             <Link href="/scout" className={`transition-colors font-medium ${
               isActive("/scout") ? "text-primary" : "text-gray-700 hover:text-primary"
             }`}>
@@ -83,11 +79,7 @@ export function ImprovedHeader() {
             }`}>
               For Founders
             </Link>
-            <Link href="/for-vcs" className={`transition-colors font-medium ${
-              isActive("/for-vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              For VCs
-            </Link>
+
             <Link href="/pricing" className={`transition-colors font-medium ${
               isActive("/pricing") ? "text-primary" : "text-gray-700 hover:text-primary"
             }`}>
