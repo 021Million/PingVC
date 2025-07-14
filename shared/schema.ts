@@ -166,7 +166,7 @@ export const emailSubmissions = pgTable("email_submissions", {
 export const vcUnlocks = pgTable("vc_unlocks", {
   id: serial("id").primaryKey(),
   email: varchar("email").notNull(),
-  vcId: integer("vc_id").notNull(), // Can reference either platform VCs or Airtable VC IDs
+  vcId: varchar("vc_id").notNull(), // Can reference either platform VCs (integers) or Airtable VC IDs (strings)
   vcType: varchar("vc_type").notNull(), // 'platform' or 'airtable'
   amount: integer("amount").notNull(), // Amount paid in cents
   paymentType: varchar("payment_type").notNull(), // 'verified_vc', 'cold_scout'

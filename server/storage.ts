@@ -76,7 +76,7 @@ export interface IStorage {
   
   // VC unlock operations
   createVCUnlock(unlock: InsertVCUnlock): Promise<VCUnlock>;
-  hasEmailUnlockedVC(email: string, vcId: number, vcType: string): Promise<boolean>;
+  hasEmailUnlockedVC(email: string, vcId: string, vcType: string): Promise<boolean>;
   getVCUnlocksByEmail(email: string): Promise<VCUnlock[]>;
   
   // Cold investor operations
@@ -464,7 +464,7 @@ export class DatabaseStorage implements IStorage {
     return unlock;
   }
 
-  async hasEmailUnlockedVC(email: string, vcId: number, vcType: string): Promise<boolean> {
+  async hasEmailUnlockedVC(email: string, vcId: string, vcType: string): Promise<boolean> {
     const [unlock] = await db
       .select()
       .from(vcUnlocks)

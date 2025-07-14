@@ -582,7 +582,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Missing required parameters" });
       }
       
-      const hasUnlocked = await storage.hasEmailUnlockedVC(email as string, parseInt(vcId as string), vcType as string);
+      const hasUnlocked = await storage.hasEmailUnlockedVC(email as string, vcId as string, vcType as string);
       res.json({ hasUnlocked });
     } catch (error) {
       console.error("Error checking VC unlock status:", error);
