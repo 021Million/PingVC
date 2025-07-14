@@ -136,21 +136,17 @@ export default function VCs() {
   return (
     <div className="min-h-screen bg-gray-50">
       <ImprovedHeader />
-      
       {/* Header */}
       <section className="bg-white border-b border-gray-200 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Connect with verified investors
-            </h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Connect with Investors</h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Browse curated profiles, see pricing upfront, and get direct access to VCs and Angels.
             </p>
           </div>
         </div>
       </section>
-
       {/* Filters */}
       <section className="bg-white py-6 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -187,7 +183,6 @@ export default function VCs() {
           </div>
         </div>
       </section>
-
       {/* VC Grid */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
