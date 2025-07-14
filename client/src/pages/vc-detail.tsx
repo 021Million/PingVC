@@ -407,10 +407,10 @@ export function VCDetailPage() {
               </Card>
             )}
 
-            {/* Professional Background & Social Links */}
+            {/* Investment Thesis & Social Links */}
             <Card>
               <CardHeader>
-                <CardTitle>Professional Background</CardTitle>
+                <CardTitle>Investment Thesis</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -466,6 +466,24 @@ export function VCDetailPage() {
                   </div>
                 </div>
 
+              </CardContent>
+            </Card>
+
+            {/* Portfolio Performance */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Portfolio Performance</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {vc['Portfolio Performance'] ? (
+                  <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {vc['Portfolio Performance']}
+                  </div>
+                ) : (
+                  <div className="text-gray-600 italic">
+                    Portfolio performance data will be available after connection.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
