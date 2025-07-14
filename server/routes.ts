@@ -417,7 +417,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Payment routes
+  // Check if email has unlocked a specific VC
+  app.get("/api/check-vc-unlock", async (req, res) => {
+    try {
+      const { email, vcId, vcType } = req.query;
+      
+      if (!email || !vcId || !vcType) {
+        return res.status(400).json({ message: "Missing required parameters" });
+      }
+      
+      const hasUnlocked = await storage.hasEmailUnlockedVC(email as string, parseInt(vcId as string), vcType as string);
+      res.json({ hasUnlocked });
+    } catch (error) {
+      console.error("Error checking VC unlock status:", error);
+      res.status(500).json({ message: "Error checking unlock status", hasUnlocked: false });
+    }
+  });
+
+  // VC Unlock Payment Endpoint for Airtable VCs
+  app.post("/api/create-vc-unlock-payment", async (req, res) => {
+    try {
+      const { vcId, vcType, email, amount } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+      
+      // Check if already unlocked
+      const hasUnlocked = await storage.hasEmailUnlockedVC(email, vcId, vcType);
+      if (hasUnlocked) {
+        return res.status(400).json({ message: "VC already unlocked for this email" });
+      }
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        metadata: {
+          vcId: vcId.toString(),
+          vcType,
+          email,
+        },
+      });
+      
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error) {
+      console.error("Error creating VC unlock payment:", error);
+      res.status(500).json({ message: "Error creating payment intent" });
+    }
+  });
+
+  // Payment success confirmation endpoint
+  app.post("/api/confirm-vc-unlock-payment", async (req, res) => {
+    try {
+      const { paymentIntentId, vcId, vcType, email } = req.body;
+      
+      // Verify payment with Stripe
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status !== 'succeeded') {
+        return res.status(400).json({ message: "Payment not completed" });
+      }
+      
+      // Create unlock record
+      await storage.createVCUnlock({
+        email,
+        vcId,
+        vcType,
+        unlockedAt: new Date(),
+      });
+      
+      res.json({ success: true, message: "VC contact information unlocked successfully" });
+    } catch (error) {
+      console.error("Error confirming VC unlock payment:", error);
+      res.status(500).json({ message: "Error confirming payment" });
+    }
+  });
+
+  // Legacy payment route for platform VCs
   app.post("/api/create-payment-intent", isAuthenticated, async (req: any, res) => {
     try {
       const { vcId } = req.body;

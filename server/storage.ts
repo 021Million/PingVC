@@ -218,7 +218,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     if (filters?.stage) {
-      whereConditions.push(eq(vcs.stage, filters.stage));
+      whereConditions.push(sql`${filters.stage} = ANY(${vcs.stage})`);
     }
     
     if (filters?.sector) {

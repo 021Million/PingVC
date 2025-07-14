@@ -34,9 +34,18 @@ export function VCDetailPage() {
 
   const handleUnlockClick = () => {
     if (!email) {
-      // Redirect to landing page if no email
-      setLocation('/');
-      return;
+      // Create a simple prompt for email and store it
+      const userEmail = prompt("Please enter your email to unlock this VC's contact information:");
+      if (userEmail && userEmail.includes('@')) {
+        localStorage.setItem('email_access_ping', userEmail);
+        window.location.reload(); // Refresh to update email state
+        return;
+      } else if (userEmail) {
+        alert("Please enter a valid email address.");
+        return;
+      } else {
+        return; // User cancelled
+      }
     }
     setShowUnlockModal(true);
   };
@@ -102,11 +111,16 @@ export function VCDetailPage() {
               </div>
             )}
             {(vc['Meeting/Calendly Link'] || vc.meetingLink) && (
-              <div className="flex items-center text-sm">
-                <Calendar className="h-4 w-4 mr-3 text-green-600" />
-                <a href={vc['Meeting/Calendly Link'] || vc.meetingLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Book Meeting
-                </a>
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center text-sm">
+                  <Calendar className="h-4 w-4 mr-3 text-green-600" />
+                  <div>
+                    <p className="font-medium text-green-800">Schedule a Meeting</p>
+                    <a href={vc['Meeting/Calendly Link'] || vc.meetingLink} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
+                      Book Meeting via Calendly
+                    </a>
+                  </div>
+                </div>
               </div>
             )}
             {vc.linkedin && (
@@ -147,16 +161,24 @@ export function VCDetailPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-yellow-700">
-            This investor's contact details are locked. Unlock access to get their email, Telegram, meeting links, and more.
-          </p>
+          <div className="space-y-3">
+            <p className="text-yellow-700">
+              This investor's contact details are locked. Unlock access to get:
+            </p>
+            <ul className="text-sm text-yellow-600 space-y-1 ml-4">
+              <li>• Direct email contact</li>
+              <li>• Calendly booking link</li>
+              <li>• Social media profiles</li>
+              <li>• Additional contact methods</li>
+            </ul>
+          </div>
           <Button 
             onClick={handleUnlockClick}
             className="w-full bg-green-600 hover:bg-green-700"
             size="lg"
           >
             <DollarSign className="h-4 w-4 mr-2" />
-            Unlock Access for ${vc.price || 5}
+            Unlock Access for {typeof vc.price === 'string' ? vc.price : `$${vc.price || 5}`}
           </Button>
         </CardContent>
       </Card>
@@ -270,7 +292,9 @@ export function VCDetailPage() {
                     <DollarSign className="h-5 w-5 mr-3 text-green-600" />
                     <div>
                       <p className="font-medium text-gray-900">Unlock Price</p>
-                      <p className="text-gray-600">{vc.price}</p>
+                      <p className="text-gray-600">
+                        {typeof vc.price === 'string' ? vc.price : `$${vc.price}`}
+                      </p>
                     </div>
                   </div>
                 )}

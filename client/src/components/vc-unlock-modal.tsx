@@ -26,9 +26,16 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
   // Different pricing based on VC type
   const getPrice = () => {
     if (vcType === "platform") {
-      return vc.price || 500; // Default $5 for platform VCs
+      return vc.price || 500; // Default $5 for platform VCs in cents
     } else {
-      return 500; // $5 for verified Airtable VCs
+      // For Airtable VCs, convert price to cents if it's a dollar amount
+      const price = vc.price;
+      if (typeof price === 'string' && price.startsWith('$')) {
+        return Math.round(parseFloat(price.substring(1)) * 100);
+      } else if (typeof price === 'number') {
+        return price < 100 ? price * 100 : price; // Assume dollars if < 100, cents if >= 100
+      }
+      return 500; // Default $5 for verified Airtable VCs
     }
   };
 
@@ -58,30 +65,52 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
         amount: getPrice(),
       });
 
-      const { clientSecret } = await response.json();
+      const { clientSecret, paymentIntentId } = await response.json();
       
       if (!clientSecret) {
         throw new Error("Failed to create payment intent");
       }
 
-      // Redirect to Stripe Checkout or handle payment
+      // Complete payment with Stripe
       const stripe = await stripePromise;
       if (!stripe) {
         throw new Error("Stripe failed to load");
       }
 
-      // For now, simulate successful payment for demonstration
-      // In production, you'd complete the Stripe payment flow
-      toast({
-        title: "Payment Successful",
-        description: "VC contact information unlocked! You now have access to their contact details.",
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/payment-success`,
+        },
+        redirect: 'if_required'
       });
-      
-      onClose();
-      
-      // Call success callback to refresh unlock status
-      if (onSuccess) {
-        onSuccess();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Confirm payment on backend
+        await apiRequest("POST", "/api/confirm-vc-unlock-payment", {
+          paymentIntentId,
+          vcId: vc.id,
+          vcType,
+          email: userEmail,
+        });
+
+        toast({
+          title: "Payment Successful",
+          description: "VC contact information unlocked! You now have access to their contact details.",
+        });
+        
+        onClose();
+        
+        // Call success callback to refresh unlock status
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        throw new Error("Payment was not completed successfully");
       }
       
     } catch (error: any) {

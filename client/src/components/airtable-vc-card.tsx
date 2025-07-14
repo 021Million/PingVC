@@ -100,7 +100,7 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
           size="sm"
         >
           <DollarSign className="h-4 w-4 mr-2" />
-          Unlock for ${vc.price || 5}
+          Unlock for {typeof vc.price === 'string' ? vc.price : `$${vc.price || 5}`}
         </Button>
       </div>
     );

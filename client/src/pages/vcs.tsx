@@ -84,7 +84,9 @@ export default function VCs() {
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center text-primary font-semibold">
                 <DollarSign className="w-4 h-4 mr-1" />
-                <span className="text-lg">{vc.price || '49'}</span>
+                <span className="text-lg">
+                  {typeof vc.price === 'string' ? vc.price.replace('$', '') : (vc.price || '5')}
+                </span>
                 <span className="text-sm text-gray-500 ml-1">to connect</span>
               </div>
               <Button size="sm" className="bg-primary hover:bg-primary/90">
