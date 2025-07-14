@@ -50,125 +50,128 @@ export default function VCs() {
   const sectors = ["All", "DeFi", "Stablecoins", "RWA", "Infrastructure", "Social", "Enterprise", "AI/ML", "Gaming"];
 
   const VCCard = ({ vc, isVerified = true }: { vc: any; isVerified?: boolean }) => (
-    <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
+    <Card className="hover:shadow-lg transition-shadow group relative">
       <Link href={`/vc/${vc.id}`}>
-        <CardHeader className="pb-3">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0">
-              {vc.Image && vc.Image[0] ? (
-                <img
-                  src={vc.Image[0].url}
-                  alt={vc.name}
-                  className="w-12 h-12 rounded-lg object-cover border border-gray-200"
-                />
-              ) : vc.profileImageUrl ? (
-                <img
-                  src={vc.profileImageUrl}
-                  alt={vc.name}
-                  className="w-12 h-12 rounded-lg object-cover border border-gray-200"
-                />
-              ) : (
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                  {vc.name ? vc.name.charAt(0) : 'V'}
+        <div className="cursor-pointer">
+          <CardHeader className="pb-3">
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0">
+                {vc.Image && vc.Image[0] ? (
+                  <img
+                    src={vc.Image[0].url}
+                    alt={vc.name}
+                    className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                  />
+                ) : vc.profileImageUrl ? (
+                  <img
+                    src={vc.profileImageUrl}
+                    alt={vc.name}
+                    className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                    {vc.name ? vc.name.charAt(0) : 'V'}
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-gray-900 truncate group-hover:text-primary transition-colors">
+                    {vc.name || 'Unknown VC'}
+                  </h3>
+                  <Badge 
+                    variant="secondary" 
+                    className={`ml-2 ${isVerified 
+                      ? 'bg-green-100 text-green-800 border-green-200' 
+                      : 'bg-orange-100 text-orange-800 border-orange-200'
+                    }`}
+                  >
+                    <Shield className="w-3 h-3 mr-1" />
+                    {isVerified ? 'Verified' : 'Unverified'}
+                  </Badge>
                 </div>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900 truncate group-hover:text-primary transition-colors">
-                  {vc.name || 'Unknown VC'}
-                </h3>
-                <Badge 
-                  variant="secondary" 
-                  className={`ml-2 ${isVerified 
-                    ? 'bg-green-100 text-green-800 border-green-200' 
-                    : 'bg-orange-100 text-orange-800 border-orange-200'
-                  }`}
-                >
-                  <Shield className="w-3 h-3 mr-1" />
-                  {isVerified ? 'Verified' : 'Unverified'}
-                </Badge>
+                <p className="text-sm text-gray-600 font-medium">{vc.fund || 'Unknown Fund'}</p>
               </div>
-              <p className="text-sm text-gray-600 font-medium">{vc.fund || 'Unknown Fund'}</p>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="space-y-3">
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1">
-              {vc.stages && vc.stages.slice(0, 2).map((stage: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {stage}
-                </Badge>
-              ))}
-              {vc.specialties && vc.specialties.slice(0, 2).map((sector: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-                  {sector}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Bio */}
-            <p className="text-sm text-gray-600 line-clamp-3">
-              {vc.bio || vc.thesis || 'Investment focus and thesis information available after connection.'}
-            </p>
-
-            {/* Social Links */}
-            {(vc.linkedin || vc['X Profile'] || vc.twitter || vc.website) && (
-              <div className="flex items-center space-x-3 py-2">
-                {vc.linkedin && (
-                  <a 
-                    href={vc.linkedin} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                )}
-                {(vc['X Profile'] || vc.twitter) && (
-                  <a 
-                    href={vc['X Profile'] || vc.twitter} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-gray-600 hover:text-gray-800 transition-colors"
-                  >
-                    <X className="h-4 w-4" />
-                  </a>
-                )}
-                {vc.website && (
-                  <a 
-                    href={vc.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-gray-600 hover:text-gray-800 transition-colors"
-                  >
-                    <Globe className="h-4 w-4" />
-                  </a>
-                )}
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="space-y-3">
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1">
+                {vc.stages && vc.stages.slice(0, 2).map((stage: string, index: number) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {stage}
+                  </Badge>
+                ))}
+                {vc.specialties && vc.specialties.slice(0, 2).map((sector: string, index: number) => (
+                  <Badge key={index} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                    {sector}
+                  </Badge>
+                ))}
               </div>
-            )}
 
-            {/* Price */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center text-primary font-semibold">
-                <DollarSign className="w-4 h-4 mr-1" />
-                <span className="text-lg">
-                  {typeof vc.price === 'string' ? vc.price.replace('$', '') : (vc.price || '5')}
-                </span>
-                <span className="text-sm text-gray-500 ml-1">to connect</span>
+              {/* Bio */}
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {vc.bio || vc.thesis || 'Investment focus and thesis information available after connection.'}
+              </p>
+
+              {/* Price and Button */}
+              <div className="flex items-center justify-between pt-2">
+                {isVerified ? (
+                  <div className="flex items-center text-primary font-semibold">
+                    <DollarSign className="w-4 h-4 mr-1" />
+                    <span className="text-lg">
+                      {typeof vc.price === 'string' ? vc.price.replace('$', '') : (vc.price || '5')}
+                    </span>
+                    <span className="text-sm text-gray-500 ml-1">to connect</span>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                <Button size="sm" className="bg-primary hover:bg-primary/90">
+                  {isVerified ? "Connect" : "Request"}
+                </Button>
               </div>
-              <Button size="sm" className="bg-primary hover:bg-primary/90">
-                {isVerified ? "Connect" : "Request"}
-              </Button>
             </div>
-          </div>
-        </CardContent>
+          </CardContent>
+        </div>
       </Link>
+      
+      {/* Social Links - Outside the main link to avoid nesting */}
+      {(vc.linkedin || vc['X Profile'] || vc.twitter || vc.website) && (
+        <div className="absolute top-3 right-12 flex items-center space-x-2 z-10">
+          {vc.linkedin && (
+            <a 
+              href={vc.linkedin} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full p-1 shadow-sm"
+            >
+              <Linkedin className="h-3 w-3" />
+            </a>
+          )}
+          {(vc['X Profile'] || vc.twitter) && (
+            <a 
+              href={vc['X Profile'] || vc.twitter} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-800 transition-colors bg-white rounded-full p-1 shadow-sm"
+            >
+              <X className="h-3 w-3" />
+            </a>
+          )}
+          {vc.website && (
+            <a 
+              href={vc.website} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-800 transition-colors bg-white rounded-full p-1 shadow-sm"
+            >
+              <Globe className="h-3 w-3" />
+            </a>
+          )}
+        </div>
+      )}
     </Card>
   );
 
