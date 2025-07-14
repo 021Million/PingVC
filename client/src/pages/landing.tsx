@@ -55,9 +55,7 @@ export default function Landing() {
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Where <span className="text-green-600">Founders</span> meet <span className="text-primary">VCs & Angels</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Pay once. Chat with the partner who writes the checks. No middlemen, no spam, pure signal.
-          </p>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Founders pay to connect directly with verified VCs and Angels. No spam. Just results.</p>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
