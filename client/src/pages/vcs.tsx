@@ -114,6 +114,45 @@ export default function VCs() {
               {vc.bio || vc.thesis || 'Investment focus and thesis information available after connection.'}
             </p>
 
+            {/* Social Links */}
+            {(vc.linkedin || vc['X Profile'] || vc.twitter || vc.website) && (
+              <div className="flex items-center space-x-3 py-2">
+                {vc.linkedin && (
+                  <a 
+                    href={vc.linkedin} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                )}
+                {(vc['X Profile'] || vc.twitter) && (
+                  <a 
+                    href={vc['X Profile'] || vc.twitter} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-gray-600 hover:text-gray-800 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </a>
+                )}
+                {vc.website && (
+                  <a 
+                    href={vc.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-gray-600 hover:text-gray-800 transition-colors"
+                  >
+                    <Globe className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
+            )}
+
             {/* Price */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center text-primary font-semibold">
