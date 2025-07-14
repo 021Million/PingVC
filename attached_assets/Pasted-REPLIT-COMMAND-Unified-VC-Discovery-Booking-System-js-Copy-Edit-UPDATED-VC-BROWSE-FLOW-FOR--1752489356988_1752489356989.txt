@@ -1,0 +1,100 @@
+REPLIT COMMAND: Unified VC Discovery & Booking System
+js
+Copy
+Edit
+// 🔁 UPDATED VC BROWSE FLOW FOR PING ME
+//
+// 📌 Purpose: Merge free discovery + pay-to-book flow into a single "Browse VCs" experience
+// 💡 Key Logic:
+//
+// 1. /api/vcs returns ALL VCs (verified and unverified)
+// 2. Each VC profile includes:
+//    - Name, Fund, Tags, Price, Image
+//    - `verified: true` or `false`
+//    - Social/contact links (Twitter, LinkedIn, etc.)
+//    - Optional booking CTA if verified
+// 3. Frontend:
+//    - If VC is VERIFIED → Show "Book Call" button (Stripe Checkout)
+//    - If NOT VERIFIED → Show "Request Call" button (triggers DM to VC via Ping Me team)
+//    - Always show public links (socials) for unverified
+//
+// 4. On Landing Page ("/"):
+//    - Display only top 6 most-viewed or most-booked VCs
+//    - CTA: "View All Investors" → redirects to full Browse VC page
+//
+// 5. Backend Enhancements:
+//    - Track view count / click count per VC (optional)
+//    - Add POST /api/request-call route:
+//        - Payload: { vcId, founderEmail }
+//        - Stores or sends DM to VC (via Slack, email, Twitter automation)
+//        - Optional auto-email to team for review
+//
+// 6. (Optional) Badge styles for verified:
+//    - Add ✅ "Ping Me Verified" label on cards
+//
+// 🔧 Stack: Express + Stripe Checkout + session logic (email gate optional)
+✅ Additional Endpoints You Should Implement:
+📥 POST /api/request-call
+js
+Copy
+Edit
+app.post('/api/request-call', (req, res) => {
+  const { vcId, founderEmail } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  // TODO: Send Slack/Email/Discord DM to Ping Me team
+  console.log(`📩 New request for VC ${vc.name} from ${founderEmail}`);
+
+  res.json({ message: 'Request sent. Our team will notify the investor!' });
+});
+🧠 Updated /api/vcs Response Example
+js
+Copy
+Edit
+[
+  {
+    id: "vc-olivia",
+    name: "Olivia Chen",
+    fund: "Wild Loop Ventures",
+    tags: ["Web3", "AI", "Seed"],
+    image: "/images/vcs/olivia.jpg",
+    verified: true,
+    price: 3000,
+    social: {
+      twitter: "https://twitter.com/oliviaVC",
+      linkedin: "https://linkedin.com/in/oliviaVC"
+    }
+  },
+  {
+    id: "vc-max",
+    name: "Max Lin",
+    fund: "Ghost Capital",
+    tags: ["DeFi", "Infra"],
+    image: "/images/vcs/max.jpg",
+    verified: false,
+    social: {
+      twitter: "https://twitter.com/maxlin_eth"
+    }
+  }
+]
+🖼️ Frontend UX Summary
+VC Type	Shown	CTA
+Verified	Bio, tags, price, book button	✅ “Book Call” (Stripe Checkout)
+Unverified	Bio, tags, social links	🔘 “Request Call” → fires /api/request-call
+
+Landing page:
+
+Shows 6 most popular VCs
+
+CTA: “View All Investors” → goes to full /browse-vcs
+
+Would you like:
+
+Sample UI layout in HTML or React?
+
+Help wiring in Stripe Checkout for verified VCs?
+
+Backend logic to track clicks/views per VC?
+
+This is an excellent conversion funnel — high signal, simple path. You're building something real.

@@ -78,6 +78,114 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   app.use('/uploads', express.static(uploadsDir));
 
+  // Unified VC Discovery & Booking API
+  app.get('/api/browse-vcs', async (req, res) => {
+    try {
+      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+        return res.status(500).json({ error: 'Airtable configuration missing' });
+      }
+
+      const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+      
+      const verifiedVCs: any[] = [];
+      const unverifiedVCs: any[] = [];
+
+      await base('VCs').select({
+        view: 'Grid view',
+        fields: [
+          'Name', 'Title', 'Fund', 'Bio', 'Investment Stage', 'Primary Sector',
+          'Investment Thesis', 'Image', 'X Profile', 'LinkedIn Profile', 
+          'Website', 'Price', 'Verified', 'Twitter'
+        ]
+      }).eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          const vc = {
+            id: record.id,
+            name: record.get('Name') as string,
+            title: record.get('Title') as string,
+            fund: record.get('Fund') as string,
+            bio: record.get('Bio') as string,
+            'Investment Stage': record.get('Investment Stage') as string[],
+            'Primary Sector': record.get('Primary Sector') as string[],
+            'Investment Thesis': record.get('Investment Thesis') as string,
+            Image: record.get('Image') as Array<{ url: string }>,
+            'X Profile': record.get('X Profile') as string,
+            linkedin: record.get('LinkedIn Profile') as string,
+            website: record.get('Website') as string,
+            twitter: record.get('Twitter') as string,
+            price: record.get('Price') as number,
+            verified: record.get('Verified') as boolean
+          };
+
+          if (vc.verified) {
+            verifiedVCs.push(vc);
+          } else {
+            unverifiedVCs.push(vc);
+          }
+        });
+
+        fetchNextPage();
+      });
+
+      res.json({ verifiedVCs, unverifiedVCs });
+    } catch (error) {
+      console.error('Error fetching VCs:', error);
+      res.status(500).json({ error: 'Failed to fetch VCs' });
+    }
+  });
+
+  // Request Call for Unverified VCs
+  app.post('/api/request-call', async (req, res) => {
+    try {
+      const { vcId, founderEmail } = req.body;
+
+      if (!vcId || !founderEmail) {
+        return res.status(400).json({ error: 'Missing vcId or founderEmail' });
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(founderEmail)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+      }
+
+      // Get VC details from Airtable
+      const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+      const record = await base('VCs').find(vcId);
+      
+      if (!record) {
+        return res.status(404).json({ error: 'VC not found' });
+      }
+
+      const vcName = record.get('Name') as string;
+      const vcFund = record.get('Fund') as string;
+
+      // TODO: Implement actual notification system (Slack, Discord, Email)
+      // For now, just log the request
+      console.log(`📩 New call request:
+        VC: ${vcName} (${vcFund})
+        From: ${founderEmail}
+        VC ID: ${vcId}
+        Timestamp: ${new Date().toISOString()}
+      `);
+
+      // In a real implementation, you would:
+      // 1. Send to Slack webhook
+      // 2. Email the team
+      // 3. Store in a database for tracking
+      // 4. Send follow-up email to founder
+
+      res.json({ 
+        message: 'Request sent. Our team will notify the investor!',
+        vcName,
+        vcFund
+      });
+    } catch (error) {
+      console.error('Error processing call request:', error);
+      res.status(500).json({ error: 'Failed to process request' });
+    }
+  });
+
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
