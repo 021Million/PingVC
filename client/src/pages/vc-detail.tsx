@@ -424,32 +424,22 @@ export function VCDetailPage() {
                   )}
                 </div>
                 
-                {/* Social Links */}
+                {/* Connect Section */}
                 <div className="pt-4 border-t border-gray-200">
                   <p className="font-medium text-gray-900 mb-3">Connect</p>
                   <div className="flex flex-col space-y-2">
-                    {vc.linkedin && (
-                      <a 
-                        href={vc.linkedin} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        <Linkedin className="h-4 w-4 mr-2" />
-                        <span>LinkedIn Profile</span>
-                      </a>
-                    )}
-                    {(vc.twitter || vc['X Profile']) && (
-                      <a 
-                        href={vc.twitter || vc['X Profile']} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                      >
-                        <X className="h-4 w-4 mr-2" />
-                        <span>X (Twitter) Profile</span>
-                      </a>
-                    )}
+                    <Button 
+                      onClick={() => {
+                        if (isVerified) {
+                          setShowUnlockModal(true);
+                        } else {
+                          setShowRequestModal(true);
+                        }
+                      }}
+                      className="bg-primary hover:bg-primary/90 w-fit"
+                    >
+                      Request Intro
+                    </Button>
                     {vc.website && (
                       <a 
                         href={vc.website} 
