@@ -1,0 +1,110 @@
+🎯 Ping Me — Simplified Funnel (2025 Version)
+Core Promise:
+Founders pay to connect directly with verified VCs and Angels. No spam. Just results.
+
+🧭 Funnel Overview (3 Core Steps)
+Step	Page / Flow	Goal
+1. Landing Page	GET /	Explain the value & get them to click "Browse VCs"
+2. VC Marketplace	GET /vcs	Let them browse profiles, pricing, tags
+3. VC Profile Page	GET /vc/:id	Unlock contact or book a call via Stripe
+
+Everything else is optional or secondary.
+
+✅ Page-by-Page Breakdown
+🔹 1. Homepage (/)
+Goal: Make the value clear in 3 seconds.
+
+Wireframe:
+
+csharp
+Copy
+Edit
+[Logo]      [Browse VCs] [Join as Investor]
+
+💡 Headline:
+Connect with real investors. Instantly.
+
+🧠 Subheadline:
+Ping Me helps startup founders access verified VCs and angels — no intros needed.
+
+🔥 CTA:
+[Browse Investors]
+🔹 2. Investor Marketplace (/vcs)
+Goal: Show credibility + pricing. Get click-through to profile.
+
+Layout:
+
+Grid of cards (photo, name, tags, fund, price)
+
+Filter by tag or stage
+
+Each card links to: /vc/:id
+
+🔹 3. VC Profile (/vc/:id)
+Goal: Sell the investor & convert the user.
+
+Layout:
+
+VC Name + Photo + Fund
+
+“About this Investor” bio
+
+Tags (Stage, Focus)
+
+Price to unlock contact / book
+
+CTA: “Connect for $X”
+
+On click → Stripe Checkout → Success → show email/calendly
+
+🧱 Backend Simplification
+Drop unnecessary routes like:
+
+Scout listing
+
+Founder profile builder
+
+Cold DM directory
+
+Only keep:
+
+js
+Copy
+Edit
+/app.post('/api/enter')          // Email gate (optional)
+/app.get('/api/vcs')             // Fetch all verified VCs
+/app.get('/api/vc/:id')          // Fetch 1 VC profile
+/app.post('/api/unlock-vc')      // Stripe checkout to unlock
+🧠 Copywriting Tone (Miss AI x Greg Isenberg style)
+Be crisp, smart, a little cheeky
+
+You’re speaking to time-poor founders and polished investors
+
+Connect with verified investors. Skip the dance.
+
+💥 Pay once. Get direct contact. No gatekeepers.
+
+🧰 Tools to Keep
+Stripe Checkout + Connect (you already have this ✅)
+
+Minimal session storage / db (Airtable or Supabase) to track who unlocked what
+
+(Optional) Email collector before unlock or Calendly redirect
+
+🔥 MVP Flow Recap
+Founder lands → clicks “Browse VCs”
+
+Sees grid → clicks profile
+
+Sees price → pays via Stripe
+
+Gets contact email or Calendly
+
+(Optionally) ping sent to investor + confirmation email
+
+NEXT: Want me to…
+Draft new homepage HTML for /?
+
+Redesign /vcs layout with cards + filters?
+
+Simplify your Replit routes for this new architecture?

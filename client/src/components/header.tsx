@@ -68,10 +68,10 @@ export function Header() {
             }`}>
               Scout
             </Link>
-            <Link href="/ping" className={`transition-colors font-medium ${
-              isActive("/ping") ? "text-primary" : "text-gray-700 hover:text-primary"
+            <Link href="/vcs" className={`transition-colors font-medium ${
+              isActive("/vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
             }`}>
-              Ping
+              Browse VCs
             </Link>
 
           </nav>

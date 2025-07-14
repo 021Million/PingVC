@@ -15,6 +15,7 @@ import ProjectSetup from "@/pages/project-setup";
 import Profile from "@/pages/profile";
 import Scout from "@/pages/scout";
 import Ping from "@/pages/ping";
+import VCs from "@/pages/vcs";
 import Join from "@/pages/join";
 import SignupType from "@/pages/signup-type";
 import PrivacyPolicy from "@/pages/privacy-policy";
@@ -50,6 +51,7 @@ function Router() {
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
+          <Route path="/vcs" component={VCs} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/join" component={Join} />
           <Route path="/signup" component={SignupType} />
@@ -69,6 +71,7 @@ function Router() {
           <Route path="/profile" component={Profile} />
           <Route path="/scout" component={Scout} />
           <Route path="/ping" component={Ping} />
+          <Route path="/vcs" component={VCs} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/join" component={Join} />

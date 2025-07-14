@@ -204,7 +204,7 @@ export default function HowItWorks() {
             </div>
             <div className="flex space-x-6">
               <Link href="/scout"><a className="text-gray-600 hover:text-primary transition-colors">Scout</a></Link>
-              <Link href="/ping"><a className="text-gray-600 hover:text-primary transition-colors">Browse VCs</a></Link>
+              <Link href="/vcs"><a className="text-gray-600 hover:text-primary transition-colors">Browse VCs</a></Link>
             </div>
           </div>
         </div>

@@ -53,42 +53,23 @@ export default function Landing() {
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Where <span className="text-green-600">Founders</span> meet <span className="text-primary">VCs & Angels</span>
+            Connect with real investors. <span className="text-primary">Instantly.</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Founders pay to connect directly with verified VCs and Angels. No spam. Just results.</p>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Ping Me helps startup founders access verified VCs and angels — no intros needed.</p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg" asChild>
-              <Link href="/ping">
-                Browse VCs
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg font-semibold" asChild>
+              <Link href="/vcs">
+                Browse Investors
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="px-8 py-4 text-lg" asChild>
-              <Link href="/scout">
-                View Scout
+              <Link href="/vc-signup">
+                Join as Investor
               </Link>
             </Button>
-          </div>
-          
-          {/* Email Capture */}
-          <div className="max-w-md mx-auto mb-8">
-            <form onSubmit={handleEmailSubmit} className="flex gap-3">
-              <Input
-                type="email"
-                placeholder="Enter your email to unlock browsing"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
-                required
-              />
-              <Button type="submit" className="bg-gray-800 text-white px-6">
-                <Mail className="mr-2 h-4 w-4" />
-                Unlock
-              </Button>
-            </form>
-            <p className="text-sm text-gray-500 mt-2">Get access to verified VCs today</p>
           </div>
           
           
@@ -96,16 +77,16 @@ export default function Landing() {
           {/* Trust indicators */}
           <div className="grid grid-cols-3 gap-8 max-w-md mx-auto text-center">
             <div>
-              <div className="text-2xl font-bold text-gray-900">1:1</div>
-              <div className="text-sm text-gray-600">Warm Intro</div>
+              <div className="text-2xl font-bold text-gray-900">💥</div>
+              <div className="text-sm text-gray-600">Pay once. Get direct contact.</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">Trusted</div>
-              <div className="text-sm text-gray-600">No cold DMs</div>
+              <div className="text-2xl font-bold text-gray-900">🚫</div>
+              <div className="text-sm text-gray-600">No gatekeepers.</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">100%</div>
-              <div className="text-sm text-gray-600">Pay-to-Ping</div>
+              <div className="text-2xl font-bold text-gray-900">✅</div>
+              <div className="text-sm text-gray-600">Skip the dance.</div>
             </div>
           </div>
         </div>
@@ -156,7 +137,7 @@ export default function Landing() {
           
           {/* View All Investors Button */}
           <div className="text-center mt-12">
-            <Link href="/ping">
+            <Link href="/vcs">
               <Button 
                 size="lg"
                 className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
@@ -220,7 +201,7 @@ export default function Landing() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Marketplace</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/ping" className="hover:text-white transition-colors">Browse VCs</a></li>
+                <li><a href="/vcs" className="hover:text-white transition-colors">Browse VCs</a></li>
                 <li><a href="/scout" className="hover:text-white transition-colors">Scout Projects</a></li>
               </ul>
             </div>
