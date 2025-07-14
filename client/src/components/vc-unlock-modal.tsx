@@ -135,6 +135,18 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
   };
 
   const getPriceDisplay = () => {
+    // Show the original Airtable price for display, but we'll charge the Stripe minimum
+    const originalPrice = vc.price;
+    if (typeof originalPrice === 'string' && originalPrice.startsWith('$')) {
+      return originalPrice;
+    } else if (typeof originalPrice === 'number') {
+      return `$${originalPrice.toFixed(2)}`;
+    }
+    return `$0.50`; // Fallback
+  };
+
+  const getActualChargeAmount = () => {
+    // This is what we actually charge (Stripe minimum enforcement)
     const price = getPrice();
     return `$${(price / 100).toFixed(2)}`;
   };
@@ -234,7 +246,16 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
           <Card className="border-primary/20">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
-                Unlock for {getPriceDisplay()}
+                {vc.price && vc.price < 0.5 ? (
+                  <div>
+                    <div>Unlock for {getPriceDisplay()}</div>
+                    <div className="text-sm font-normal text-amber-600">
+                      (Charged {getActualChargeAmount()} - Stripe minimum)
+                    </div>
+                  </div>
+                ) : (
+                  `Unlock for ${getPriceDisplay()}`
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -273,7 +294,7 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
                 disabled={isLoading}
                 className="flex-1 bg-green-600 hover:bg-green-700"
               >
-                {isLoading ? "Setting up..." : `Unlock for ${getPriceDisplay()}`}
+                {isLoading ? "Setting up..." : (vc.price && vc.price < 0.5 ? `Pay ${getActualChargeAmount()}` : `Unlock for ${getPriceDisplay()}`)}
               </Button>
             ) : (
               <div className="flex-1">
