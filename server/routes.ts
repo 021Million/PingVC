@@ -486,7 +486,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         email,
         vcId,
         vcType,
-        unlockedAt: new Date(),
+        amount: paymentIntent.amount,
+        paymentType: "verified_vc",
+        stripePaymentIntentId: paymentIntentId,
+        status: "completed",
       });
       
       res.json({ success: true, message: "VC contact information unlocked successfully" });

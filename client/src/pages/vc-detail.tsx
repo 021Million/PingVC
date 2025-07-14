@@ -358,34 +358,7 @@ export function VCDetailPage() {
                   )}
                 </div>
                 
-                {/* Social Links */}
-                <div className="border-t pt-4">
-                  <p className="font-medium text-gray-900 mb-3">Connect</p>
-                  <div className="flex flex-wrap gap-3">
-                    {(vc.twitter || vc['X Profile']) && (
-                      <a 
-                        href={vc.twitter || vc['X Profile']} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="inline-flex items-center px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
-                      >
-                        <X className="h-4 w-4 mr-2" />
-                        X Profile
-                      </a>
-                    )}
-                    {vc.linkedin && (
-                      <a 
-                        href={vc.linkedin} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="inline-flex items-center px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                      >
-                        <Linkedin className="h-4 w-4 mr-2" />
-                        LinkedIn
-                      </a>
-                    )}
-                  </div>
-                </div>
+
               </CardContent>
             </Card>
           </div>
