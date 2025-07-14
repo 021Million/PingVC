@@ -377,17 +377,7 @@ export function VCDetailPage() {
                   </div>
                 )}
 
-                {vc['Investment Thesis'] && (
-                  <div className="flex items-start">
-                    <Target className="h-5 w-5 mr-3 text-indigo-600 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-gray-900">Investment Thesis</p>
-                      <p className="text-gray-600 leading-relaxed">
-                        {vc['Investment Thesis']}
-                      </p>
-                    </div>
-                  </div>
-                )}
+
               </CardContent>
             </Card>
 
@@ -413,6 +403,14 @@ export function VCDetailPage() {
                 <CardTitle>Investment Thesis</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {vc['Investment Thesis'] && (
+                  <div className="mb-4">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                      {vc['Investment Thesis']}
+                    </p>
+                  </div>
+                )}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="font-medium text-gray-900 mb-1">Fund</p>
