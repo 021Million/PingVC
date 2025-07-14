@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Shield, Users, X, ExternalLink, Telegram, Calendar } from "lucide-react";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -19,9 +20,100 @@ interface VCUnlockModalProps {
   onSuccess?: () => void;
 }
 
-export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSuccess }: VCUnlockModalProps) {
+// Payment Form Component with Stripe Elements
+function PaymentForm({ vc, vcType, userEmail, onSuccess, onClose, amount }: {
+  vc: any;
+  vcType: string;
+  userEmail: string;
+  onSuccess: () => void;
+  onClose: () => void;
+  amount: number;
+}) {
+  const stripe = useStripe();
+  const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!stripe || !elements) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/payment-success`,
+        },
+        redirect: 'if_required'
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Confirm payment on backend
+        await apiRequest("POST", "/api/confirm-vc-unlock-payment", {
+          paymentIntentId: paymentIntent.id,
+          vcId: vc.id,
+          vcType,
+          email: userEmail,
+        });
+
+        toast({
+          title: "Payment Successful",
+          description: "VC contact information unlocked! You now have access to their contact details.",
+        });
+        
+        onClose();
+        onSuccess();
+      } else {
+        throw new Error("Payment was not completed successfully");
+      }
+      
+    } catch (error: any) {
+      console.error("Payment error:", error);
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Failed to process payment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <PaymentElement />
+      <Button
+        type="submit"
+        disabled={!stripe || isProcessing}
+        className="w-full bg-green-600 hover:bg-green-700"
+        size="lg"
+      >
+        {isProcessing ? "Processing..." : `Pay $${(amount / 100).toFixed(2)}`}
+      </Button>
+    </form>
+  );
+}
+
+export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSuccess }: VCUnlockModalProps) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  // Reset client secret when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setClientSecret(null);
+    }
+  }, [isOpen]);
 
   // Different pricing based on VC type
   const getPrice = () => {
@@ -47,7 +139,7 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
     return `$${(price / 100).toFixed(2)}`;
   };
 
-  const handleUnlock = async () => {
+  const handleInitiatePayment = async () => {
     if (!userEmail) {
       toast({
         title: "Email Required",
@@ -57,7 +149,7 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
       return;
     }
 
-    setIsProcessing(true);
+    setIsLoading(true);
     
     try {
       // Create payment intent
@@ -68,63 +160,23 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
         amount: getPrice(),
       });
 
-      const { clientSecret, paymentIntentId } = await response.json();
+      const { clientSecret } = await response.json();
       
       if (!clientSecret) {
         throw new Error("Failed to create payment intent");
       }
 
-      // Complete payment with Stripe
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error("Stripe failed to load");
-      }
-
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        clientSecret,
-        confirmParams: {
-          return_url: `${window.location.origin}/payment-success`,
-        },
-        redirect: 'if_required'
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // Confirm payment on backend
-        await apiRequest("POST", "/api/confirm-vc-unlock-payment", {
-          paymentIntentId,
-          vcId: vc.id,
-          vcType,
-          email: userEmail,
-        });
-
-        toast({
-          title: "Payment Successful",
-          description: "VC contact information unlocked! You now have access to their contact details.",
-        });
-        
-        onClose();
-        
-        // Call success callback to refresh unlock status
-        if (onSuccess) {
-          onSuccess();
-        }
-      } else {
-        throw new Error("Payment was not completed successfully");
-      }
+      setClientSecret(clientSecret);
       
     } catch (error: any) {
-      console.error("Payment error:", error);
+      console.error("Payment initialization error:", error);
       toast({
-        title: "Payment Failed",
-        description: error.message || "Failed to process payment. Please try again.",
+        title: "Payment Setup Failed",
+        description: error.message || "Failed to setup payment. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsProcessing(false);
+      setIsLoading(false);
     }
   };
 
@@ -215,13 +267,28 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
             >
               Cancel
             </Button>
-            <Button 
-              onClick={handleUnlock}
-              disabled={isProcessing}
-              className="flex-1"
-            >
-              {isProcessing ? "Processing..." : `Unlock for ${getPriceDisplay()}`}
-            </Button>
+            {!clientSecret ? (
+              <Button 
+                onClick={handleInitiatePayment}
+                disabled={isLoading}
+                className="flex-1 bg-green-600 hover:bg-green-700"
+              >
+                {isLoading ? "Setting up..." : `Unlock for ${getPriceDisplay()}`}
+              </Button>
+            ) : (
+              <div className="flex-1">
+                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  <PaymentForm 
+                    vc={vc}
+                    vcType={vcType}
+                    userEmail={userEmail || ""}
+                    onSuccess={onSuccess || (() => {})}
+                    onClose={onClose}
+                    amount={getPrice()}
+                  />
+                </Elements>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
