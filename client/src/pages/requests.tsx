@@ -72,9 +72,7 @@ export default function RequestsPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             📬 Feedback & Requests
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Help shape Ping VC — request features, VCs, or report bugs. Your feedback drives our product development.
-          </p>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Help shape Ping VC - request features, VCs, or report bugs. Your feedback drives our product development.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
