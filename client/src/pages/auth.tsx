@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { ImprovedHeader } from '@/components/improved-header';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest, queryClient } from '@/lib/queryClient';
-import { Eye, EyeOff, Mail, Lock, User, Building } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 const loginSchema = z.object({
@@ -373,19 +373,7 @@ export default function Auth() {
                 </Button>
               </div>
 
-              <Separator />
 
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-3">Or continue with Replit</p>
-                <Button
-                  variant="outline"
-                  onClick={() => window.location.href = '/api/login'}
-                  className="w-full"
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Sign in with Replit
-                </Button>
-              </div>
             </CardContent>
           </Card>
         </div>

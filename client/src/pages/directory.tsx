@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ImprovedHeader } from '@/components/improved-header';
-import { Search, ExternalLink, X, Linkedin, Globe, Filter, Users, TrendingUp, Target } from 'lucide-react';
+import { Search, ExternalLink, Globe, Filter, TrendingUp, Target, Users, Star, ArrowUpRight } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Twitter } from 'lucide-react';
 
 interface AirtableVC {
   id: string;
@@ -44,38 +45,19 @@ export default function Directory() {
       const matchesSearch = !searchTerm || 
         vc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vc.fund?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vc.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vc.bio?.toLowerCase().includes(searchTerm.toLowerCase());
+        vc.bio?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vc['Primary Sector']?.some(sector => sector.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        vc['Investment Stage']?.some(stage => stage.toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchesStage = !stageFilter || 
-        (vc['Investment Stage'] && vc['Investment Stage'].includes(stageFilter));
+        vc['Investment Stage']?.includes(stageFilter);
 
       const matchesSector = !sectorFilter || 
-        (vc['Primary Sector'] && vc['Primary Sector'].includes(sectorFilter));
+        vc['Primary Sector']?.includes(sectorFilter);
 
       return matchesSearch && matchesStage && matchesSector;
     });
   }, [allVCs, searchTerm, stageFilter, sectorFilter]);
-
-  const allStages = useMemo(() => {
-    const stages = new Set<string>();
-    allVCs.forEach((vc: AirtableVC) => {
-      if (vc['Investment Stage']) {
-        vc['Investment Stage'].forEach(stage => stages.add(stage));
-      }
-    });
-    return Array.from(stages).sort();
-  }, [allVCs]);
-
-  const allSectors = useMemo(() => {
-    const sectors = new Set<string>();
-    allVCs.forEach((vc: AirtableVC) => {
-      if (vc['Primary Sector']) {
-        vc['Primary Sector'].forEach(sector => sectors.add(sector));
-      }
-    });
-    return Array.from(sectors).sort();
-  }, [allVCs]);
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -83,13 +65,42 @@ export default function Directory() {
     setSectorFilter('');
   };
 
+  const getStageDisplay = (stages: string[] | undefined) => {
+    if (!stages || stages.length === 0) return 'Not specified';
+    return stages.join(', ');
+  };
+
+  const getSectorDisplay = (sectors: string[] | undefined) => {
+    if (!sectors || sectors.length === 0) return 'Web3';
+    return sectors.slice(0, 3).join(', ') + (sectors.length > 3 ? ` +${sectors.length - 3}` : '');
+  };
+
+  const getTwitterUrl = (vc: AirtableVC) => {
+    const twitterUrl = vc.twitter || vc['X Profile'];
+    if (!twitterUrl) return null;
+    
+    if (twitterUrl.startsWith('http')) {
+      return twitterUrl;
+    }
+    
+    const handle = twitterUrl.replace('@', '');
+    return `https://twitter.com/${handle}`;
+  };
+
+  const getWebsiteUrl = (url: string | undefined) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `https://${url}`;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <ImprovedHeader />
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading the ultimate Web3 VC directory...</p>
           </div>
         </div>
       </div>
@@ -100,277 +111,239 @@ export default function Directory() {
     <div className="min-h-screen bg-gray-50">
       <ImprovedHeader />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Web3 VC Directory
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            The complete free directory of Web3 venture capitalists, angels, and investors. 
-            Find the right investor for your startup with comprehensive profiles and contact information.
-          </p>
-          <div className="mt-4 flex items-center justify-center space-x-6 text-sm text-gray-500">
-            <div className="flex items-center">
-              <Users className="h-4 w-4 mr-1" />
-              {allVCs.length} Investors
+      {/* Hero Section */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center mb-4">
+              <Target className="h-8 w-8 text-primary mr-3" />
+              <Badge variant="secondary" className="bg-green-100 text-green-800 px-3 py-1">
+                100% Free • No Login Required
+              </Badge>
             </div>
-            <div className="flex items-center">
-              <Target className="h-4 w-4 mr-1" />
-              {allSectors.length} Sectors
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              The Ultimate Web3 VC Directory for Founders
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Save hours of crawling Twitter and LinkedIn.<br />
+              Browse verified Web3 VCs in one place — no logins, no noise, just signal.
+            </p>
+            
+            {/* Quick Stats */}
+            <div className="flex items-center justify-center space-x-8 mt-8 text-sm text-gray-500">
+              <div className="flex items-center">
+                <Users className="h-4 w-4 mr-2" />
+                {allVCs.length}+ VCs Listed
+              </div>
+              <div className="flex items-center">
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Active 2024
+              </div>
+              <div className="flex items-center">
+                <Star className="h-4 w-4 mr-2" />
+                Community Curated
+              </div>
             </div>
-            <div className="flex items-center">
-              <TrendingUp className="h-4 w-4 mr-1" />
-              {allStages.length} Stages
+          </div>
+
+          {/* Search and Filters */}
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="md:col-span-2">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <Input
+                      placeholder="Search by name, fund, or focus area..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 h-12 text-base"
+                    />
+                  </div>
+                </div>
+                
+                <Select value={stageFilter} onValueChange={setStageFilter}>
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Investment Stage" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Pre-Seed">Pre-Seed</SelectItem>
+                    <SelectItem value="Seed">Seed</SelectItem>
+                    <SelectItem value="Series A">Series A</SelectItem>
+                    <SelectItem value="Series B">Series B</SelectItem>
+                    <SelectItem value="Angel">Angel</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={sectorFilter} onValueChange={setSectorFilter}>
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Focus Area" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="DeFi">DeFi</SelectItem>
+                    <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                    <SelectItem value="Gaming">Gaming</SelectItem>
+                    <SelectItem value="NFTs">NFTs</SelectItem>
+                    <SelectItem value="Consumer">Consumer</SelectItem>
+                    <SelectItem value="AI">AI</SelectItem>
+                    <SelectItem value="Payments">Payments</SelectItem>
+                    <SelectItem value="Security">Security</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {(searchTerm || stageFilter || sectorFilter) && (
+                <div className="mt-4 flex items-center justify-between">
+                  <p className="text-sm text-gray-600">
+                    Showing {filteredVCs.length} of {allVCs.length} VCs
+                  </p>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    Clear filters
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Search and Filters */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search by name, fund, title, or description..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              
-              {/* Stage Filter */}
-              <Select value={stageFilter} onValueChange={setStageFilter}>
-                <SelectTrigger className="w-full lg:w-48">
-                  <SelectValue placeholder="Investment Stage" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Stages</SelectItem>
-                  {allStages.map((stage) => (
-                    <SelectItem key={stage} value={stage}>
-                      {stage}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Sector Filter */}
-              <Select value={sectorFilter} onValueChange={setSectorFilter}>
-                <SelectTrigger className="w-full lg:w-48">
-                  <SelectValue placeholder="Primary Sector" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Sectors</SelectItem>
-                  {allSectors.map((sector) => (
-                    <SelectItem key={sector} value={sector}>
-                      {sector}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Clear Filters */}
-              {(searchTerm || stageFilter || sectorFilter) && (
-                <Button onClick={clearFilters} variant="outline" className="lg:w-auto">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Clear
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className="text-gray-600">
-            Showing {filteredVCs.length} of {allVCs.length} investors
-          </p>
-        </div>
-
-        {/* VC Directory Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredVCs.map((vc: AirtableVC) => (
-            <Card key={vc.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-4">
-                <div className="flex items-start gap-3">
-                  {/* Profile Image */}
-                  <div className="flex-shrink-0">
-                    {vc.Image && Array.isArray(vc.Image) && vc.Image.length > 0 ? (
-                      <img 
-                        src={vc.Image[0].url} 
-                        alt={vc.name || "Investor"}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-lg font-medium">
-                          {(vc.name || "?").charAt(0).toUpperCase()}
-                        </span>
+      {/* Directory Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {filteredVCs.length === 0 ? (
+          <div className="text-center py-16">
+            <Filter className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No VCs found</h3>
+            <p className="text-gray-500">Try adjusting your search or filters</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredVCs.map((vc: AirtableVC) => (
+              <Card key={vc.id} className="hover:shadow-md transition-shadow duration-200 group">
+                <CardContent className="p-6">
+                  {/* VC Image and Name */}
+                  <div className="flex items-start space-x-4 mb-4">
+                    <div className="flex-shrink-0">
+                      {vc.Image && vc.Image[0] ? (
+                        <img
+                          src={vc.Image[0].url}
+                          alt={vc.name}
+                          className="w-16 h-16 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+                          <span className="text-white font-semibold text-lg">
+                            {vc.name ? vc.name.substring(0, 2).toUpperCase() : 'VC'}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900 truncate">
+                          {vc.name}
+                        </h3>
+                        {vc.verified && (
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
+                            Verified
+                          </Badge>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <div className="min-w-0">
-                        <CardTitle className="text-lg font-semibold text-gray-900 truncate">
-                          {vc.name || "Partner Name"}
-                        </CardTitle>
-                        <p className="text-sm text-gray-600 truncate">
-                          {vc.title || "Position"}
-                        </p>
-                        <p className="text-sm font-medium text-blue-600 truncate">
-                          {vc.fund || "Fund Name"}
-                        </p>
-                      </div>
-                      {vc.verified && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
-                          Verified
-                        </Badge>
+                      
+                      {vc.fund && (
+                        <p className="text-sm text-gray-600 mt-1">{vc.fund}</p>
                       )}
                     </div>
                   </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                {/* Investment Focus */}
-                {(vc['Investment Stage'] || vc['Primary Sector']) && (
-                  <div className="space-y-2">
-                    {vc['Investment Stage'] && (
-                      <div>
-                        <p className="text-xs font-medium text-gray-500 mb-1">Investment Stages</p>
-                        <div className="flex flex-wrap gap-1">
-                          {vc['Investment Stage'].slice(0, 2).map((stage, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {stage}
-                            </Badge>
-                          ))}
-                          {vc['Investment Stage'].length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{vc['Investment Stage'].length - 2}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
+
+                  {/* Focus Areas */}
+                  <div className="mb-4">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Focus</p>
+                    <p className="text-sm text-gray-600">{getSectorDisplay(vc['Primary Sector'])}</p>
+                  </div>
+
+                  {/* Investment Stage */}
+                  <div className="mb-4">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Stage</p>
+                    <p className="text-sm text-gray-600">{getStageDisplay(vc['Investment Stage'])}</p>
+                  </div>
+
+                  {/* Bio Preview */}
+                  {vc.bio && (
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-600 line-clamp-2">
+                        {vc.bio.length > 100 ? `${vc.bio.substring(0, 100)}...` : vc.bio}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Social Links */}
+                  <div className="flex items-center space-x-3 pt-4 border-t border-gray-100">
+                    {getTwitterUrl(vc) && (
+                      <a
+                        href={getTwitterUrl(vc)!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors group-hover:text-blue-600"
+                      >
+                        <Twitter className="h-4 w-4" />
+                        <span className="text-xs">Twitter</span>
+                      </a>
                     )}
                     
-                    {vc['Primary Sector'] && (
-                      <div>
-                        <p className="text-xs font-medium text-gray-500 mb-1">Primary Sectors</p>
-                        <div className="flex flex-wrap gap-1">
-                          {vc['Primary Sector'].slice(0, 2).map((sector, index) => (
-                            <Badge key={index} variant="outline" className="text-xs bg-blue-50 text-blue-700">
-                              {sector}
-                            </Badge>
-                          ))}
-                          {vc['Primary Sector'].length > 2 && (
-                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
-                              +{vc['Primary Sector'].length - 2}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Bio Preview */}
-                {vc.bio && (
-                  <div>
-                    <p className="text-sm text-gray-600 line-clamp-2">
-                      {vc.bio.length > 100 ? `${vc.bio.substring(0, 100)}...` : vc.bio}
-                    </p>
-                  </div>
-                )}
-
-                {/* Social Links */}
-                <div className="flex items-center justify-between pt-2 border-t">
-                  <div className="flex space-x-3">
-                    {(vc.twitter || vc['X Profile']) && (
-                      <a 
-                        href={vc.twitter || vc['X Profile']} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                        title="X Profile"
-                      >
-                        <X className="h-4 w-4" />
-                      </a>
-                    )}
-                    {vc.linkedin && (
-                      <a 
-                        href={vc.linkedin} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
-                        title="LinkedIn"
-                      >
-                        <Linkedin className="h-4 w-4" />
-                      </a>
-                    )}
                     {vc.website && (
-                      <a 
-                        href={vc.website} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="text-gray-600 hover:text-gray-800 transition-colors"
-                        title="Website"
+                      <a
+                        href={getWebsiteUrl(vc.website)!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-1 text-gray-500 hover:text-green-600 transition-colors group-hover:text-green-700"
                       >
                         <Globe className="h-4 w-4" />
+                        <span className="text-xs">Website</span>
                       </a>
                     )}
-                  </div>
-                  
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => window.open(`/vc/${vc.id}`, '_blank')}
-                    className="text-xs"
-                  >
-                    View Profile
-                    <ExternalLink className="h-3 w-3 ml-1" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
 
-        {/* No Results */}
-        {filteredVCs.length === 0 && (
-          <Card className="text-center py-16">
-            <CardContent>
-              <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No investors found</h3>
-              <p className="text-gray-600 mb-4">
-                Try adjusting your search terms or filters to find more results.
-              </p>
-              <Button onClick={clearFilters} variant="outline">
-                Clear all filters
-              </Button>
-            </CardContent>
-          </Card>
+                    <div className="flex-1"></div>
+                    
+                    {/* Active Badge */}
+                    <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
+                      Active 2024
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
 
-        {/* Footer Info */}
-        <div className="mt-16 text-center">
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="py-8">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                Missing from our directory?
-              </h3>
-              <p className="text-blue-700 mb-4">
-                We're constantly updating our database. If you know of a Web3 investor we should include, 
-                let us know and we'll add them to the directory.
-              </p>
-              <Button variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                Suggest an Investor
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center bg-white rounded-xl border shadow-sm p-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            Need to connect directly with VCs?
+          </h3>
+          <p className="text-gray-600 mb-6">
+            This directory shows public info. For direct contact and booking, check out our premium platform.
+          </p>
+          <div className="flex items-center justify-center space-x-4">
+            <Button 
+              onClick={() => window.location.href = '/vcs'}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <ArrowUpRight className="h-4 w-4 mr-2" />
+              Upgrade to unlock contact info
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => window.location.href = 'mailto:submit@pingme.com?subject=Submit VC to Directory'}
+            >
+              Submit a VC to directory
+            </Button>
+          </div>
         </div>
       </div>
     </div>
