@@ -81,7 +81,8 @@ export function AirtableVCPreviewCard({ vc }: AirtableVCPreviewCardProps) {
           )}
           {vc.price && (
             <div className="flex items-center text-sm text-gray-600">
-              Unlock for ${vc.price}
+              <DollarSign className="h-4 w-4 mr-2" />
+              Unlock for $${vc.price}
             </div>
           )}
           {vc.limit && (
@@ -118,7 +119,7 @@ export function AirtableVCPreviewCard({ vc }: AirtableVCPreviewCardProps) {
             className="w-full bg-primary hover:bg-primary/90 text-white font-semibold"
             onClick={(e) => {
               e.stopPropagation();
-              window.location.href = '/vcs';
+              setLocation(`/vc/${vc.id}`);
             }}
           >
             Book Now
