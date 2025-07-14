@@ -26,9 +26,9 @@ export default function TermsOfService() {
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Services and Payments</h2>
             <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-              <li>All payments made to Ping Me are non-refundable, unless explicitly stated under specific conditions.</li>
-              <li>Ping Me charges a fee for access to introductions and/or for listing services on the platform.</li>
-              <li>Venture Capitalists (VCs) and Angels listed on the platform are not employees or agents of Ping Me.</li>
+              <li>All payments made to Ping VC are non-refundable, unless explicitly stated under specific conditions.</li>
+              <li>Ping VC charges a fee for access to introductions and/or for listing services on the platform.</li>
+              <li>Venture Capitalists (VCs) and Angels listed on the platform are not employees or agents of Ping VC.</li>
             </ul>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Refund Policy</h2>
@@ -36,9 +36,9 @@ export default function TermsOfService() {
               If a VC or Angel does not show up to a scheduled call or fails to respond to a paid introduction request within 5 business days:
             </p>
             <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-              <li>The founder must submit a written complaint to Ping Me at support@pingme.app within 7 calendar days of the missed appointment or non-response.</li>
-              <li>Ping Me will conduct an internal review and may contact both parties for verification.</li>
-              <li>If Ping Me confirms the VC did not respond or attend, the founder will be issued a full 100% refund within 10 business days.</li>
+              <li>The founder must submit a written complaint to Ping VC at support@pingvc.app within 7 calendar days of the missed appointment or non-response.</li>
+              <li>Ping VC will conduct an internal review and may contact both parties for verification.</li>
+              <li>If Ping VC confirms the VC did not respond or attend, the founder will be issued a full 100% refund within 10 business days.</li>
             </ul>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. User Responsibilities</h2>

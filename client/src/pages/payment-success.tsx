@@ -120,7 +120,7 @@ export default function PaymentSuccess() {
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">P</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">Ping Me</span>
+              <span className="text-xl font-bold text-gray-900">Ping VC</span>
             </div>
             
             <div className="flex items-center space-x-4">

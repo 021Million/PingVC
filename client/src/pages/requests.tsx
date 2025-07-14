@@ -73,7 +73,7 @@ export default function RequestsPage() {
             📬 Feedback & Requests
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Help shape Ping Me — request features, VCs, or report bugs. Your feedback drives our product development.
+            Help shape Ping VC — request features, VCs, or report bugs. Your feedback drives our product development.
           </p>
         </div>
 
@@ -85,7 +85,7 @@ export default function RequestsPage() {
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Suggest new features or improvements to make Ping Me better for founders and investors.
+                Suggest new features or improvements to make Ping VC better for founders and investors.
               </CardDescription>
             </CardContent>
           </Card>
@@ -186,7 +186,7 @@ export default function RequestsPage() {
                   "Sending..."
                 ) : (
                   <>
-                    Send to Ping Me Team
+                    Send to Ping VC Team
                     <Send className="ml-2 h-4 w-4" />
                   </>
                 )}

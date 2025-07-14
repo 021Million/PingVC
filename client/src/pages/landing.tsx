@@ -146,7 +146,7 @@ export default function Landing() {
             onClick={() => window.location.href = '/vc-signup'}
             className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
           >
-            Apply to Join Ping Me
+            Apply to Join Ping VC
           </Button>
         </div>
       </section>
@@ -159,7 +159,7 @@ export default function Landing() {
                 <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">P</span>
                 </div>
-                <span className="text-xl font-bold">Ping Me</span>
+                <span className="text-xl font-bold">Ping VC</span>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">The fastest way for Web3 founders to connect with VCs & Angels. No middlemen, no spam, just warm intros that work.</p>
             </div>
@@ -182,7 +182,7 @@ export default function Landing() {
           <div className="border-t border-gray-800 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-400 text-sm">
-                © 2024 Ping Me. All rights reserved.
+                © 2024 Ping VC. All rights reserved.
               </p>
               <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
                 <a href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</a>

@@ -1510,7 +1510,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Ping Me requests submission endpoint
+  // Ping VC requests submission endpoint
   app.post('/api/submit-request', async (req, res) => {
     try {
       const { name, email, message, category } = req.body;
@@ -1529,7 +1529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       requests.push(request);
-      console.log("📩 New Ping Me Request:", request);
+      console.log("📩 New Ping VC Request:", request);
 
       res.json({ success: true, message: "Thanks for your feedback! We'll review it soon." });
     } catch (error) {
@@ -1559,20 +1559,20 @@ async function sendVCThankYouEmail(vc: any): Promise<void> {
   // - SendGrid, Mailgun, AWS SES, etc.
   console.log(`Thank you email would be sent to: ${vc.email}`);
   console.log(`VC Name: ${vc.partnerName}, Fund: ${vc.fundName}`);
-  console.log(`Email content: Thank you for applying to join Ping Me as a VC. A team member will be in touch with you soon to complete verification.`);
+  console.log(`Email content: Thank you for applying to join Ping VC as a VC. A team member will be in touch with you soon to complete verification.`);
   
   // Example implementation (uncomment when you have an email service):
   /*
   const emailContent = {
     to: vc.email,
     from: 'team@pingme.com',
-    subject: 'Thank you for your VC application - Ping Me',
+    subject: 'Thank you for your VC application - Ping VC',
     html: `
       <h2>Thank you for applying, ${vc.partnerName}!</h2>
-      <p>We've received your application to join Ping Me as a VC partner from ${vc.fundName}.</p>
+      <p>We've received your application to join Ping VC as a VC partner from ${vc.fundName}.</p>
       <p>Our team will review your application and be in touch with you soon to complete the verification process.</p>
       <p>In the meantime, feel free to reach out if you have any questions.</p>
-      <p>Best regards,<br>The Ping Me Team</p>
+      <p>Best regards,<br>The Ping VC Team</p>
     `
   };
   
