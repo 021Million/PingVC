@@ -130,7 +130,7 @@ export default function RequestsPage() {
                   <Input
                     id="name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Elon Musk"
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                   />
@@ -141,7 +141,7 @@ export default function RequestsPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="elon@example.com"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                   />
