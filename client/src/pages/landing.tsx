@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Calendar, MessageCircle, Mail, ArrowRight } from "lucide-react";
 import { AirtableVCPreviewCard } from "@/components/airtable-vc-preview-card";
 import { ImprovedHeader } from "@/components/improved-header";
+import { EmailCaptureModal } from "@/components/email-capture-modal";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "wouter";
@@ -21,6 +22,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-gray-50">
       <ImprovedHeader />
+      <EmailCaptureModal />
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -130,7 +132,7 @@ export default function Landing() {
             <Card className="p-6">
               <Badge className="w-8 h-8 text-success mx-auto mb-4" />
               <h3 className="font-semibold text-gray-900 mb-2">Earn Revenue</h3>
-              <p className="text-sm text-gray-600">85% of each unlock fee goes to you</p>
+              <p className="text-sm text-gray-600">85% of each unlock fee goes to you or donate to charity</p>
             </Card>
             <Card className="p-6">
               <Lock className="w-8 h-8 text-success mx-auto mb-4" />

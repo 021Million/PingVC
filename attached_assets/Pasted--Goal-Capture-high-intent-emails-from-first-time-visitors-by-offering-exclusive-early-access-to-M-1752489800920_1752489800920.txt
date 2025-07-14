@@ -1,0 +1,74 @@
+🧠 Goal:
+Capture high-intent emails from first-time visitors by offering exclusive early access to Miss AI content/tools.
+
+✅ Replit Command Description
+js
+Copy
+Edit
+// 📬 EMAIL POPUP: MISS AI EARLY BIRD SIGNUP
+//
+// ✅ Triggered on 1st visit (session-based)
+// ✅ Modal popup asks for email: "Join the Miss AI Community Early"
+// ✅ Stores email in session or sends to backend (/api/email-capture)
+// ✅ If submitted, hide modal and prevent repeat
+// ✅ Includes optional incentive: “Get exclusive access to AI tools, launches, and playbooks”
+//
+// Tech: Express + Session + Frontend Modal (JS)
+// Add route: POST /api/email-capture
+// Add session flag: req.session.emailCaptured = true
+🔧 Backend Code (Express + Session)
+js
+Copy
+Edit
+// Store email + prevent re-showing modal
+app.post('/api/email-capture', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email required' });
+
+  // Store in memory or send to Airtable
+  users[email] = true;
+  req.session.emailCaptured = true;
+
+  console.log(`📥 New Miss AI Early Bird: ${email}`);
+  res.json({ success: true });
+});
+🖥 Frontend Code (HTML + JS)
+Add this to your homepage template:
+
+html
+Copy
+Edit
+<div id="emailModal" style="display:none;" class="modal">
+  <div class="modal-content">
+    <h2>✨ Join Miss AI Early</h2>
+    <p>Be the first to access AI tools, founder insights, and community drops.</p>
+    <input type="email" id="earlyEmail" placeholder="you@email.com" />
+    <button onclick="submitEarlyEmail()">Join Early</button>
+  </div>
+</div>
+
+<script>
+  // Check if already joined
+  if (!sessionStorage.getItem("missAIearly")) {
+    setTimeout(() => document.getElementById("emailModal").style.display = "block", 1000);
+  }
+
+  function submitEarlyEmail() {
+    const email = document.getElementById("earlyEmail").value;
+    fetch('/api/email-capture', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    }).then(res => {
+      sessionStorage.setItem("missAIearly", "true");
+      document.getElementById("emailModal").style.display = "none";
+      alert("You're in! Welcome to Miss AI.");
+    });
+  }
+</script>
+✨ Optional Upgrades
+Feature	Description
+🎁 Incentive	“Free AI founder playbook when you join”
+📧 Airtable or EmailZap	Save emails to Airtable or send a welcome email
+📣 Launch campaign	Use this as your waitlist funnel for Miss AI content/tools
+🔒 GDPR Text	"By submitting, you agree to receive emails from Miss AI."

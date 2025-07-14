@@ -133,6 +133,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Email Capture for Miss AI Early Access
+  app.post('/api/email-capture', async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+      }
+
+      // Store email in session to prevent re-showing modal
+      (req as any).session.emailCaptured = true;
+
+      // Log the early bird signup (in production, you'd store this in database or send to email service)
+      console.log(`📥 New Miss AI Early Bird: ${email} at ${new Date().toISOString()}`);
+
+      // TODO: In production, you would:
+      // 1. Store in database for email marketing
+      // 2. Send to Airtable or email service provider
+      // 3. Send welcome email
+      // 4. Add to email marketing list (Mailchimp, ConvertKit, etc.)
+
+      res.json({ 
+        success: true,
+        message: "Successfully joined Miss AI early access!" 
+      });
+    } catch (error) {
+      console.error('Error capturing email:', error);
+      res.status(500).json({ error: 'Failed to capture email' });
+    }
+  });
+
   // Request Call for Unverified VCs
   app.post('/api/request-call', async (req, res) => {
     try {
