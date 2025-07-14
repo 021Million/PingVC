@@ -34,7 +34,7 @@ export default function Landing() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg font-semibold" asChild>
-              <Link href="/browse-vcs">
+              <Link href="/vcs">
                 Browse Investors
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -103,7 +103,7 @@ export default function Landing() {
           
           {/* View All Investors Button */}
           <div className="text-center mt-12">
-            <Link href="/browse-vcs">
+            <Link href="/vcs">
               <Button 
                 size="lg"
                 className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
@@ -188,6 +188,7 @@ export default function Landing() {
                 <a href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</a>
                 <a href="/support" className="hover:text-white transition-colors">Support</a>
+                <a href="/requests" className="hover:text-white transition-colors">Feedback & Requests</a>
               </div>
             </div>
           </div>

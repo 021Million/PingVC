@@ -17,7 +17,7 @@ import Profile from "@/pages/profile";
 import Ping from "@/pages/ping";
 import VCs from "@/pages/vcs";
 import Directory from "@/pages/directory";
-import BrowseVCs from "@/pages/browse-vcs";
+
 import Join from "@/pages/join";
 import SignupType from "@/pages/signup-type";
 import PrivacyPolicy from "@/pages/privacy-policy";
@@ -31,6 +31,7 @@ import PasswordSetupPage from "@/pages/password-setup";
 import ColdScoutDetail from "@/pages/cold-scout-detail";
 import { VCDetailPage } from "@/pages/vc-detail";
 import Auth from "@/pages/auth";
+import RequestsPage from "@/pages/requests";
 
 
 function Router() {
@@ -54,7 +55,6 @@ function Router() {
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/ping" component={Ping} />
           <Route path="/vcs" component={VCs} />
-          <Route path="/browse-vcs" component={BrowseVCs} />
           <Route path="/directory" component={Directory} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/auth" component={Auth} />
@@ -63,6 +63,7 @@ function Router() {
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
+          <Route path="/requests" component={RequestsPage} />
           <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/cold-scout/:slug" component={ColdScoutDetail} />
         </>
@@ -76,7 +77,6 @@ function Router() {
           <Route path="/profile" component={Profile} />
           <Route path="/ping" component={Ping} />
           <Route path="/vcs" component={VCs} />
-          <Route path="/browse-vcs" component={BrowseVCs} />
           <Route path="/directory" component={Directory} />
           <Route path="/vc/:id" component={VCDetailPage} />
           <Route path="/auth" component={Auth} />
@@ -86,6 +86,7 @@ function Router() {
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
+          <Route path="/requests" component={RequestsPage} />
           <Route path="/project-payment" component={ProjectVisibilityPayment} />
           <Route path="/settings" component={Settings} />
           <Route path="/password-setup" component={PasswordSetupPage} />

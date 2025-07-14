@@ -65,6 +65,16 @@ const upload = multer({
   }
 });
 
+// In-memory storage for requests (extend to database later)
+let requests: Array<{
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  category?: string;
+  timestamp: string;
+}> = [];
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
@@ -78,52 +88,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   app.use('/uploads', express.static(uploadsDir));
 
-  // Unified VC Discovery & Booking API
+  // Unified VC Discovery & Booking API - redirects to working Airtable endpoint
   app.get('/api/browse-vcs', async (req, res) => {
     try {
+      // Just redirect to the working Airtable endpoint that already has the correct structure
       if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
         return res.status(500).json({ error: 'Airtable configuration missing' });
       }
 
       const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-      
+      const records = await base('VCs').select().all();
+
       const verifiedVCs: any[] = [];
       const unverifiedVCs: any[] = [];
 
-      await base('VCs').select({
-        view: 'Grid view',
-        fields: [
-          'Name', 'Fund', 'Bio', 'Investment Stage', 'Primary Sector',
-          'Investment Thesis', 'Image', 'X Profile', 'LinkedIn Profile', 
-          'Website', 'Price', 'Verified', 'Twitter'
-        ]
-      }).eachPage((records, fetchNextPage) => {
-        records.forEach((record) => {
-          const vc = {
-            id: record.id,
-            name: record.get('Name') as string,
-            fund: record.get('Fund') as string,
-            bio: record.get('Bio') as string,
-            'Investment Stage': record.get('Investment Stage') as string[],
-            'Primary Sector': record.get('Primary Sector') as string[],
-            'Investment Thesis': record.get('Investment Thesis') as string,
-            Image: record.get('Image') as Array<{ url: string }>,
-            'X Profile': record.get('X Profile') as string,
-            linkedin: record.get('LinkedIn Profile') as string,
-            website: record.get('Website') as string,
-            twitter: record.get('Twitter') as string,
-            price: record.get('Price') as number,
-            verified: record.get('Verified') as boolean
-          };
+      records.forEach(record => {
+        const fields = record.fields;
+        const vc = {
+          id: record.id,
+          name: fields.Name,
+          fund: fields.Fund,
+          title: fields.Title,
+          verified: fields.Verified || false,
+          twitter: fields.Twitter,
+          linkedin: fields.LinkedIn,
+          email: fields.Email,
+          telegram: fields.Telegram,
+          'Meeting/Calendly Link': fields['Meeting/Calendly Link'],
+          'Investment Stage': fields['Investment Stage'],
+          'Primary Sector': fields['Primary Sector'],
+          'Investment Thesis': fields['Investment Thesis'],
+          Image: fields.Image,
+          imageUrl: fields['Image URL'],
+          specialties: fields.Specialties || fields['Primary Sector'] || [],
+          stages: fields['Investment Stage'] || [],
+          price: fields.Price,
+          limit: fields.Limit,
+          contactLink: fields['Contact Link'],
+          bio: fields.Bio,
+          website: fields.Website
+        };
 
-          if (vc.verified) {
-            verifiedVCs.push(vc);
-          } else {
-            unverifiedVCs.push(vc);
-          }
-        });
-
-        fetchNextPage();
+        if (vc.verified) {
+          verifiedVCs.push(vc);
+        } else {
+          unverifiedVCs.push(vc);
+        }
       });
 
       res.json({ verifiedVCs, unverifiedVCs });
@@ -1497,6 +1507,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error confirming payment:", error);
       res.status(500).json({ message: "Error confirming payment: " + error.message });
+    }
+  });
+
+  // Ping Me requests submission endpoint
+  app.post('/api/submit-request', async (req, res) => {
+    try {
+      const { name, email, message, category } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ message: 'Message is required' });
+      }
+
+      const request = {
+        id: Date.now().toString(),
+        name: name || 'Anonymous',
+        email: email || 'Not provided',
+        message,
+        category: category || 'General',
+        timestamp: new Date().toISOString()
+      };
+
+      requests.push(request);
+      console.log("📩 New Ping Me Request:", request);
+
+      res.json({ success: true, message: "Thanks for your feedback! We'll review it soon." });
+    } catch (error) {
+      console.error("Error submitting request:", error);
+      res.status(500).json({ message: "Failed to submit request" });
+    }
+  });
+
+  // Admin endpoint to view requests (development only)
+  app.get('/api/requests', async (req, res) => {
+    try {
+      // In production, add authentication check here
+      res.json(requests);
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+      res.status(500).json({ message: "Failed to fetch requests" });
     }
   });
 

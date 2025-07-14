@@ -118,7 +118,7 @@ export function AirtableVCPreviewCard({ vc }: AirtableVCPreviewCardProps) {
             className="w-full bg-primary hover:bg-primary/90 text-white font-semibold"
             onClick={(e) => {
               e.stopPropagation();
-              window.location.href = '/browse-vcs';
+              window.location.href = '/vcs';
             }}
           >
             Book Now
