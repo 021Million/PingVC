@@ -165,7 +165,6 @@ export default function Landing() {
               <h3 className="text-lg font-semibold mb-4">Marketplace</h3>
               <ul className="space-y-2 text-gray-300">
                 <li><a href="/vcs" className="hover:text-white transition-colors">Browse VCs</a></li>
-                <li><a href="/scout" className="hover:text-white transition-colors">Scout Projects</a></li>
               </ul>
             </div>
             

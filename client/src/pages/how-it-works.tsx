@@ -203,7 +203,6 @@ export default function HowItWorks() {
               <span className="font-semibold text-gray-900">Ping Me</span>
             </div>
             <div className="flex space-x-6">
-              <Link href="/scout"><a className="text-gray-600 hover:text-primary transition-colors">Scout</a></Link>
               <Link href="/vcs"><a className="text-gray-600 hover:text-primary transition-colors">Browse VCs</a></Link>
             </div>
           </div>

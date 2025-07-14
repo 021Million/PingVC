@@ -63,11 +63,7 @@ export function Header() {
             }`}>
               Home
             </Link>
-            <Link href="/scout" className={`transition-colors font-medium ${
-              isActive("/scout") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              Scout
-            </Link>
+
             <Link href="/vcs" className={`transition-colors font-medium ${
               isActive("/vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
             }`}>
