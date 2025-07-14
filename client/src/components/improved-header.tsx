@@ -52,7 +52,7 @@ export function ImprovedHeader() {
               <div className="w-6 h-6 gradient-primary rounded flex items-center justify-center">
                 <span className="text-white font-bold text-xs">P</span>
               </div>
-              <span className="ml-3 text-xl font-bold text-gray-900">Ping Me</span>
+              <span className="ml-3 text-xl font-bold text-gray-900">Ping VC</span>
             </Link>
           </div>
 
