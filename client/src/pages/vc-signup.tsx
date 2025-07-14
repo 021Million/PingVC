@@ -212,7 +212,7 @@ export default function VCSignup() {
             <Card className="p-6">
               <DollarSign className="w-8 h-8 text-success mx-auto mb-4" />
               <h3 className="font-semibold text-gray-900 mb-2">Earn Revenue</h3>
-              <p className="text-sm text-gray-600">85% of each unlock fee goes to you</p>
+              <p className="text-sm text-gray-600">85% of each unlock fee goes to you or donated to charity</p>
             </Card>
             <Card className="p-6">
               <CheckCircle className="w-8 h-8 text-success mx-auto mb-4" />
