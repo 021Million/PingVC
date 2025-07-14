@@ -124,7 +124,7 @@ export default function VCs() {
                 <span className="text-sm text-gray-500 ml-1">to connect</span>
               </div>
               <Button size="sm" className="bg-primary hover:bg-primary/90">
-                Connect
+                {isVerified ? "Connect" : "Request"}
               </Button>
             </div>
           </div>
