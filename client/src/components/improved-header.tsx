@@ -84,7 +84,7 @@ export function ImprovedHeader() {
                   onClick={() => window.location.href = '/api/login'}
                   className="text-gray-700 hover:text-primary"
                 >
-                  Sign In
+                  Login
                 </Button>
                 <Button 
                   onClick={() => window.location.href = '/vc-signup'}
