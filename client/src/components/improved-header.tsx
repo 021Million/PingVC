@@ -71,11 +71,7 @@ export function ImprovedHeader() {
               Browse VCs
             </Link>
             
-            <Link href="/directory" className={`transition-colors font-medium ${
-              isActive("/directory") ? "text-primary" : "text-gray-700 hover:text-primary"
-            }`}>
-              Free Directory
-            </Link>
+
 
           </nav>
 

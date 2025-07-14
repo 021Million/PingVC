@@ -93,7 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await base('VCs').select({
         view: 'Grid view',
         fields: [
-          'Name', 'Title', 'Fund', 'Bio', 'Investment Stage', 'Primary Sector',
+          'Name', 'Fund', 'Bio', 'Investment Stage', 'Primary Sector',
           'Investment Thesis', 'Image', 'X Profile', 'LinkedIn Profile', 
           'Website', 'Price', 'Verified', 'Twitter'
         ]
@@ -102,7 +102,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const vc = {
             id: record.id,
             name: record.get('Name') as string,
-            title: record.get('Title') as string,
             fund: record.get('Fund') as string,
             bio: record.get('Bio') as string,
             'Investment Stage': record.get('Investment Stage') as string[],
