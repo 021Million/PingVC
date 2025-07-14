@@ -29,7 +29,7 @@ export default function Landing() {
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Where <span className="text-blue-600">Founders</span> connect with <span className="text-green-600">VCs & Angels</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Ping Me helps startup founders access verified VCs and angels, no intros needed.</p>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Ping VC helps startup founders access verified VCs and angels, no intros needed.</p>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
