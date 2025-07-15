@@ -70,6 +70,12 @@ export function Header() {
               Browse VCs
             </Link>
 
+            <Link href="/scout" className={`transition-colors font-medium ${
+              isActive("/scout") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              Marketplace
+            </Link>
+
           </nav>
 
           {/* Auth Section */}
