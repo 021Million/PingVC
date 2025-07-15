@@ -80,6 +80,8 @@ The application follows a full-stack monolithic architecture with clear separati
 - **Stripe**: Payment processing and checkout sessions
 - **OpenAI**: AI-powered intro template generation
 - **Replit Auth**: Authentication and user management
+- **Beehiiv**: Newsletter subscription management for email marketing
+- **Airtable**: VC signup tracking and booking request management
 
 ### Environment Variables
 - `DATABASE_URL`: Neon PostgreSQL connection string
@@ -89,6 +91,9 @@ The application follows a full-stack monolithic architecture with clear separati
 - `SESSION_SECRET`: Express session encryption secret
 - `REPL_ID`: Replit environment identifier
 - `ISSUER_URL`: OAuth issuer URL (defaults to Replit)
+- `BEEHIIV_API_KEY`: Beehiiv API key for newsletter subscriptions
+- `AIRTABLE_API_KEY`: Airtable API key for VC signup tracking
+- `AIRTABLE_BASE_ID`: Airtable base ID for data storage
 
 ## Deployment Strategy
 
@@ -158,3 +163,4 @@ Changelog:
 - July 14, 2025. Updated button text on VCs page to show "Connect" for verified investors and "Request" for unverified investors to clarify user actions. Enhanced social links on VC detail pages with prominent placement in both header and Professional Background sections.
 - July 14, 2025. Added social media icons (LinkedIn, X, Website) to VC cards on VCs page, positioned as floating icons in top-right corner. Removed price display for unverified investors while keeping it for verified investors to differentiate paid vs. request-based connections.
 - July 14, 2025. Repositioned social media icons to bottom-left of VC cards aligned with Connect/Request buttons. Added Fund Website as fourth social link option with purple styling and ExternalLink icon. Updated VC detail page sections: changed "Professional Background" to "Investment Thesis" and added new "Portfolio Performance" section.
+- July 15, 2025. Integrated Beehiiv newsletter subscription system for automatic email capture across all user interactions (VC requests, unlock payments, newsletter signups). Added Airtable integration for VC signup tracking with automatic storage in "VC Signups" table. Created dedicated /api/newsletter-signup endpoint for seamless email marketing automation. All email interactions now automatically subscribe users to Ping VC newsletter and track engagement data.

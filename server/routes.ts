@@ -5,6 +5,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import Airtable from "airtable";
+import { BeehiivClient } from "@beehiiv/sdk";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { setupEmailAuth } from "./emailAuth";
@@ -28,6 +29,75 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY 
 });
+
+// Initialize Beehiiv API
+let beehiiv: BeehiivClient | null = null;
+if (process.env.BEEHIIV_API_KEY) {
+  beehiiv = new BeehiivClient({ apiKey: process.env.BEEHIIV_API_KEY });
+}
+
+// Helper function to add email to Beehiiv newsletter
+async function addToBeehiivNewsletter(email: string, name?: string): Promise<boolean> {
+  try {
+    if (!beehiiv || !process.env.BEEHIIV_PUBLICATION_ID) {
+      console.log("Beehiiv not configured, skipping newsletter subscription");
+      return false;
+    }
+
+    const publicationId = process.env.BEEHIIV_PUBLICATION_ID;
+    
+    const subscription = await beehiiv.subscriptions.create(publicationId, {
+      email: email,
+      reactivate_existing: true,
+      send_welcome_email: true
+    });
+
+    console.log(`✅ Successfully subscribed ${email} to Beehiiv newsletter`);
+    return true;
+  } catch (error) {
+    console.error("Error subscribing to Beehiiv:", error);
+    return false;
+  }
+}
+
+// Helper function to save VC signup to Airtable
+async function saveVCToAirtable(vcData: any): Promise<boolean> {
+  try {
+    if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+      console.log("Airtable not configured, skipping VC save");
+      return false;
+    }
+
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+    
+    // Save to VC Signups table
+    await base('VC Signups').create({
+      'Name': vcData.partnerName,
+      'Email': vcData.email,
+      'Fund': vcData.fundName,
+      'Title': vcData.title,
+      'Investment Stage': vcData.stage,
+      'Sectors': vcData.sectors?.join(', ') || '',
+      'Investment Thesis': vcData.investmentThesis,
+      'Contact Type': vcData.contactType,
+      'Contact Info': vcData.contactInfo,
+      'Price': vcData.price,
+      'Limit': vcData.limit,
+      'Website': vcData.website,
+      'LinkedIn': vcData.linkedin,
+      'Twitter': vcData.twitter,
+      'Bio': vcData.bio,
+      'Signup Date': new Date().toISOString(),
+      'Status': 'Pending Review'
+    });
+
+    console.log(`✅ Successfully saved VC ${vcData.partnerName} to Airtable`);
+    return true;
+  } catch (error) {
+    console.error("Error saving VC to Airtable:", error);
+    return false;
+  }
+}
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -180,6 +250,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Newsletter signup endpoint
+  app.post('/api/newsletter-signup', async (req, res) => {
+    try {
+      const { email, name, source } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+      }
+
+      // Add to Beehiiv newsletter
+      const beehiivSuccess = await addToBeehiivNewsletter(email, name);
+
+      // Store in local database for tracking
+      try {
+        await storage.submitEmail({
+          email,
+          source: source || 'newsletter',
+          submittedAt: new Date(),
+        });
+      } catch (dbError) {
+        console.error('Error saving email to database:', dbError);
+        // Continue even if DB save fails
+      }
+
+      res.json({ 
+        success: true, 
+        beehiivSubscribed: beehiivSuccess,
+        message: beehiivSuccess 
+          ? "Successfully subscribed to Ping VC newsletter!" 
+          : "Email captured, but newsletter subscription failed. Our team will add you manually."
+      });
+    } catch (error) {
+      console.error('Error processing newsletter signup:', error);
+      res.status(500).json({ error: 'Failed to process newsletter signup' });
+    }
+  });
+
   // Request Call for Unverified VCs - Now saves to Airtable
   app.post('/api/request-call', async (req, res) => {
     try {
@@ -231,6 +344,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (airtableError) {
         console.error('Error saving to Airtable:', airtableError);
         // Continue with the response even if Airtable save fails
+      }
+
+      // Add founder email to Beehiiv newsletter
+      try {
+        await addToBeehiivNewsletter(founderEmail, founderName);
+      } catch (beehiivError) {
+        console.error('Error adding to Beehiiv:', beehiivError);
+        // Continue with the response even if Beehiiv fails
       }
 
       res.json({ 
@@ -535,6 +656,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const vc = await storage.createVC(vcData);
+      
+      // Save VC signup to Airtable
+      try {
+        await saveVCToAirtable(vc);
+      } catch (airtableError) {
+        console.error("Error saving VC to Airtable:", airtableError);
+        // Don't fail the VC creation if Airtable save fails
+      }
       
       // Send thank you email
       try {
@@ -1361,6 +1490,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         stripePaymentIntentId: paymentIntent.id,
         status: "completed",
       });
+
+      // Add email to Beehiiv newsletter
+      try {
+        await addToBeehiivNewsletter(email);
+      } catch (beehiivError) {
+        console.error('Error adding to Beehiiv during VC unlock:', beehiivError);
+      }
 
       res.json({ 
         clientSecret: paymentIntent.client_secret,
