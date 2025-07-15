@@ -21,29 +21,17 @@ import { ImageUpload } from "@/components/image-upload";
 const vcSignupSchema = insertVCSchema.extend({
   sectors: z.array(z.string()).min(1, "Please select at least one sector"),
   stage: z.array(z.string()).min(1, "Please select at least one investment stage"),
-  telegramHandle: z.string().optional(),
-  meetingLink: z.string().optional(),
+  meetingLink: z.string().min(1, "Meeting link is required"),
+  location: z.string().min(1, "Location is required"),
+  investmentTag: z.string().min(1, "Investment tag is required"),
+  fundDescription: z.string().min(1, "Fund description is required"),
+  investmentThesis: z.string().min(1, "Investment thesis is required"),
+  bio: z.string().min(1, "Bio is required"),
+  portfolioPerformance: z.string().min(1, "Portfolio performance is required"),
+  position: z.string().min(1, "Position is required"),
   donateToCharity: z.boolean().optional(),
   charityOfChoice: z.string().optional(),
-}).omit({ userId: true, isVerified: true, isActive: true })
-.refine((data) => {
-  if (data.contactType === "telegram" || data.contactType === "both") {
-    return data.telegramHandle && data.telegramHandle.length > 0;
-  }
-  return true;
-}, {
-  message: "Telegram handle is required when selected",
-  path: ["telegramHandle"],
-})
-.refine((data) => {
-  if (data.contactType === "meeting" || data.contactType === "both") {
-    return data.meetingLink && data.meetingLink.length > 0;
-  }
-  return true;
-}, {
-  message: "Meeting link is required when selected",
-  path: ["meetingLink"],
-});
+}).omit({ userId: true, isVerified: true, isActive: true, contactType: true, telegramHandle: true });
 
 type VCSignupForm = z.infer<typeof vcSignupSchema>;
 
@@ -88,19 +76,24 @@ export default function VCSignup() {
   } = useForm<VCSignupForm>({
     resolver: zodResolver(vcSignupSchema),
     defaultValues: {
-      contactType: "telegram",
-      price: 4900, // $49 in cents
+      price: 0, // Default to $0
       weeklyIntroLimit: 5,
       sectors: [],
       stage: [],
       donateToCharity: false,
       charityOfChoice: "",
+      location: "",
+      investmentTag: "",
+      fundDescription: "",
+      investmentThesis: "",
+      bio: "",
+      portfolioPerformance: "",
+      position: "",
+      meetingLink: "",
     },
   });
 
-  const contactType = watch("contactType");
   const price = watch("price");
-  const telegramHandle = watch("telegramHandle");
   const meetingLink = watch("meetingLink");
   const sectors = watch("sectors") || [];
   const stages = watch("stage") || [];
@@ -109,20 +102,11 @@ export default function VCSignup() {
 
   const createVCMutation = useMutation({
     mutationFn: async (data: VCSignupForm) => {
-      // Set the main contactHandle based on the contactType
-      let contactHandle = data.contactHandle || "";
-      if (data.contactType === "telegram") {
-        contactHandle = data.telegramHandle || "";
-      } else if (data.contactType === "meeting") {
-        contactHandle = data.meetingLink || "";
-      } else if (data.contactType === "both") {
-        contactHandle = `Telegram: ${data.telegramHandle || ""}, Meeting: ${data.meetingLink || ""}`;
-      }
-      
       return await apiRequest("POST", "/api/vcs", {
         ...data,
         sectors: data.sectors, // Already an array
-        contactHandle,
+        contactHandle: data.meetingLink, // Use meeting link as contact handle
+        contactType: "meeting", // Always meeting type
         price: Math.round(data.price * 100), // Convert to cents
       });
     },
@@ -266,19 +250,7 @@ export default function VCSignup() {
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    {...register("email")}
-                    placeholder="john@exampleventures.com"
-                    className={errors.email ? "border-red-500" : ""}
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
-                  )}
-                </div>
+
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
@@ -440,67 +412,103 @@ export default function VCSignup() {
                   )}
                 </div>
 
-                <div>
-                  <Label className="text-base font-medium">How should founders contact you?</Label>
-                  <p className="text-sm text-gray-600 mb-4">Select one or both options below</p>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <Checkbox
-                        id="telegram-option"
-                        checked={contactType === "telegram" || contactType === "both"}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setValue("contactType", contactType === "meeting" ? "both" : "telegram");
-                          } else {
-                            setValue("contactType", contactType === "both" ? "meeting" : "");
-                          }
-                        }}
-                      />
-                      <div className="space-y-2 flex-1">
-                        <Label htmlFor="telegram-option" className="text-sm font-medium">
-                          Telegram Handle (Direct messaging)
-                        </Label>
-                        <Input
-                          placeholder="@yourtelegram"
-                          {...register("telegramHandle")}
-                          disabled={!(contactType === "telegram" || contactType === "both")}
-                          className={`${!(contactType === "telegram" || contactType === "both") ? "bg-gray-50" : ""} ${errors.telegramHandle ? "border-red-500" : ""}`}
-                        />
-                        {errors.telegramHandle && (
-                          <p className="text-sm text-red-500">{errors.telegramHandle.message}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-3">
-                      <Checkbox
-                        id="meeting-option"
-                        checked={contactType === "meeting" || contactType === "both"}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setValue("contactType", contactType === "telegram" ? "both" : "meeting");
-                          } else {
-                            setValue("contactType", contactType === "both" ? "telegram" : "");
-                          }
-                        }}
-                      />
-                      <div className="space-y-2 flex-1">
-                        <Label htmlFor="meeting-option" className="text-sm font-medium">
-                          Meeting Link (Scheduled calls)
-                        </Label>
-                        <Input
-                          placeholder="https://calendly.com/yourname"
-                          {...register("meetingLink")}
-                          disabled={!(contactType === "meeting" || contactType === "both")}
-                          className={`${!(contactType === "meeting" || contactType === "both") ? "bg-gray-50" : ""} ${errors.meetingLink ? "border-red-500" : ""}`}
-                        />
-                        {errors.meetingLink && (
-                          <p className="text-sm text-red-500">{errors.meetingLink.message}</p>
-                        )}
-                      </div>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      {...register("location")}
+                      placeholder="San Francisco, CA"
+                      className={errors.location ? "border-red-500" : ""}
+                    />
+                    {errors.location && (
+                      <p className="text-sm text-red-500 mt-1">{errors.location.message}</p>
+                    )}
                   </div>
+
+                  <div>
+                    <Label htmlFor="position">Position</Label>
+                    <Input
+                      id="position"
+                      {...register("position")}
+                      placeholder="Managing Partner"
+                      className={errors.position ? "border-red-500" : ""}
+                    />
+                    {errors.position && (
+                      <p className="text-sm text-red-500 mt-1">{errors.position.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="investmentTag">Investment Tag</Label>
+                  <Input
+                    id="investmentTag"
+                    {...register("investmentTag")}
+                    placeholder="Web3 Infrastructure"
+                    className={errors.investmentTag ? "border-red-500" : ""}
+                  />
+                  {errors.investmentTag && (
+                    <p className="text-sm text-red-500 mt-1">{errors.investmentTag.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="fundDescription">Fund Description</Label>
+                  <Textarea
+                    id="fundDescription"
+                    {...register("fundDescription")}
+                    placeholder="Brief description of your fund's focus and investment approach..."
+                    className={errors.fundDescription ? "border-red-500" : ""}
+                    rows={3}
+                  />
+                  {errors.fundDescription && (
+                    <p className="text-sm text-red-500 mt-1">{errors.fundDescription.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="bio">Personal Bio</Label>
+                  <Textarea
+                    id="bio"
+                    {...register("bio")}
+                    placeholder="Your background, experience, and what you bring to founders..."
+                    className={errors.bio ? "border-red-500" : ""}
+                    rows={4}
+                  />
+                  {errors.bio && (
+                    <p className="text-sm text-red-500 mt-1">{errors.bio.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="portfolioPerformance">Portfolio Performance</Label>
+                  <Textarea
+                    id="portfolioPerformance"
+                    {...register("portfolioPerformance")}
+                    placeholder="Notable investments, exits, and portfolio highlights..."
+                    className={errors.portfolioPerformance ? "border-red-500" : ""}
+                    rows={3}
+                  />
+                  {errors.portfolioPerformance && (
+                    <p className="text-sm text-red-500 mt-1">{errors.portfolioPerformance.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="meetingLink">Meeting Link</Label>
+                  <Input
+                    id="meetingLink"
+                    {...register("meetingLink")}
+                    placeholder="https://calendly.com/yourname"
+                    className={errors.meetingLink ? "border-red-500" : ""}
+                  />
+                  {errors.meetingLink && (
+                    <p className="text-sm text-red-500 mt-1">{errors.meetingLink.message}</p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Founders will use this link to schedule meetings with you
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -510,8 +518,8 @@ export default function VCSignup() {
                       id="price"
                       type="number"
                       {...register("price", { valueAsNumber: true })}
-                      min={25}
-                      placeholder="49"
+                      min={0}
+                      placeholder="0"
                       className={errors.price ? "border-red-500" : ""}
                     />
                     {errors.price && (

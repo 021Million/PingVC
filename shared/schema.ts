@@ -50,7 +50,13 @@ export const vcs = pgTable("vcs", {
   userId: varchar("user_id").references(() => users.id),
   fundName: varchar("fund_name").notNull(),
   partnerName: varchar("partner_name").notNull(),
-  email: varchar("email").notNull(),
+  email: varchar("email"),
+  location: varchar("location").notNull(),
+  position: varchar("position").notNull(),
+  investmentTag: varchar("investment_tag").notNull(),
+  fundDescription: text("fund_description").notNull(),
+  bio: text("bio").notNull(),
+  portfolioPerformance: text("portfolio_performance").notNull(),
   twitterUrl: varchar("twitter_url"),
   linkedinUrl: varchar("linkedin_url"),
   telegramUrl: varchar("telegram_url"),
@@ -58,10 +64,9 @@ export const vcs = pgTable("vcs", {
   stage: text("stage").array().notNull(), // Pre-Seed, Seed, Series A, Angel, etc.
   sectors: text("sectors").array().notNull(), // DeFi, Gaming, Infrastructure, etc.
   investmentThesis: text("investment_thesis").notNull(),
-  contactType: varchar("contact_type").notNull(), // 'telegram', 'meeting', or 'both'
-  contactHandle: varchar("contact_handle").notNull(), // Telegram handle or Calendly link
-  telegramHandle: varchar("telegram_handle"), // Separate telegram handle when both options selected
-  meetingLink: varchar("meeting_link"), // Separate meeting link when both options selected
+  contactType: varchar("contact_type").notNull().default("meeting"), // Always 'meeting' now
+  contactHandle: varchar("contact_handle").notNull(), // Meeting link
+  meetingLink: varchar("meeting_link").notNull(), // Meeting link
   price: integer("price").notNull(), // Price in cents
   logoUrl: varchar("logo_url"),
   weeklyIntroLimit: integer("weekly_intro_limit").default(5),
