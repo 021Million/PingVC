@@ -468,8 +468,8 @@ export function VCDetailPage() {
                     {vc['Portfolio Performance']}
                   </div>
                 ) : (
-                  <div className="text-gray-600 italic">
-                    Portfolio performance data will be available after connection.
+                  <div className="text-gray-600">
+                    Portfolio performance information not provided by this investor.
                   </div>
                 )}
               </CardContent>
