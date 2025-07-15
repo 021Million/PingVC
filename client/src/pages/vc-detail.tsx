@@ -419,36 +419,7 @@ export function VCDetailPage() {
                     </div>
                   )}
                 </div>
-                
-                {/* Connect Section */}
-                <div className="pt-4 border-t border-gray-200">
-                  <p className="font-medium text-gray-900 mb-3">Connect</p>
-                  <div className="flex flex-col space-y-2">
-                    <Button 
-                      onClick={() => {
-                        if (isVerified) {
-                          setShowUnlockModal(true);
-                        } else {
-                          setShowRequestModal(true);
-                        }
-                      }}
-                      className="bg-primary hover:bg-primary/90 w-fit"
-                    >
-                      Request Intro
-                    </Button>
-                    {vc.website && (
-                      <a 
-                        href={vc.website} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                      >
-                        <Globe className="h-4 w-4 mr-2" />
-                        <span>Website</span>
-                      </a>
-                    )}
-                  </div>
-                </div>
+
 
               </CardContent>
             </Card>
