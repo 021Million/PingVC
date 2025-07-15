@@ -284,8 +284,6 @@ export default function AirtableVCDetail() {
                     </div>
                   )}
 
-                  
-
                   {vcStats && (
                     <div className="flex items-center justify-center md:justify-start text-gray-600">
                       <BarChart3 className="h-4 w-4 mr-2" />
@@ -340,6 +338,60 @@ export default function AirtableVCDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Bio/About */}
+            {vc.bio && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>About</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">{vc.bio}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Investment Tag */}
+            {(vc['Investment Tag'] || vc.investmentTag) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Target className="h-5 w-5 mr-2" />
+                    Investment Tag
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">{vc['Investment Tag'] || vc.investmentTag}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Investment Thesis */}
+            {vc['Investment Thesis'] && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Investment Thesis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">{vc['Investment Thesis']}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Portfolio Performance */}
+            {(vc['Portfolio Performance'] || vc.portfolioPerformance) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <BarChart3 className="h-5 w-5 mr-2" />
+                    Portfolio Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">{vc['Portfolio Performance'] || vc.portfolioPerformance}</p>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Investment Focus */}
             <Card>
               <CardHeader>
@@ -376,45 +428,6 @@ export default function AirtableVCDetail() {
                 )}
               </CardContent>
             </Card>
-
-            {/* Investment Thesis */}
-            {vc['Investment Thesis'] && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Investment Thesis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 leading-relaxed">{vc['Investment Thesis']}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Portfolio Performance */}
-            {(vc['Portfolio Performance'] || vc.portfolioPerformance) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <BarChart3 className="h-5 w-5 mr-2" />
-                    Portfolio Performance
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 leading-relaxed">{vc['Portfolio Performance'] || vc.portfolioPerformance}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Bio/About */}
-            {vc.bio && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>About</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 leading-relaxed">{vc.bio}</p>
-                </CardContent>
-              </Card>
-            )}
           </div>
 
           {/* Sidebar */}
