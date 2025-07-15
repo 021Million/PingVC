@@ -25,6 +25,7 @@ import {
   Heart,
   BarChart3
 } from "lucide-react";
+import { FaLinkedin } from "react-icons/fa";
 import { VCUnlockModal } from "@/components/vc-unlock-modal";
 import { ImprovedHeader } from "@/components/improved-header";
 import { useState } from "react";
@@ -280,6 +281,45 @@ export default function AirtableVCDetail() {
                       {vcStats.totalRequests || 0} connection requests
                     </div>
                   )}
+
+                  {/* Social Media Links */}
+                  <div className="flex items-center justify-center md:justify-start gap-3 mt-4">
+                    {(vc.twitter || vc['X Profile']) && (
+                      <a
+                        href={vc.twitter || vc['X Profile']}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                        title="X (Twitter) Profile"
+                      >
+                        <X className="h-4 w-4 text-gray-600" />
+                      </a>
+                    )}
+                    
+                    {(vc.linkedin || vc['LinkedIn Profile']) && (
+                      <a
+                        href={vc.linkedin || vc['LinkedIn Profile']}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-blue-100 hover:bg-blue-200 rounded-full transition-colors"
+                        title="LinkedIn Profile"
+                      >
+                        <FaLinkedin className="h-4 w-4 text-blue-600" />
+                      </a>
+                    )}
+                    
+                    {(vc.website || vc.Website) && (
+                      <a
+                        href={vc.website || vc.Website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-purple-100 hover:bg-purple-200 rounded-full transition-colors"
+                        title="Website"
+                      >
+                        <Globe className="h-4 w-4 text-purple-600" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -370,12 +410,6 @@ export default function AirtableVCDetail() {
           <div className="space-y-6">
             {/* Investment Details */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <DollarSign className="h-5 w-5 mr-2" />
-                  Investment Details
-                </CardTitle>
-              </CardHeader>
               <CardContent className="space-y-3">
                 {vc.price && (
                   <div className="flex items-center justify-between">
