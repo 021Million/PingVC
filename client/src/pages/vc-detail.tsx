@@ -194,8 +194,6 @@ export function VCDetailPage() {
             <ul className="text-sm text-yellow-600 space-y-1 ml-4">
               <li>• Direct email contact</li>
               <li>• Calendly booking link</li>
-              <li>• Social media profiles</li>
-              <li>• Additional contact methods</li>
             </ul>
           </div>
           <Button 
