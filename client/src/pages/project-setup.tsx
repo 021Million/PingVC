@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -17,8 +18,13 @@ export default function ProjectSetup() {
   const [formData, setFormData] = useState({
     companyName: "",
     logoUrl: "",
+    description: "",
+    projectStage: "",
+    tickerLaunched: false,
+    dexScreenerUrl: "",
     pitchDeckUrl: "",
     amountRaising: "",
+    valuation: "",
     traction: "",
     ecosystem: "",
     vertical: "",
@@ -26,6 +32,7 @@ export default function ProjectSetup() {
     linkedinUrl: "",
     twitterUrl: "",
     websiteUrl: "",
+    revenueGenerating: false,
   });
   
   const { toast } = useToast();
@@ -57,6 +64,32 @@ export default function ProjectSetup() {
     },
   });
 
+  const saveToScoutMutation = useMutation({
+    mutationFn: async (data: any) => {
+      await apiRequest("POST", "/api/save-to-scout", data);
+    },
+    onSuccess: () => {
+      // Trigger confetti animation
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
+      toast({
+        title: "Published to Scout!",
+        description: "Your project is now live on the Scout marketplace and visible to investors!",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to publish to Scout",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -69,12 +102,41 @@ export default function ProjectSetup() {
       return;
     }
 
+    if (!formData.description.trim()) {
+      toast({
+        title: "Required Field",
+        description: "Please provide a project description.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const submitData = {
       ...formData,
       amountRaising: formData.amountRaising ? parseInt(formData.amountRaising.replace(/[^\d]/g, '')) : null,
+      valuation: formData.valuation ? parseInt(formData.valuation.replace(/[^\d]/g, '')) : null,
     };
 
     updateProjectMutation.mutate(submitData);
+  };
+
+  const handlePublishToScout = () => {
+    if (!formData.companyName.trim() || !formData.description.trim()) {
+      toast({
+        title: "Required Fields Missing",
+        description: "Please fill in company name and description before publishing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const submitData = {
+      ...formData,
+      amountRaising: formData.amountRaising ? parseInt(formData.amountRaising.replace(/[^\d]/g, '')) : null,
+      valuation: formData.valuation ? parseInt(formData.valuation.replace(/[^\d]/g, '')) : null,
+    };
+
+    saveToScoutMutation.mutate(submitData);
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -120,6 +182,57 @@ export default function ProjectSetup() {
                   placeholder="Drop your company logo here or click to browse"
                   maxSize={5}
                 />
+
+                <div>
+                  <Label htmlFor="description">Project Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleInputChange("description", e.target.value)}
+                    placeholder="Describe your project, what it does, and its value proposition"
+                    rows={4}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="projectStage">Project Stage</Label>
+                  <Select value={formData.projectStage} onValueChange={(value) => handleInputChange("projectStage", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select project stage" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Idea">Idea</SelectItem>
+                      <SelectItem value="MVP">MVP</SelectItem>
+                      <SelectItem value="Beta">Beta</SelectItem>
+                      <SelectItem value="Live">Live</SelectItem>
+                      <SelectItem value="Growth">Growth</SelectItem>
+                      <SelectItem value="Scaling">Scaling</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="tickerLaunched"
+                    checked={formData.tickerLaunched}
+                    onCheckedChange={(checked) => handleInputChange("tickerLaunched", checked)}
+                  />
+                  <Label htmlFor="tickerLaunched">Ticker Launched</Label>
+                </div>
+
+                {formData.tickerLaunched && (
+                  <div>
+                    <Label htmlFor="dexScreenerUrl">DEX Screener URL</Label>
+                    <Input
+                      id="dexScreenerUrl"
+                      value={formData.dexScreenerUrl}
+                      onChange={(e) => handleInputChange("dexScreenerUrl", e.target.value)}
+                      placeholder="https://dexscreener.com/..."
+                      type="url"
+                    />
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -184,15 +297,47 @@ export default function ProjectSetup() {
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="amountRaising">Amount Raising (USD)</Label>
-                  <Input
-                    id="amountRaising"
-                    value={formData.amountRaising}
-                    onChange={(e) => handleInputChange("amountRaising", e.target.value)}
-                    placeholder=""
-                    type="number"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="amountRaising">Amount Raising (USD)</Label>
+                    <Input
+                      id="amountRaising"
+                      value={formData.amountRaising}
+                      onChange={(e) => handleInputChange("amountRaising", e.target.value)}
+                      placeholder=""
+                      type="number"
+                    />
+                    {!formData.amountRaising && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        If left blank, will show "Please get in contact with founder"
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="valuation">Valuation (USD)</Label>
+                    <Input
+                      id="valuation"
+                      value={formData.valuation}
+                      onChange={(e) => handleInputChange("valuation", e.target.value)}
+                      placeholder=""
+                      type="number"
+                    />
+                    {!formData.valuation && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Optional - if left blank, will show contact founder message
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="revenueGenerating"
+                    checked={formData.revenueGenerating}
+                    onCheckedChange={(checked) => handleInputChange("revenueGenerating", checked)}
                   />
+                  <Label htmlFor="revenueGenerating">Revenue Generating</Label>
                 </div>
 
                 <div>
@@ -271,15 +416,27 @@ export default function ProjectSetup() {
 
               {/* Info Box */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-900 mb-2">Scout Marketplace</h4>
-                <p className="text-blue-800 text-sm">
-                  Once you complete this setup, your project will appear in our Scout marketplace where the community can discover and vote for promising startups. Higher-voted projects get more visibility to our VC network.
-                </p>
+                <h4 className="font-semibold text-blue-900 mb-2">Publishing Options</h4>
+                <div className="text-blue-800 text-sm space-y-2">
+                  <p><strong>Save Project Details:</strong> Saves your information privately to your profile.</p>
+                  <p><strong>Publish to Scout Marketplace:</strong> Makes your project visible in our public Scout marketplace where investors and the community can discover your startup.</p>
+                  <p className="text-xs text-blue-600 mt-2">
+                    💡 If you leave Amount Raising or Valuation blank, visitors will see "Please get in contact with founder" with links to your social profiles.
+                  </p>
+                </div>
               </div>
 
               <div className="flex gap-4">
                 <Button type="submit" disabled={updateProjectMutation.isPending}>
                   {updateProjectMutation.isPending ? "Saving..." : "Save Project Details"}
+                </Button>
+                <Button 
+                  type="button" 
+                  onClick={handlePublishToScout} 
+                  disabled={saveToScoutMutation.isPending}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {saveToScoutMutation.isPending ? "Publishing..." : "Publish to Scout Marketplace"}
                 </Button>
                 <Button type="button" variant="outline" asChild>
                   <Link href="/">Skip for now</Link>

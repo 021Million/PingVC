@@ -1251,13 +1251,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const projectData = {
         companyName: req.body.companyName,
-        logoUrl: req.body.logoUrl, // Add logo URL support
+        logoUrl: req.body.logoUrl,
+        description: req.body.description,
+        projectStage: req.body.projectStage,
+        tickerLaunched: req.body.tickerLaunched,
+        dexScreenerUrl: req.body.dexScreenerUrl,
         pitchDeckUrl: req.body.pitchDeckUrl,
         amountRaising: req.body.amountRaising,
+        valuation: req.body.valuation,
         traction: req.body.traction,
         ecosystem: req.body.ecosystem,
         vertical: req.body.vertical,
-        description: req.body.description,
+        dataRoomUrl: req.body.dataRoomUrl,
+        linkedinUrl: req.body.linkedinUrl,
+        twitterUrl: req.body.twitterUrl,
+        websiteUrl: req.body.websiteUrl,
+        revenueGenerating: req.body.revenueGenerating,
       };
 
       const updatedFounder = await storage.updateFounderProject(founder.id, projectData);
@@ -1309,6 +1318,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error uploading image:', error);
       res.status(500).json({ message: 'Failed to upload image' });
+    }
+  });
+
+  // Scout projects from Airtable API
+  app.get('/api/scout-projects', async (req, res) => {
+    try {
+      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+        return res.status(500).json({ error: 'Airtable configuration missing' });
+      }
+
+      const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+      const records = await base('Scout').select().all();
+
+      const projects = records.map(record => ({
+        id: record.id,
+        companyName: record.get('Company Name') as string,
+        description: record.get('Description') as string,
+        projectStage: record.get('Project Stage') as string,
+        tickerLaunched: record.get('Ticker Launched') as boolean,
+        dexScreenerUrl: record.get('DEX Screener URL') as string,
+        amountRaising: record.get('Amount Raising') as string,
+        valuation: record.get('Valuation') as string,
+        ecosystem: record.get('Ecosystem') as string,
+        vertical: record.get('Vertical') as string,
+        twitterUrl: record.get('Twitter URL') as string,
+        linkedinUrl: record.get('LinkedIn URL') as string,
+        websiteUrl: record.get('Website URL') as string,
+        revenueGenerating: record.get('Revenue Generating') as boolean,
+        logoUrl: record.get('Logo URL') as string,
+        pitchDeckUrl: record.get('Pitch Deck URL') as string,
+        dataRoomUrl: record.get('Data Room URL') as string,
+        traction: record.get('Traction') as string,
+        votes: record.get('Votes') as number || 0,
+        createdAt: record.get('Created') as string,
+      }));
+
+      res.json(projects);
+    } catch (error) {
+      console.error('Error fetching Scout projects:', error);
+      res.status(500).json({ error: 'Failed to fetch Scout projects' });
+    }
+  });
+
+  // Save project to Scout Airtable
+  app.post('/api/save-to-scout', isAuthenticated, async (req: any, res) => {
+    try {
+      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+        return res.status(500).json({ error: 'Airtable configuration missing' });
+      }
+
+      const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+      
+      // Create record in Scout table
+      const record = await base('Scout').create({
+        'Company Name': req.body.companyName,
+        'Description': req.body.description,
+        'Project Stage': req.body.projectStage,
+        'Ticker Launched': req.body.tickerLaunched,
+        'DEX Screener URL': req.body.dexScreenerUrl,
+        'Amount Raising': req.body.amountRaising,
+        'Valuation': req.body.valuation,
+        'Ecosystem': req.body.ecosystem,
+        'Vertical': req.body.vertical,
+        'Twitter URL': req.body.twitterUrl,
+        'LinkedIn URL': req.body.linkedinUrl,
+        'Website URL': req.body.websiteUrl,
+        'Revenue Generating': req.body.revenueGenerating,
+        'Logo URL': req.body.logoUrl,
+        'Pitch Deck URL': req.body.pitchDeckUrl,
+        'Data Room URL': req.body.dataRoomUrl,
+        'Traction': req.body.traction,
+        'Votes': 0,
+        'Created': new Date().toISOString(),
+      });
+
+      console.log(`✅ Successfully saved project ${req.body.companyName} to Scout Airtable`);
+      res.json({ success: true, recordId: record.id });
+    } catch (error) {
+      console.error('Error saving to Scout Airtable:', error);
+      res.status(500).json({ error: 'Failed to save to Scout Airtable' });
     }
   });
 
