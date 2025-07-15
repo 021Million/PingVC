@@ -190,7 +190,7 @@ export default function ProjectSetup() {
                     id="amountRaising"
                     value={formData.amountRaising}
                     onChange={(e) => handleInputChange("amountRaising", e.target.value)}
-                    placeholder="e.g., 2000000 for $2M"
+                    placeholder=""
                     type="number"
                   />
                 </div>
