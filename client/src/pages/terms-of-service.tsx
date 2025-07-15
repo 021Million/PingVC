@@ -4,25 +4,18 @@ export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white rounded-lg shadow-sm p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Terms of Service</h1>
           
           <div className="prose prose-gray max-w-none">
-            <p className="text-gray-600 mb-6">
-              Welcome to Ping Me. By accessing or using our website and services, you agree to be bound by the following Terms of Service. If you do not agree with these terms, please do not use Ping Me.
-            </p>
+            <p className="text-gray-600 mb-6">Welcome to Ping VC. By accessing or using our website and services, you agree to be bound by the following Terms of Service. If you do not agree with these terms, please do not use Ping VC.</p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Overview</h2>
-            <p className="text-gray-600 mb-6">
-              Ping Me is a platform that facilitates paid introductions between founders and venture capitalists or angels. Ping Me acts solely as an intermediary and does not guarantee investment outcomes or business success as a result of any introduction.
-            </p>
+            <p className="text-gray-600 mb-6">Ping VC is a platform that facilitates paid introductions between founders and venture capitalists or angels. Ping VC acts solely as an intermediary and does not guarantee investment outcomes or business success as a result of any introduction.</p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Eligibility</h2>
-            <p className="text-gray-600 mb-6">
-              You must be at least 18 years old to use Ping Me. By using the platform, you confirm you meet this requirement and have the legal capacity to enter into this agreement.
-            </p>
+            <p className="text-gray-600 mb-6">You must be at least 18 years old to use Ping VC. By using the platform, you confirm you meet this requirement and have the legal capacity to enter into this agreement.</p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Services and Payments</h2>
             <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
@@ -43,14 +36,14 @@ export default function TermsOfService() {
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. User Responsibilities</h2>
             <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-              <li>You agree to use Ping Me lawfully and professionally.</li>
+              <li>You agree to use Ping VC lawfully and professionally.</li>
               <li>You will not misrepresent your identity, company, or intentions.</li>
               <li>Spam, harassment, or platform manipulation will result in immediate account removal and potential legal consequences.</li>
             </ul>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">6. No Guarantees</h2>
             <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-              <li>Ping Me makes no warranties regarding investment outcomes or responses.</li>
+              <li>Ping VC makes no warranties regarding investment outcomes or responses.</li>
               <li>We do not guarantee the success or quality of any introduction or interaction.</li>
             </ul>
 
@@ -62,9 +55,7 @@ export default function TermsOfService() {
             </ul>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">8. Limitation of Liability</h2>
-            <p className="text-gray-600 mb-6">
-              Ping Me shall not be liable for indirect, incidental, or consequential damages resulting from use of the platform. Total liability shall not exceed the amount you paid to Ping Me in the preceding 3 months.
-            </p>
+            <p className="text-gray-600 mb-6">Ping VC shall not be liable for indirect, incidental, or consequential damages resulting from use of the platform. Total liability shall not exceed the amount you paid to Ping VC in the preceding 3 months.</p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">9. Governing Law</h2>
             <p className="text-gray-600 mb-6">
