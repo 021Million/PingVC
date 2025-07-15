@@ -52,7 +52,7 @@ export function Header() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">P</span>
               </div>
-              <span className="ml-3 text-xl font-bold text-gray-900">Ping Me</span>
+              <span className="ml-3 text-xl font-bold text-gray-900">Ping VC</span>
             </Link>
           </div>
 
