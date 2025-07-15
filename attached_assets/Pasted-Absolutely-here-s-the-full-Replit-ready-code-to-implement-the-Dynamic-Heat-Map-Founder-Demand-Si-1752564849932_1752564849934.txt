@@ -1,0 +1,100 @@
+Absolutely — here's the full Replit-ready code to implement the "Dynamic Heat Map: Founder Demand Signals" for each VC profile in your PingVC app.
+
+This code:
+
+Tracks how many times a VC has been requested in the past 30 days
+
+Calculates the average “requestor score” (founder profile quality)
+
+Shows if they’re open to angel checks or donate to charity
+
+Displays their top-tagged founder category (e.g., AI infra / DePIN)
+
+Creates an emotional feedback loop so VCs feel seen, valued, popular
+
+✅ 1. Data Models (Extend Airtable or local store)
+Add these fields to each VC record (in Airtable or memory):
+
+js
+Copy
+Edit
+{
+  id: 'vc-jane',
+  name: 'Jane Capital',
+  verified: true,
+  openToAngel: true,
+  donatesToCharity: true,
+  requestHistory: [
+    { founderId: 'f1', score: 72, timestamp: '2025-07-01T12:00:00Z', tags: ['AI infra'] },
+    { founderId: 'f2', score: 76, timestamp: '2025-07-03T17:30:00Z', tags: ['DePIN'] },
+    ...
+  ]
+}
+✅ 2. Backend Logic (Express)
+Add this route to calculate and return insights:
+
+js
+Copy
+Edit
+app.get('/api/vc-stats/:id', (req, res) => {
+  const vcId = req.params.id;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  const now = new Date();
+  const past30Days = new Date(now.setDate(now.getDate() - 30));
+  
+  const recentRequests = vc.requestHistory.filter(r =>
+    new Date(r.timestamp) >= past30Days
+  );
+
+  const totalRequests = recentRequests.length;
+  const avgScore = recentRequests.length
+    ? Math.round(recentRequests.reduce((sum, r) => sum + r.score, 0) / recentRequests.length)
+    : 0;
+
+  const tagCount = {};
+  recentRequests.forEach(r => {
+    (r.tags || []).forEach(tag => {
+      tagCount[tag] = (tagCount[tag] || 0) + 1;
+    });
+  });
+
+  const topTag = Object.entries(tagCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
+
+  res.json({
+    totalRequests,
+    avgScore,
+    topTag,
+    openToAngel: vc.openToAngel || false,
+    donatesToCharity: vc.donatesToCharity || false
+  });
+});
+✅ 3. Frontend VC Profile UI (HTML/JS)
+html
+Copy
+Edit
+<div id="vc-stats"></div>
+
+<script>
+function loadVCStats(vcId) {
+  fetch(`/api/vc-stats/${vcId}`)
+    .then(res => res.json())
+    .then(stats => {
+      const el = document.getElementById('vc-stats');
+      el.innerHTML = `
+        <p><strong>🔥 Requested by:</strong> ${stats.totalRequests} founders in the last 30 days</p>
+        <p><strong>🧠 Avg founder score:</strong> ${stats.avgScore}/100</p>
+        <p><strong>🏷 Top-tagged category:</strong> ${stats.topTag}</p>
+        ${stats.openToAngel ? `<p>✅ Open to angel investments</p>` : ''}
+        ${stats.donatesToCharity ? `<p>💖 Donates to founder-aligned charities</p>` : ''}
+      `;
+    });
+}
+
+// Call this on page load with the VC's ID
+loadVCStats('vc-jane');
+</script>
+🧠 Optional Enhancements
+Feature	Benefit
+🧩 Add requestHistory to Airtable	Long-term trackin

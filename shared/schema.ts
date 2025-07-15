@@ -208,6 +208,20 @@ export const decisionMakerUnlocks = pgTable("decision_maker_unlocks", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// VC Request Tracking for Gamification
+export const vcRequests = pgTable("vc_requests", {
+  id: serial("id").primaryKey(),
+  vcId: varchar("vc_id").notNull(), // Airtable ID or platform VC ID
+  vcType: varchar("vc_type").notNull(), // 'airtable' or 'platform'
+  founderEmail: varchar("founder_email").notNull(),
+  founderId: varchar("founder_id"), // Optional user ID if logged in
+  founderScore: integer("founder_score").default(50), // Quality score 0-100
+  tags: text("tags").array(), // Founder categories like ['AI infra', 'DePIN']
+  requestType: varchar("request_type").notNull(), // 'unlock', 'booking_request'
+  amount: integer("amount"), // Payment amount in cents for unlocks
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   vcs: many(vcs),
@@ -308,6 +322,11 @@ export const insertDecisionMakerUnlockSchema = createInsertSchema(decisionMakerU
   createdAt: true,
 });
 
+export const insertVCRequestSchema = createInsertSchema(vcRequests).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type UpsertUser = z.infer<typeof upsertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -327,3 +346,5 @@ export type DecisionMaker = typeof decisionMakers.$inferSelect;
 export type InsertDecisionMaker = z.infer<typeof insertDecisionMakerSchema>;
 export type DecisionMakerUnlock = typeof decisionMakerUnlocks.$inferSelect;
 export type InsertDecisionMakerUnlock = z.infer<typeof insertDecisionMakerUnlockSchema>;
+export type VCRequest = typeof vcRequests.$inferSelect;
+export type InsertVCRequest = z.infer<typeof insertVCRequestSchema>;

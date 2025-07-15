@@ -9,6 +9,7 @@ import {
   coldInvestors,
   decisionMakers,
   decisionMakerUnlocks,
+  vcRequests,
   type User,
   type UpsertUser,
   type VC,
@@ -27,6 +28,8 @@ import {
   type InsertDecisionMaker,
   type DecisionMakerUnlock,
   type InsertDecisionMakerUnlock,
+  type VCRequest,
+  type InsertVCRequest,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, sql, gt } from "drizzle-orm";
@@ -85,6 +88,22 @@ export interface IStorage {
   getDecisionMakersByFund(fundId: number): Promise<DecisionMaker[]>;
   createDecisionMakerUnlock(unlock: InsertDecisionMakerUnlock): Promise<DecisionMakerUnlock>;
   hasEmailUnlockedDecisionMaker(email: string, decisionMakerId: number): Promise<boolean>;
+  
+  // VC Request tracking for gamification
+  createVCRequest(request: InsertVCRequest): Promise<VCRequest>;
+  getVCStats(vcId: string, vcType: string): Promise<{
+    totalRequests: number;
+    avgScore: number;
+    topTag: string;
+    openToAngel?: boolean;
+    donatesToCharity?: boolean;
+  }>;
+  getTopVCs(): Promise<Array<{
+    vcId: string;
+    vcType: string;
+    requests: number;
+    avgScore: number;
+  }>>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -535,6 +554,91 @@ export class DatabaseStorage implements IStorage {
       .limit(1);
     
     return !!unlock;
+  }
+
+  // VC Request tracking for gamification
+  async createVCRequest(requestData: InsertVCRequest): Promise<VCRequest> {
+    const [request] = await db
+      .insert(vcRequests)
+      .values(requestData)
+      .returning();
+    return request;
+  }
+
+  async getVCStats(vcId: string, vcType: string): Promise<{
+    totalRequests: number;
+    avgScore: number;
+    topTag: string;
+    openToAngel?: boolean;
+    donatesToCharity?: boolean;
+  }> {
+    // Get requests from the last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const recentRequests = await db
+      .select()
+      .from(vcRequests)
+      .where(and(
+        eq(vcRequests.vcId, vcId),
+        eq(vcRequests.vcType, vcType),
+        gt(vcRequests.createdAt, thirtyDaysAgo)
+      ));
+
+    const totalRequests = recentRequests.length;
+    const avgScore = totalRequests > 0 
+      ? Math.round(recentRequests.reduce((sum, r) => sum + (r.founderScore || 50), 0) / totalRequests)
+      : 0;
+
+    // Calculate top tag
+    const tagCount: Record<string, number> = {};
+    recentRequests.forEach(r => {
+      (r.tags || []).forEach(tag => {
+        tagCount[tag] = (tagCount[tag] || 0) + 1;
+      });
+    });
+
+    const topTag = Object.entries(tagCount)
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
+
+    return {
+      totalRequests,
+      avgScore,
+      topTag,
+      openToAngel: false, // Will be populated from Airtable data
+      donatesToCharity: false, // Will be populated from Airtable data
+    };
+  }
+
+  async getTopVCs(): Promise<Array<{
+    vcId: string;
+    vcType: string;
+    requests: number;
+    avgScore: number;
+  }>> {
+    // Get requests from the last 30 days grouped by VC
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const topVCs = await db
+      .select({
+        vcId: vcRequests.vcId,
+        vcType: vcRequests.vcType,
+        requests: sql<number>`count(*)`,
+        avgScore: sql<number>`round(avg(${vcRequests.founderScore}))`,
+      })
+      .from(vcRequests)
+      .where(gt(vcRequests.createdAt, thirtyDaysAgo))
+      .groupBy(vcRequests.vcId, vcRequests.vcType)
+      .orderBy(sql`count(*) desc, round(avg(${vcRequests.founderScore})) desc`)
+      .limit(10);
+
+    return topVCs.map(vc => ({
+      vcId: vc.vcId,
+      vcType: vc.vcType,
+      requests: Number(vc.requests),
+      avgScore: Number(vc.avgScore) || 0,
+    }));
   }
 }
 

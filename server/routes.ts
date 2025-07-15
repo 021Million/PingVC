@@ -1561,6 +1561,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Gamification API endpoints
+  
+  // Create VC request tracking entry
+  app.post('/api/vc-request', async (req: any, res) => {
+    try {
+      const { vcId, vcType, founderEmail, founderId, founderScore, tags, requestType, amount } = req.body;
+      
+      if (!vcId || !vcType || !founderEmail || !requestType) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      await storage.createVCRequest({
+        vcId,
+        vcType,
+        founderEmail,
+        founderId: founderId || null,
+        founderScore: founderScore || 50,
+        tags: tags || [],
+        requestType,
+        amount: amount || null,
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error creating VC request:", error);
+      res.status(500).json({ message: "Failed to track VC request" });
+    }
+  });
+
+  // Get VC stats for gamification display
+  app.get('/api/vc-stats/:vcId/:vcType', async (req: any, res) => {
+    try {
+      const { vcId, vcType } = req.params;
+      
+      if (!vcId || !vcType) {
+        return res.status(400).json({ message: "VC ID and type are required" });
+      }
+
+      const stats = await storage.getVCStats(vcId, vcType);
+      
+      // For Airtable VCs, fetch additional data from Airtable if needed
+      if (vcType === 'airtable') {
+        // You can extend this to fetch openToAngel and donatesToCharity from Airtable
+        // For now, we'll use the database stats
+      }
+
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching VC stats:", error);
+      res.status(500).json({ message: "Failed to fetch VC stats" });
+    }
+  });
+
+  // Get top VCs leaderboard
+  app.get('/api/top-vcs', async (req: any, res) => {
+    try {
+      const topVCs = await storage.getTopVCs();
+      res.json(topVCs);
+    } catch (error) {
+      console.error("Error fetching top VCs:", error);
+      res.status(500).json({ message: "Failed to fetch top VCs" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { ImprovedHeader } from "@/components/improved-header";
+import { TopVCsLeaderboard } from "@/components/top-vcs-leaderboard";
 
 export default function VCs() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -240,6 +241,14 @@ export default function VCs() {
           </div>
         </div>
       </section>
+      
+      {/* Top VCs Leaderboard */}
+      <section className="py-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TopVCsLeaderboard />
+        </div>
+      </section>
+      
       {/* VC Grid */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, DollarSign, Users, Lock, Unlock, Globe, Linkedin, X, Mail, MessageCircle, Calendar, Target, TrendingUp, ArrowLeft, AlertTriangle } from "lucide-react";
 import { VCUnlockModal } from "@/components/vc-unlock-modal";
 import { RequestCallModal } from "@/components/request-call-modal";
+import { VCStatsDisplay } from "@/components/vc-stats-display";
 import { useQuery } from "@tanstack/react-query";
 import { ImprovedHeader } from "@/components/improved-header";
 
@@ -457,6 +458,15 @@ export function VCDetailPage() {
               </Card>
             ) : (
               renderContactInfo()
+            )}
+            
+            {/* VC Stats Display */}
+            {vcId && (
+              <VCStatsDisplay 
+                vcId={vcId} 
+                vcType="airtable" 
+                className="w-full"
+              />
             )}
           </div>
         </div>

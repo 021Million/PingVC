@@ -48,7 +48,7 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!founderEmail || !founderName) {
@@ -71,6 +71,20 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
 
     // Save email to localStorage for future use
     localStorage.setItem('email_access_ping', founderEmail);
+
+    // Track VC request for gamification
+    try {
+      await apiRequest("POST", "/api/vc-request", {
+        vcId: vc.id,
+        vcType: 'airtable',
+        founderEmail,
+        founderScore: 65, // Default score for manual requests
+        tags: vc['Investment Stage'] ? [vc['Investment Stage']] : ['General'],
+        requestType: 'booking_request',
+      });
+    } catch (error) {
+      console.error("Error tracking VC request:", error);
+    }
 
     requestMutation.mutate({
       vcId: vc.id,

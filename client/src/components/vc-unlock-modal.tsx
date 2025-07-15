@@ -157,6 +157,17 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
     setIsLoading(true);
     
     try {
+      // Track VC request for gamification
+      await apiRequest("POST", "/api/vc-request", {
+        vcId: vc.id,
+        vcType,
+        founderEmail: email,
+        founderScore: 75, // Default score, could be calculated based on user profile
+        tags: vc.sectors || vc['Investment Stage'] ? [vc.sectors?.[0] || vc['Investment Stage']] : ['General'],
+        requestType: 'unlock',
+        amount: getPrice(),
+      });
+
       // Create payment intent
       const response = await apiRequest("POST", "/api/create-vc-unlock-payment", {
         vcId: vc.id,
