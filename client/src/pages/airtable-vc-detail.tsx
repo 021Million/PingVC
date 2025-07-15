@@ -242,24 +242,33 @@ export default function AirtableVCDetail() {
               
               {/* Profile Info */}
               <div className="flex-1 text-center md:text-left">
-                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
-                  <CardTitle className="text-3xl font-bold text-gray-900">
-                    {vc.fund || "Fund Name"}
+                {/* Person's Name - BIG */}
+                {vc.name && (
+                  <CardTitle className="text-4xl font-bold text-gray-900 mb-2">
+                    {vc.name}
                   </CardTitle>
+                )}
+                
+                {/* Fund Name */}
+                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
+                  <h2 className="text-2xl font-semibold text-gray-700">
+                    {vc.fund || "Fund Name"}
+                  </h2>
                   <Badge variant="secondary" className="bg-green-100 text-green-800 w-fit mx-auto md:mx-0">
                     <Shield className="h-4 w-4 mr-1" />
                     Verified
                   </Badge>
                 </div>
                 
+                {/* Position */}
+                {(vc.title || vc.position || vc.Position) && (
+                  <div className="flex items-center justify-center md:justify-start text-lg text-gray-600 mb-4">
+                    <Briefcase className="h-5 w-5 mr-2" />
+                    {vc.title || vc.position || vc.Position}
+                  </div>
+                )}
+                
                 <div className="space-y-2">
-                  {vc.name && (
-                    <div className="flex items-center justify-center md:justify-start text-lg text-gray-700">
-                      <Briefcase className="h-5 w-5 mr-2" />
-                      {vc.name}
-                      {(vc.title || vc.position || vc.Position) && <span className="text-gray-500 ml-1">• {vc.title || vc.position || vc.Position}</span>}
-                    </div>
-                  )}
                   
                   {(vc.location || vc.Location) && (
                     <div className="flex items-center justify-center md:justify-start text-gray-600">
