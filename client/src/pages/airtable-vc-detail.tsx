@@ -21,7 +21,9 @@ import {
   ArrowLeft,
   Building,
   MapPin,
-  Briefcase
+  Briefcase,
+  Heart,
+  BarChart3
 } from "lucide-react";
 import { VCUnlockModal } from "@/components/vc-unlock-modal";
 import { ImprovedHeader } from "@/components/improved-header";
@@ -43,6 +45,12 @@ export default function AirtableVCDetail() {
   // Check if VC is unlocked (using anonymous email for demo)
   const { data: unlockStatus, isLoading: checkingUnlock } = useQuery({
     queryKey: ["/api/check-vc-unlock", { email: 'anonymous@example.com', vcId: id, vcType: "airtable" }],
+    enabled: !!id,
+  });
+
+  // Get VC stats including request count
+  const { data: vcStats } = useQuery({
+    queryKey: ["/api/vc-stats", { vcId: id, vcType: "airtable" }],
     enabled: !!id,
   });
 
@@ -160,12 +168,12 @@ export default function AirtableVCDetail() {
               </div>
             )}
             
-            {vc.website && (
+            {(vc.website || vc.Website) && (
               <div className="flex items-center p-3 bg-purple-50 rounded-lg">
                 <Globe className="h-5 w-5 mr-3 text-purple-600" />
                 <div>
                   <p className="text-sm font-medium text-gray-700">Website</p>
-                  <a href={vc.website} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">
+                  <a href={vc.website || vc.Website} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">
                     Visit Website
                   </a>
                 </div>
@@ -248,14 +256,28 @@ export default function AirtableVCDetail() {
                     <div className="flex items-center justify-center md:justify-start text-lg text-gray-700">
                       <Briefcase className="h-5 w-5 mr-2" />
                       {vc.name}
-                      {vc.title && <span className="text-gray-500 ml-1">• {vc.title}</span>}
+                      {(vc.title || vc.position) && <span className="text-gray-500 ml-1">• {vc.title || vc.position}</span>}
                     </div>
                   )}
                   
-                  {vc.location && (
+                  {(vc.location || vc.Location) && (
                     <div className="flex items-center justify-center md:justify-start text-gray-600">
                       <MapPin className="h-4 w-4 mr-2" />
-                      {vc.location}
+                      {vc.location || vc.Location}
+                    </div>
+                  )}
+
+                  {(vc['Investment Tag'] || vc.investmentTag) && (
+                    <div className="flex items-center justify-center md:justify-start text-gray-600">
+                      <Target className="h-4 w-4 mr-2" />
+                      {vc['Investment Tag'] || vc.investmentTag}
+                    </div>
+                  )}
+
+                  {vcStats && (
+                    <div className="flex items-center justify-center md:justify-start text-gray-600">
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      {vcStats.totalRequests || 0} connection requests
                     </div>
                   )}
                 </div>
@@ -316,6 +338,21 @@ export default function AirtableVCDetail() {
               </Card>
             )}
 
+            {/* Portfolio Performance */}
+            {(vc['Portfolio Performance'] || vc.portfolioPerformance) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <BarChart3 className="h-5 w-5 mr-2" />
+                    Portfolio Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">{vc['Portfolio Performance'] || vc.portfolioPerformance}</p>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Bio/About */}
             {vc.bio && (
               <Card>
@@ -358,6 +395,23 @@ export default function AirtableVCDetail() {
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Check Size</span>
                     <span className="font-medium">{vc['Check Size']}</span>
+                  </div>
+                )}
+
+                {vcStats && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Total Requests</span>
+                    <span className="font-medium">{vcStats.totalRequests || 0}</span>
+                  </div>
+                )}
+
+                {(vc['Donate To Charity'] || vc.donateToCharity) && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 flex items-center">
+                      <Heart className="h-4 w-4 mr-1 text-red-500" />
+                      Donates to Charity
+                    </span>
+                    <span className="font-medium text-green-600">Yes</span>
                   </div>
                 )}
               </CardContent>
