@@ -582,7 +582,7 @@ export default function VCSignup() {
                     You keep 85% of each unlock fee. We handle payments, verification, and platform maintenance.
                   </p>
                   <div className="text-sm text-gray-700">
-                    <span className="font-medium">Your earnings:</span> ${price ? calculateEarnings(price) : '34.30'} per intro
+                    <span className="font-medium">Your earnings:</span> ${price ? calculateEarnings(price) : '0.00'} per intro
                   </div>
                 </Card>
 
