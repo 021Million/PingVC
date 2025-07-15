@@ -408,48 +408,7 @@ export default function AirtableVCDetail() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Investment Details */}
-            <Card>
-              <CardContent className="space-y-3">
-                {vc.price && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Unlock Price</span>
-                    <span className="font-medium">${vc.price}</span>
-                  </div>
-                )}
-                
-                {vc.limit && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Monthly Limit</span>
-                    <span className="font-medium">{vc.limit} connections</span>
-                  </div>
-                )}
-                
-                {vc['Check Size'] && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Check Size</span>
-                    <span className="font-medium">{vc['Check Size']}</span>
-                  </div>
-                )}
 
-                {vcStats && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Total Requests</span>
-                    <span className="font-medium">{vcStats.totalRequests || 0}</span>
-                  </div>
-                )}
-
-                {(vc['Donate To Charity'] || vc.donateToCharity) && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 flex items-center">
-                      <Heart className="h-4 w-4 mr-1 text-red-500" />
-                      Donates to Charity
-                    </span>
-                    <span className="font-medium text-green-600">Yes</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
 
             {/* Contact Information */}
             <Card>
