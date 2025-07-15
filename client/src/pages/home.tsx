@@ -46,20 +46,23 @@ export default function Home() {
             <div className="text-sm text-gray-500">✓ Instant Access • ✓ Unlock Alpha • ✓ Money-back Guarantee</div>
           </div>
           
-          {/* Trust indicators */}
-          <div className="grid grid-cols-3 gap-8 max-w-md mx-auto text-center">
-            <div>
-              <div className="text-2xl font-bold text-gray-900">1:1</div>
-              <div className="text-sm text-gray-600">Warm Intro</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">Trusted</div>
-              <div className="text-sm text-gray-600">Intros Made</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">100%</div>
-              <div className="text-sm text-gray-600">Pay-to-Ping</div>
-            </div>
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+            <Button 
+              size="lg"
+              onClick={() => window.location.href = '/browse-vcs'}
+              className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
+            >
+              View All Investors
+            </Button>
+            <Button 
+              size="lg"
+              variant="outline"
+              onClick={() => window.location.href = '/vc-signup'}
+              className="border-primary text-primary px-8 py-4 text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+            >
+              Sign Up
+            </Button>
           </div>
         </div>
       </section>
@@ -145,23 +148,23 @@ export default function Home() {
                 <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">P</span>
                 </div>
-                <span className="text-xl font-bold">Ping Me</span>
+                <span className="text-xl font-bold">Ping VC</span>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">The fastest way for Web3 founders to connect with VCs and Angels. No middlemen, no spam, just warm intros that work.</p>
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">Marketplace</h3>
+              <h3 className="text-lg font-semibold mb-4">Platform</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/vcs" className="hover:text-white transition-colors">Browse VCs</a></li>
+                <li><a href="/browse-vcs" className="hover:text-white transition-colors">View All Investors</a></li>
+                <li><a href="/requests" className="hover:text-white transition-colors">Request Page</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">For VCs & Angel</h3>
+              <h3 className="text-lg font-semibold mb-4">For VCs</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/scout" className="hover:text-white transition-colors">Scout</a></li>
-                <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC or Angel</a></li>
+                <li><a href="/vc-signup" className="hover:text-white transition-colors">Sign up as VC</a></li>
               </ul>
             </div>
           </div>
