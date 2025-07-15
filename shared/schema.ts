@@ -37,7 +37,6 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   password: varchar("password"), // Hashed password for first-time setup
   hasSetPassword: boolean("has_set_password").default(false),
-  newPassword: varchar("new_password"), // Temporary field for password updates
   userType: varchar("user_type").default("founder"), // 'founder', 'vc', 'angel'
   isAdmin: boolean("is_admin").default(false),
   profileCompleted: boolean("profile_completed").default(false),
