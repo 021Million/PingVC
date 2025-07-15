@@ -284,19 +284,7 @@ export default function AirtableVCDetail() {
                     </div>
                   )}
 
-                  {(vc.website || vc.Website) && (
-                    <div className="flex items-center justify-center md:justify-start text-gray-600">
-                      <Globe className="h-4 w-4 mr-2" />
-                      <a 
-                        href={vc.website || vc.Website} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-purple-600 hover:underline"
-                      >
-                        {(vc.website || vc.Website).replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                      </a>
-                    </div>
-                  )}
+                  
 
                   {vcStats && (
                     <div className="flex items-center justify-center md:justify-start text-gray-600">
