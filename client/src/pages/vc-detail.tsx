@@ -19,6 +19,11 @@ export function VCDetailPage() {
   const vcId = params?.id;
   const email = localStorage.getItem('email_access_ping');
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [vcId]);
+
   // Fetch VC details from Airtable
   const { data: airtableData, isLoading: airtableLoading } = useQuery({
     queryKey: ["/api/airtable/vcs"],
