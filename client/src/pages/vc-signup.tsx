@@ -228,7 +228,7 @@ export default function VCSignup() {
                     <Input
                       id="partnerName"
                       {...register("partnerName")}
-                      placeholder="John Smith"
+                      placeholder="Elon Musk"
                       className={errors.partnerName ? "border-red-500" : ""}
                     />
                     {errors.partnerName && (
