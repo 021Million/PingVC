@@ -591,7 +591,7 @@ export default function VCSignup() {
                   className="w-full bg-primary text-white py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
                   disabled={createVCMutation.isPending}
                 >
-                  {createVCMutation.isPending ? "Submitting..." : "Apply to Join Ping Me"}
+                  {createVCMutation.isPending ? "Submitting..." : "Apply to Join Ping VC"}
                 </Button>
 
                 <p className="text-sm text-gray-500 text-center">Applications are reviewed within 48 hours. You'll receive an email with next steps.</p>
