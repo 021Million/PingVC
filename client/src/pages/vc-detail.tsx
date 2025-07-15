@@ -441,6 +441,23 @@ export function VCDetailPage() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Request Call Button */}
+            <div className="flex justify-center pt-6">
+              <Button 
+                onClick={() => {
+                  if (isVerified) {
+                    setShowUnlockModal(true);
+                  } else {
+                    setShowRequestModal(true);
+                  }
+                }}
+                className="bg-primary hover:bg-primary/90 px-8 py-3 text-lg font-semibold"
+                size="lg"
+              >
+                {isVerified ? "Connect Now" : "Request Call"}
+              </Button>
+            </div>
           </div>
 
           {/* Sidebar */}
