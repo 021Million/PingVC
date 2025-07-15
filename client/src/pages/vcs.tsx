@@ -139,7 +139,7 @@ export default function VCs() {
       
       {/* Social Links - Positioned outside Link to avoid nesting */}
       {(vc.linkedin || vc['X Profile'] || vc.twitter || vc.website || vc['Fund Website']) && (
-        <div className="absolute bottom-4 left-4 flex items-center space-x-2 z-10">
+        <div className="absolute bottom-6 left-6 flex items-center space-x-3 z-10">
           {vc.linkedin && (
             <a 
               href={vc.linkedin} 
