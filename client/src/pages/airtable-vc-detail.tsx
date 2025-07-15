@@ -277,12 +277,7 @@ export default function AirtableVCDetail() {
                     </div>
                   )}
 
-                  {(vc['Investment Tag'] || vc.investmentTag) && (
-                    <div className="flex items-center justify-center md:justify-start text-gray-600">
-                      <Target className="h-4 w-4 mr-2" />
-                      {vc['Investment Tag'] || vc.investmentTag}
-                    </div>
-                  )}
+                  
 
                   {vcStats && (
                     <div className="flex items-center justify-center md:justify-start text-gray-600">
