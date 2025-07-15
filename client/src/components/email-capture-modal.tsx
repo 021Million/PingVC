@@ -15,7 +15,7 @@ export function EmailCaptureModal() {
 
   useEffect(() => {
     // Check if user has already captured email in this session
-    const hasCapture = sessionStorage.getItem('missAIEarly');
+    const hasCapture = sessionStorage.getItem('pingVCEarly');
     
     if (!hasCapture) {
       // Show modal after 2 seconds delay for better UX
@@ -42,16 +42,16 @@ export function EmailCaptureModal() {
     setIsSubmitting(true);
 
     try {
-      await apiRequest('POST', '/api/email-capture', { email });
+      await apiRequest('POST', '/api/newsletter-signup', { email, source: 'early_access' });
       
       // Mark as captured in session storage
-      sessionStorage.setItem('missAIEarly', 'true');
+      sessionStorage.setItem('pingVCEarly', 'true');
       
       setIsOpen(false);
       
       toast({
-        title: "Welcome to Miss AI!",
-        description: "You're in! Get ready for exclusive AI tools and founder insights.",
+        title: "Welcome to Ping VC!",
+        description: "You're in! Get ready for exclusive early bird deals and VC insights.",
       });
     } catch (error) {
       toast({
@@ -67,7 +67,7 @@ export function EmailCaptureModal() {
   const handleClose = () => {
     setIsOpen(false);
     // Mark as seen so it doesn't show again this session
-    sessionStorage.setItem('missAIEarly', 'seen');
+    sessionStorage.setItem('pingVCEarly', 'seen');
   };
 
   return (
@@ -75,7 +75,7 @@ export function EmailCaptureModal() {
       <DialogContent className="sm:max-w-md mx-auto">
         <DialogHeader className="text-center">
           <div className="mx-auto mb-4 relative">
-            <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-green-600 rounded-full flex items-center justify-center">
               <Sparkles className="h-8 w-8 text-white" />
             </div>
             <Badge 
@@ -83,15 +83,15 @@ export function EmailCaptureModal() {
               className="absolute -top-2 -right-2 bg-yellow-100 text-yellow-800 border-yellow-300"
             >
               <Gift className="h-3 w-3 mr-1" />
-              Early Access
+              Early Bird
             </Badge>
           </div>
           
           <DialogTitle className="text-2xl font-bold text-gray-900 mb-2">
-            ✨ Join Miss AI Early
+            🚀 Join Ping VC Early
           </DialogTitle>
           
-          <p className="text-gray-600 leading-relaxed">Be the first to access AI tools, founder insights, VC  alpha and exclusive community drops. Join our early bird list today.</p>
+          <p className="text-gray-600 leading-relaxed">Get exclusive early bird deals, priority access to top VCs, and insider founder insights. Join our early access list today.</p>
         </DialogHeader>
 
         <div className="space-y-4 mt-6">
@@ -110,7 +110,7 @@ export function EmailCaptureModal() {
             
             <Button 
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold text-base"
+              className="w-full h-12 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold text-base"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -120,7 +120,7 @@ export function EmailCaptureModal() {
                 </div>
               ) : (
                 <>
-                  Join Early Access
+                  Get Early Bird Access
                   <Sparkles className="ml-2 h-4 w-4" />
                 </>
               )}
@@ -131,16 +131,16 @@ export function EmailCaptureModal() {
           <div className="bg-gray-50 rounded-lg p-4 space-y-2">
             <h4 className="font-semibold text-gray-900 text-sm">What you'll get:</h4>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>🤖 Early access to AI founder tools</li>
-              <li>📚 Exclusive playbooks and insights</li>
-              <li>💡 First look at Miss AI launches</li>
-              <li>🎯 Priority support and feedback access</li>
+              <li>💰 Exclusive early bird pricing on VC connections</li>
+              <li>🚀 Priority access to top-tier investors</li>
+              <li>📊 Weekly VC market insights and trends</li>
+              <li>💎 First access to new investor profiles</li>
             </ul>
           </div>
 
           {/* GDPR Compliance */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
-            By submitting, you agree to receive emails from Miss AI. 
+            By submitting, you agree to receive emails from Ping VC. 
             You can unsubscribe anytime.
           </p>
 
