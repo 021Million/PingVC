@@ -64,14 +64,17 @@ export function ImprovedHeader() {
               Home
             </Link>
 
+            <Link href="/scout" className={`transition-colors font-medium ${
+              isActive("/scout") ? "text-primary" : "text-gray-700 hover:text-primary"
+            }`}>
+              Marketplace
+            </Link>
 
             <Link href="/vcs" className={`transition-colors font-medium ${
               isActive("/vcs") ? "text-primary" : "text-gray-700 hover:text-primary"
             }`}>
               Browse VCs
             </Link>
-            
-
 
           </nav>
 
