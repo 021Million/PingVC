@@ -412,10 +412,6 @@ export function VCDetailPage() {
                 )}
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="font-medium text-gray-900 mb-1">Fund</p>
-                    <p className="text-gray-600">{vc.fund || "Fund Name"}</p>
-                  </div>
                   {vc.title && (
                     <div>
                       <p className="font-medium text-gray-900 mb-1">Position</p>
