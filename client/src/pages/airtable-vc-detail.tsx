@@ -257,7 +257,7 @@ export default function AirtableVCDetail() {
                     <div className="flex items-center justify-center md:justify-start text-lg text-gray-700">
                       <Briefcase className="h-5 w-5 mr-2" />
                       {vc.name}
-                      {(vc.title || vc.position) && <span className="text-gray-500 ml-1">• {vc.title || vc.position}</span>}
+                      {(vc.title || vc.position || vc.Position) && <span className="text-gray-500 ml-1">• {vc.title || vc.position || vc.Position}</span>}
                     </div>
                   )}
                   
