@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, LogOut, ChevronDown, History } from "lucide-react";
+import { User, Settings, LogOut, ChevronDown } from "lucide-react";
 
 export function ImprovedHeader() {
   const { user, isAuthenticated, isLoading, logoutMutation } = useAuth();
@@ -127,10 +127,6 @@ export function ImprovedHeader() {
                   <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => window.location.href = '/my-history'}>
-                    <History className="mr-2 h-4 w-4" />
-                    <span>My History</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
                     <Settings className="mr-2 h-4 w-4" />

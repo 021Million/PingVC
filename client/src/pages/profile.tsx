@@ -27,7 +27,11 @@ import {
   CheckCircle,
   Calendar,
   Mail,
-  UserCheck
+  UserCheck,
+  History,
+  Clock,
+  Shield,
+  MessageCircle
 } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -110,6 +114,12 @@ export default function Profile() {
   const { data: userVCs = [], isLoading: vcsLoading } = useQuery({
     queryKey: ["/api/profile/vcs"],
     enabled: isAuthenticated && user?.userType === 'vc',
+  });
+
+  // Fetch user's VC request history
+  const { data: history, isLoading: historyLoading } = useQuery({
+    queryKey: ["/api/my-history"],
+    enabled: isAuthenticated,
   });
 
   // Update form when founder profile loads
@@ -371,10 +381,11 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue={user?.userType === 'founder' ? 'project' : 'overview'} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {user?.userType === 'founder' && <TabsTrigger value="project">My Project</TabsTrigger>}
             {user?.userType === 'vc' && <TabsTrigger value="vcs">My VCs</TabsTrigger>}
+            <TabsTrigger value="history">VC History</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -1385,6 +1396,126 @@ export default function Profile() {
               </Card>
             </TabsContent>
           )}
+
+          {/* VC History Tab */}
+          <TabsContent value="history">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <History className="mr-2 h-5 w-5" />
+                  VC Request History
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {historyLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="animate-pulse">
+                        <div className="h-16 bg-gray-200 rounded"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : history?.requests?.length > 0 ? (
+                  <div className="space-y-4">
+                    {/* Stats Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-blue-600">Total Requests</p>
+                            <p className="text-2xl font-bold text-blue-900">{history?.totalRequests || 0}</p>
+                          </div>
+                          <Mail className="h-8 w-8 text-blue-500" />
+                        </div>
+                      </div>
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-green-600">VC Unlocks</p>
+                            <p className="text-2xl font-bold text-green-900">{history?.totalUnlocks || 0}</p>
+                          </div>
+                          <Shield className="h-8 w-8 text-green-500" />
+                        </div>
+                      </div>
+                      <div className="bg-yellow-50 p-4 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-yellow-600">Success Rate</p>
+                            <p className="text-2xl font-bold text-yellow-900">
+                              {history?.totalRequests > 0 ? Math.round((history?.totalUnlocks / history?.totalRequests) * 100) : 0}%
+                            </p>
+                          </div>
+                          <TrendingUp className="h-8 w-8 text-yellow-500" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Request Timeline */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-gray-900 mb-3">Recent Activity</h4>
+                      {history.requests.map((request: any, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                          <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                              {request.requestType === 'unlock' ? (
+                                <Shield className="h-5 w-5 text-green-600" />
+                              ) : (
+                                <MessageCircle className="h-5 w-5 text-blue-600" />
+                              )}
+                            </div>
+                            <div>
+                              <h5 className="font-medium text-gray-900">{request.vcName}</h5>
+                              {request.partnerName && (
+                                <p className="text-sm text-gray-600">{request.partnerName}</p>
+                              )}
+                              <p className="text-xs text-gray-500 flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {new Date(request.createdAt).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {request.amount && (
+                              <div className="flex items-center text-sm text-gray-600">
+                                <DollarSign className="h-4 w-4 mr-1" />
+                                {(request.amount / 100).toFixed(2)}
+                              </div>
+                            )}
+                            <Badge 
+                              variant="outline" 
+                              className={request.requestType === 'unlock' 
+                                ? 'bg-green-100 text-green-800 border-green-200' 
+                                : 'bg-blue-100 text-blue-800 border-blue-200'
+                              }
+                            >
+                              {request.requestType === 'unlock' ? 'Verified Unlock' : 'Introduction Request'}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <History className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-4">No VC requests yet</p>
+                    <p className="text-sm text-gray-500 mb-6">
+                      Start by browsing VCs and making your first connection
+                    </p>
+                    <Link href="/vcs">
+                      <Button>Browse VCs</Button>
+                    </Link>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Settings Tab */}
           <TabsContent value="settings">

@@ -32,7 +32,7 @@ import ColdScoutDetail from "@/pages/cold-scout-detail";
 import { VCDetailPage } from "@/pages/vc-detail";
 import Auth from "@/pages/auth";
 import RequestsPage from "@/pages/requests";
-import MyHistory from "@/pages/my-history";
+
 
 
 function Router() {
@@ -65,7 +65,6 @@ function Router() {
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
           <Route path="/requests" component={RequestsPage} />
-          <Route path="/my-history" component={MyHistory} />
           <Route path="/project/:id" component={ProjectDetails} />
           <Route path="/cold-scout/:slug" component={ColdScoutDetail} />
         </>
@@ -89,7 +88,6 @@ function Router() {
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route path="/support" component={Support} />
           <Route path="/requests" component={RequestsPage} />
-          <Route path="/my-history" component={MyHistory} />
           <Route path="/project-payment" component={ProjectVisibilityPayment} />
           <Route path="/settings" component={Settings} />
           <Route path="/password-setup" component={PasswordSetupPage} />
