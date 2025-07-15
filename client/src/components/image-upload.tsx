@@ -100,7 +100,7 @@ export function ImageUpload({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <Label>{label}</Label>
+      <Label>Profile Image</Label>
       
       {value ? (
         <div className="relative">
