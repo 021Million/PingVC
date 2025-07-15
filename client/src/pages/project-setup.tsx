@@ -140,14 +140,11 @@ export default function ProjectSetup() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Setup Your Project</CardTitle>
-            <p className="text-gray-600">
-              Add your project details to get discovered by VCs and appear in our Scout marketplace
-            </p>
+            <p className="text-gray-600">Add your project details to get discovered by VCs and appear in our Marketplace</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
