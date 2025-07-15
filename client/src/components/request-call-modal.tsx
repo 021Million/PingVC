@@ -9,6 +9,7 @@ import { AlertTriangle, MessageCircle, Mail, User } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 
 interface RequestCallModalProps {
   vc: any;
@@ -19,9 +20,9 @@ interface RequestCallModalProps {
 
 export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCallModalProps) {
   const [founderName, setFounderName] = useState("");
-  const [founderEmail, setFounderEmail] = useState(localStorage.getItem('email_access_ping') || "");
   const [message, setMessage] = useState("");
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const requestMutation = useMutation({
     mutationFn: async (data: { vcId: string; founderEmail: string; founderName: string; message: string }) => {
@@ -51,33 +52,30 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!founderEmail || !founderName) {
+    if (!user?.email) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to send introduction requests.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!founderName) {
       toast({
         title: "Missing information",
-        description: "Please provide your name and email address.",
+        description: "Please provide your name.",
         variant: "destructive",
       });
       return;
     }
-
-    if (!founderEmail.includes('@')) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Save email to localStorage for future use
-    localStorage.setItem('email_access_ping', founderEmail);
 
     // Track VC request for gamification
     try {
       await apiRequest("POST", "/api/vc-request", {
         vcId: vc.id,
         vcType: 'airtable',
-        founderEmail,
+        founderEmail: user.email,
         founderScore: 65, // Default score for manual requests
         tags: vc['Investment Stage'] ? [vc['Investment Stage']] : ['General'],
         requestType: 'booking_request',
@@ -88,7 +86,7 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
 
     requestMutation.mutate({
       vcId: vc.id,
-      founderEmail,
+      founderEmail: user.email,
       founderName,
       message,
     });
@@ -161,18 +159,13 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="founderEmail" className="flex items-center gap-2">
+                <Label className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  Your Email *
+                  Your Email
                 </Label>
-                <Input
-                  id="founderEmail"
-                  type="email"
-                  value={founderEmail}
-                  onChange={(e) => setFounderEmail(e.target.value)}
-                  placeholder="elon@startup.com"
-                  required
-                />
+                <div className="px-3 py-2 bg-gray-50 border rounded-md text-sm text-gray-700">
+                  {user?.email || "Not signed in"}
+                </div>
               </div>
             </div>
             
