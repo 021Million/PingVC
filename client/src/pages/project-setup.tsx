@@ -65,27 +65,19 @@ export default function ProjectSetup() {
     },
   });
 
-  const saveToScoutMutation = useMutation({
+  const createPaymentMutation = useMutation({
     mutationFn: async (data: any) => {
-      await apiRequest("POST", "/api/save-to-scout", data);
+      const response = await apiRequest("POST", "/api/create-scout-payment", data);
+      return response.json();
     },
-    onSuccess: () => {
-      // Trigger confetti animation
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
-      
-      toast({
-        title: "Published to Scout!",
-        description: "Your project is now live on the Scout marketplace and visible to investors!",
-      });
+    onSuccess: (data: any) => {
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
     },
     onError: (error: any) => {
       toast({
         title: "Error",
-        description: error.message || "Failed to publish to Scout",
+        description: error.message || "Failed to create payment",
         variant: "destructive",
       });
     },
@@ -137,7 +129,8 @@ export default function ProjectSetup() {
       valuation: formData.valuation ? parseInt(formData.valuation.replace(/[^\d]/g, '')) : null,
     };
 
-    saveToScoutMutation.mutate(submitData);
+    // Create Stripe payment for $9 Scout marketplace publishing
+    createPaymentMutation.mutate(submitData);
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -431,7 +424,7 @@ export default function ProjectSetup() {
                 <h4 className="font-semibold text-blue-900 mb-2">Publishing Options</h4>
                 <div className="text-blue-800 text-sm space-y-2">
                   <p><strong>Save Project Details:</strong> Saves your information privately to your profile.</p>
-                  <p><strong>Publish to Scout Marketplace:</strong> Makes your project visible in our public Scout marketplace where investors and the community can discover your startup.</p>
+                  <p><strong>Publish to Scout Marketplace ($9):</strong> Makes your project visible in our public Scout marketplace where investors and the community can discover your startup.</p>
                   <p className="text-xs text-blue-600 mt-2">
                     💡 If you leave Amount Raising or Valuation blank, visitors will see "Please get in contact with founder" with links to your social profiles.
                   </p>
@@ -445,10 +438,10 @@ export default function ProjectSetup() {
                 <Button 
                   type="button" 
                   onClick={handlePublishToScout} 
-                  disabled={saveToScoutMutation.isPending}
+                  disabled={createPaymentMutation.isPending}
                   className="bg-green-600 hover:bg-green-700"
                 >
-                  {saveToScoutMutation.isPending ? "Publishing..." : "Publish to Scout Marketplace"}
+                  {createPaymentMutation.isPending ? "Processing..." : "Publish to Scout Marketplace ($9)"}
                 </Button>
                 <Button type="button" variant="outline" asChild>
                   <Link href="/">Skip for now</Link>

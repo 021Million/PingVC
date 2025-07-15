@@ -33,6 +33,7 @@ import { VCDetailPage } from "@/pages/vc-detail";
 import Auth from "@/pages/auth";
 import RequestsPage from "@/pages/requests";
 import AirtableVCDetail from "@/pages/airtable-vc-detail";
+import ScoutSuccess from "@/pages/scout-success";
 
 
 
@@ -68,6 +69,7 @@ function Router() {
           <Route path="/requests" component={RequestsPage} />
           <Route path="/investor/:id" component={AirtableVCDetail} />
           <Route path="/project/:id" component={ProjectDetails} />
+          <Route path="/scout-success" component={ScoutSuccess} />
           <Route path="/cold-scout/:slug" component={ColdScoutDetail} />
         </>
       ) : (
@@ -78,6 +80,7 @@ function Router() {
           <Route path="/admin" component={Admin} />
           <Route path="/payment-success/:paymentIntentId" component={PaymentSuccess} />
           <Route path="/project-setup" component={ProjectSetup} />
+          <Route path="/scout-success" component={ScoutSuccess} />
           <Route path="/profile" component={Profile} />
           <Route path="/ping" component={Ping} />
           <Route path="/vcs" component={VCs} />

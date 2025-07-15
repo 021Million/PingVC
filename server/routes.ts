@@ -1363,9 +1363,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Save project to Scout Airtable
-  app.post('/api/save-to-scout', isAuthenticated, async (req: any, res) => {
+  // Create Stripe payment for Scout marketplace publishing
+  app.post('/api/create-scout-payment', isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Create Stripe checkout session for $9 Scout publishing
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Scout Marketplace Publishing',
+                description: `Publish "${req.body.companyName}" to Scout marketplace`,
+              },
+              unit_amount: 900, // $9.00 in cents
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${req.headers.origin}/scout-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.origin}/project-setup`,
+        metadata: {
+          userId: userId,
+          projectData: JSON.stringify(req.body), // Store project data for later processing
+          type: 'scout_publishing'
+        },
+      });
+
+      res.json({ url: session.url });
+    } catch (error) {
+      console.error('Error creating Scout payment:', error);
+      res.status(500).json({ error: 'Failed to create payment session' });
+    }
+  });
+
+  // Handle successful Scout payment and publish to marketplace
+  app.get('/api/scout-payment-success', async (req, res) => {
+    try {
+      const { session_id } = req.query;
+      
+      if (!session_id) {
+        return res.status(400).json({ error: 'Session ID required' });
+      }
+
+      // Retrieve the session from Stripe
+      const session = await stripe.checkout.sessions.retrieve(session_id as string);
+      
+      if (session.payment_status !== 'paid') {
+        return res.status(400).json({ error: 'Payment not completed' });
+      }
+
+      // Get project data from metadata
+      const projectData = JSON.parse(session.metadata?.projectData || '{}');
+      
       if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
         return res.status(500).json({ error: 'Airtable configuration missing' });
       }
@@ -1374,33 +1433,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create record in Scout table
       const record = await base('Scout').create({
-        'Company Name': req.body.companyName,
-        'Description': req.body.description,
-        'Project Stage': req.body.projectStage,
-        'Ticker Launched': req.body.tickerLaunched,
-        'DEX Screener URL': req.body.dexScreenerUrl,
-        'Amount Raising': req.body.amountRaising,
-        'Valuation': req.body.valuation,
-        'Ecosystem': req.body.ecosystem,
-        'Vertical': req.body.vertical,
-        'Twitter URL': req.body.twitterUrl,
-        'Founder Twitter URL': req.body.founderTwitterUrl,
-        'LinkedIn URL': req.body.linkedinUrl,
-        'Website URL': req.body.websiteUrl,
-        'Revenue Generating': req.body.revenueGenerating,
-        'Logo URL': req.body.logoUrl,
-        'Pitch Deck URL': req.body.pitchDeckUrl,
-        'Data Room URL': req.body.dataRoomUrl,
-        'Traction': req.body.traction,
+        'Company Name': projectData.companyName,
+        'Description': projectData.description,
+        'Project Stage': projectData.projectStage,
+        'Ticker Launched': projectData.tickerLaunched,
+        'DEX Screener URL': projectData.dexScreenerUrl,
+        'Amount Raising': projectData.amountRaising,
+        'Valuation': projectData.valuation,
+        'Ecosystem': projectData.ecosystem,
+        'Vertical': projectData.vertical,
+        'Twitter URL': projectData.twitterUrl,
+        'Founder Twitter URL': projectData.founderTwitterUrl,
+        'LinkedIn URL': projectData.linkedinUrl,
+        'Website URL': projectData.websiteUrl,
+        'Revenue Generating': projectData.revenueGenerating,
+        'Logo URL': projectData.logoUrl,
+        'Pitch Deck URL': projectData.pitchDeckUrl,
+        'Data Room URL': projectData.dataRoomUrl,
+        'Traction': projectData.traction,
         'Votes': 0,
         'Created': new Date().toISOString(),
+        'Payment Session ID': session_id,
+        'Payment Status': 'Paid'
       });
 
-      console.log(`✅ Successfully saved project ${req.body.companyName} to Scout Airtable`);
+      console.log(`✅ Successfully published project ${projectData.companyName} to Scout marketplace after payment`);
       res.json({ success: true, recordId: record.id });
     } catch (error) {
-      console.error('Error saving to Scout Airtable:', error);
-      res.status(500).json({ error: 'Failed to save to Scout Airtable' });
+      console.error('Error processing Scout payment success:', error);
+      res.status(500).json({ error: 'Failed to process payment success' });
     }
   });
 
