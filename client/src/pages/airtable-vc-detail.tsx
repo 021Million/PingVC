@@ -342,13 +342,6 @@ export default function AirtableVCDetail() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {(vc['Investment Tag'] || vc.investmentTag) && (
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Investment Tag</h4>
-                    <p className="text-gray-700 leading-relaxed">{vc['Investment Tag'] || vc.investmentTag}</p>
-                  </div>
-                )}
-
                 {(vc['Investment Stage'] || vc.stage) && (
                   <div>
                     <h4 className="font-medium text-gray-700 mb-2">Investment Stages</h4>
