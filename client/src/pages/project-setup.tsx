@@ -11,6 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import confetti from "canvas-confetti";
 import { Header } from "@/components/header";
+import { DragDropUpload } from "@/components/drag-drop-upload";
 
 export default function ProjectSetup() {
   const [formData, setFormData] = useState({
@@ -109,19 +110,16 @@ export default function ProjectSetup() {
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="logoUrl">Company Logo URL</Label>
-                  <Input
-                    id="logoUrl"
-                    value={formData.logoUrl}
-                    onChange={(e) => handleInputChange("logoUrl", e.target.value)}
-                    placeholder="https://your-logo-url.com/logo.png"
-                    type="url"
-                  />
-                  <p className="text-sm text-gray-500 mt-1">
-                    Upload your logo to a service like Imgur, Cloudinary, or your website and paste the URL here
-                  </p>
-                </div>
+                <DragDropUpload
+                  onFileSelect={(file) => {
+                    // File handling is done in the component
+                    console.log('File selected:', file.name);
+                  }}
+                  onUrlChange={(url) => handleInputChange("logoUrl", url)}
+                  currentUrl={formData.logoUrl}
+                  placeholder="Drop your company logo here or click to browse"
+                  maxSize={5}
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
