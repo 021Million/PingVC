@@ -35,13 +35,13 @@ export default function Landing() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg font-semibold" asChild>
               <Link href="/vcs">
-                Browse Investors
+                View All VCs
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="px-8 py-4 text-lg" asChild>
               <Link href="/vc-signup">
-                Join as Investor
+                Sign up as VC
               </Link>
             </Button>
           </div>
@@ -108,7 +108,7 @@ export default function Landing() {
                 size="lg"
                 className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
               >
-                View All Investors
+                View All VCs
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -118,7 +118,7 @@ export default function Landing() {
       {/* VC Signup Section */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white" id="vc-signup">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Join as a VC or Angel</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Sign up as VC</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Curated dealflow without the noise. Get quality founder intros and earn from each connection.
           </p>
@@ -146,7 +146,7 @@ export default function Landing() {
             onClick={() => window.location.href = '/vc-signup'}
             className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
           >
-            Apply to Join Ping VC
+            Sign up as VC
           </Button>
         </div>
       </section>
@@ -165,17 +165,17 @@ export default function Landing() {
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">Marketplace</h3>
+              <h3 className="text-lg font-semibold mb-4">Platform</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/vcs" className="hover:text-white transition-colors">Browse Investors</a></li>
+                <li><a href="/vcs" className="hover:text-white transition-colors">View All VCs</a></li>
                 <li><a href="/requests" className="hover:text-white transition-colors">Request Page</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">For VCs & Angel</h3>
+              <h3 className="text-lg font-semibold mb-4">For VCs</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/vc-signup" className="hover:text-white transition-colors">Join as VC or Angel</a></li>
+                <li><a href="/vc-signup" className="hover:text-white transition-colors">Sign up as VC</a></li>
               </ul>
             </div>
           </div>
