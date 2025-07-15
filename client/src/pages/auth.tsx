@@ -77,11 +77,32 @@ export default function Auth() {
       setLocation('/');
     },
     onError: (error: any) => {
+      let errorMessage = 'Invalid email or password';
+      
+      // Check if the error suggests user doesn't exist
+      if (error.message && (
+        error.message.includes('User not found') || 
+        error.message.includes('Invalid credentials') ||
+        error.message.includes('No user found')
+      )) {
+        errorMessage = "Account not found. Please sign up first or check your email address.";
+      }
+      
       toast({
         title: 'Login failed',
-        description: error.message || 'Invalid email or password',
+        description: errorMessage,
         variant: 'destructive',
       });
+      
+      // If account doesn't exist, suggest switching to signup
+      if (errorMessage.includes('Account not found')) {
+        setTimeout(() => {
+          toast({
+            title: 'Need an account?',
+            description: 'Click "Sign Up" below to create a new account.',
+          });
+        }, 2000);
+      }
     },
   });
 

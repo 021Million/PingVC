@@ -76,7 +76,7 @@ export function setupEmailAuth(app: Express) {
       // Find user by email
       const user = await storage.getUserByEmail(email);
       if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: 'User not found. Please sign up first or check your email address.' });
       }
 
       // Check if user has a password (might be Replit auth user)
