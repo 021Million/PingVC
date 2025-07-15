@@ -36,20 +36,6 @@ export function VCDetailPage() {
   const isUnlocked = unlockStatus?.hasUnlocked || false;
 
   const handleUnlockClick = () => {
-    if (!email) {
-      // Create a simple prompt for email and store it
-      const userEmail = prompt("Please enter your email to unlock this VC's contact information:");
-      if (userEmail && userEmail.includes('@')) {
-        localStorage.setItem('email_access_ping', userEmail);
-        window.location.reload(); // Refresh to update email state
-        return;
-      } else if (userEmail) {
-        alert("Please enter a valid email address.");
-        return;
-      } else {
-        return; // User cancelled
-      }
-    }
     setShowUnlockModal(true);
   };
 

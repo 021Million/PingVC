@@ -152,15 +152,8 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
   };
 
   const handleInitiatePayment = async () => {
-    if (!userEmail) {
-      toast({
-        title: "Email Required",
-        description: "Please provide your email to unlock VC contact information.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    const email = userEmail || 'anonymous@example.com';
+    
     setIsLoading(true);
     
     try {
@@ -168,7 +161,7 @@ export function VCUnlockModal({ vc, isOpen, onClose, vcType, userEmail, onSucces
       const response = await apiRequest("POST", "/api/create-vc-unlock-payment", {
         vcId: vc.id,
         vcType,
-        email: userEmail,
+        email: email,
         amount: getPrice(),
       });
 
