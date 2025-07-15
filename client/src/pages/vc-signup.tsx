@@ -454,7 +454,7 @@ export default function VCSignup() {
                 </div>
 
                 <div>
-                  <Label htmlFor="fundDescription">Fund Description</Label>
+                  <Label htmlFor="fundDescription">Investment Thesis</Label>
                   <Textarea
                     id="fundDescription"
                     {...register("fundDescription")}
