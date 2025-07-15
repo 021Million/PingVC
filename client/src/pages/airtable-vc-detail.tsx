@@ -338,6 +338,43 @@ export default function AirtableVCDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Investment Focus */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Target className="h-5 w-5 mr-2" />
+                  Investment Focus
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(vc['Investment Stage'] || vc.stage) && (
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-2">Investment Stages</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {(Array.isArray(vc['Investment Stage']) ? vc['Investment Stage'] : [vc['Investment Stage'] || vc.stage]).map((stage: string) => (
+                        <Badge key={stage} variant="outline" className="bg-blue-50 text-blue-700">
+                          {stage}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {vc['Primary Sector'] && (
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-2">Sectors</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {(Array.isArray(vc['Primary Sector']) ? vc['Primary Sector'] : [vc['Primary Sector']]).map((sector: string) => (
+                        <Badge key={sector} variant="outline" className="bg-purple-50 text-purple-700">
+                          {sector}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Bio/About */}
             {vc.bio && (
               <Card>
@@ -391,43 +428,6 @@ export default function AirtableVCDetail() {
                 </CardContent>
               </Card>
             )}
-
-            {/* Investment Focus */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Target className="h-5 w-5 mr-2" />
-                  Investment Focus
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {(vc['Investment Stage'] || vc.stage) && (
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Investment Stages</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {(Array.isArray(vc['Investment Stage']) ? vc['Investment Stage'] : [vc['Investment Stage'] || vc.stage]).map((stage: string) => (
-                        <Badge key={stage} variant="outline" className="bg-blue-50 text-blue-700">
-                          {stage}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {vc['Primary Sector'] && (
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Sectors</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {(Array.isArray(vc['Primary Sector']) ? vc['Primary Sector'] : [vc['Primary Sector']]).map((sector: string) => (
-                        <Badge key={sector} variant="outline" className="bg-purple-50 text-purple-700">
-                          {sector}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
           </div>
 
           {/* Sidebar */}
