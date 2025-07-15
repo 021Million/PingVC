@@ -293,17 +293,7 @@ export default function VCSignup() {
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="meetingUrl">Meeting/Calendly URL</Label>
-                  <Input
-                    id="meetingUrl"
-                    {...register("meetingUrl")}
-                    placeholder="https://calendly.com/yourname or https://cal.com/yourname"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Your dedicated meeting scheduling link (separate from contact preference below)
-                  </p>
-                </div>
+
 
                 <div>
                   <ImageUpload
