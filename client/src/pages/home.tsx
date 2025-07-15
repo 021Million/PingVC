@@ -5,7 +5,7 @@ import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
 import { FilterSection } from "@/components/filter-section";
 import { VCCard } from "@/components/vc-card";
 import { AirtableVCCard } from "@/components/airtable-vc-card";
-import { MarketplaceLanding } from "@/components/marketplace-landing";
+
 import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -16,10 +16,6 @@ export default function Home() {
 
   const { data: vcs = [], isLoading } = useQuery({
     queryKey: ["/api/vcs", { stage: stageFilter, sector: sectorFilter, verified: true }],
-  });
-
-  const { data: featuredProjects = [] } = useQuery({
-    queryKey: ["/api/scout/featured"],
   });
 
   // Fetch Airtable VCs for the landing page thumbnails
@@ -68,8 +64,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* Marketplace Section */}
-      <MarketplaceLanding vcs={airtableVCs.slice(0, 6)} projects={featuredProjects.slice(0, 6)} />
+
       {/* Filter Section */}
       <FilterSection 
         stageFilter={stageFilter}
