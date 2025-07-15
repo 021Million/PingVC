@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
-import { FilterSection } from "@/components/filter-section";
+
 import { VCCard } from "@/components/vc-card";
 import { AirtableVCCard } from "@/components/airtable-vc-card";
 
@@ -11,11 +11,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function Home() {
-  const [stageFilter, setStageFilter] = useState("All");
-  const [sectorFilter, setSectorFilter] = useState("");
+
 
   const { data: vcs = [], isLoading } = useQuery({
-    queryKey: ["/api/vcs", { stage: stageFilter, sector: sectorFilter, verified: true }],
+    queryKey: ["/api/vcs", { verified: true }],
   });
 
   // Fetch Airtable VCs for the landing page thumbnails
@@ -65,13 +64,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Filter Section */}
-      <FilterSection 
-        stageFilter={stageFilter}
-        sectorFilter={sectorFilter}
-        onStageChange={setStageFilter}
-        onSectorChange={setSectorFilter}
-      />
+
       {/* VC Grid */}
       <section className="py-16 bg-gray-50" id="vc-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
