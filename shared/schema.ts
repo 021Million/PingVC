@@ -218,7 +218,7 @@ export const vcRequests = pgTable("vc_requests", {
   vcId: varchar("vc_id").notNull(), // Airtable ID or platform VC ID
   vcType: varchar("vc_type").notNull(), // 'airtable' or 'platform'
   founderEmail: varchar("founder_email").notNull(),
-  founderId: varchar("founder_id"), // Optional user ID if logged in
+  userId: varchar("user_id"), // Optional user ID if logged in
   founderScore: integer("founder_score").default(50), // Quality score 0-100
   tags: text("tags").array(), // Founder categories like ['AI infra', 'DePIN']
   requestType: varchar("request_type").notNull(), // 'unlock', 'booking_request'

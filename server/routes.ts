@@ -1712,7 +1712,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         vcId,
         vcType,
         founderEmail,
-        founderId: founderId || null,
+        userId: founderId || null,
         founderScore: founderScore || 50,
         tags: tags || [],
         requestType,

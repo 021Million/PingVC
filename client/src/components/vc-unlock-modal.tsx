@@ -57,6 +57,21 @@ function PaymentForm({ vc, vcType, userEmail, onSuccess, onClose, amount }: {
       }
 
       if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Track VC request for gamification
+        try {
+          await apiRequest("POST", "/api/vc-request", {
+            vcId: vc.id,
+            vcType,
+            founderEmail: userEmail,
+            founderScore: 75, // Higher score for paying customers
+            tags: vc.stages || vc['Investment Stage'] ? [vc.stages?.[0] || vc['Investment Stage']] : ['General'],
+            requestType: 'unlock',
+            amount: amount,
+          });
+        } catch (error) {
+          console.error("Error tracking VC request:", error);
+        }
+
         // Confirm payment on backend
         await apiRequest("POST", "/api/confirm-vc-unlock-payment", {
           paymentIntentId: paymentIntent.id,

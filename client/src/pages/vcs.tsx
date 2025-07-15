@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { ImprovedHeader } from "@/components/improved-header";
 import { TopVCsLeaderboard } from "@/components/top-vcs-leaderboard";
+import { VCRequestBadge } from "@/components/vc-request-badge";
 
 export default function VCs() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,6 +53,7 @@ export default function VCs() {
 
   const VCCard = ({ vc, isVerified = true }: { vc: any; isVerified?: boolean }) => (
     <Card className="hover:shadow-lg transition-shadow group relative">
+      <VCRequestBadge vcId={vc.id} vcType="airtable" />
       <Link href={`/vc/${vc.id}`}>
         <div className="cursor-pointer">
           <CardHeader className="pb-3">

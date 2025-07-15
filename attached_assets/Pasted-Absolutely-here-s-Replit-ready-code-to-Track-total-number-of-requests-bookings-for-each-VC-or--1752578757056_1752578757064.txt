@@ -1,0 +1,124 @@
+Absolutely — here’s Replit-ready code to:
+
+✅ Track total number of requests/bookings for each VC or Angel
+
+✅ Display a count badge on each VC’s thumbnail
+
+✅ Show a Leaderboard with the top 3 most-requested VCs/Angels
+
+🔧 Step 1: Update VC Data Model
+In your existing VC data structure, add a requestCount:
+
+js
+Copy
+Edit
+let vcs = [
+  {
+    id: 'vc1',
+    name: 'Jane Capital',
+    requestCount: 12,
+    verified: true,
+    thumbnail: 'https://example.com/jane.jpg'
+  },
+  {
+    id: 'vc2',
+    name: 'Mr. Web3 Angel',
+    requestCount: 35,
+    verified: true,
+    thumbnail: 'https://example.com/mrangel.jpg'
+  },
+  // etc.
+];
+🔧 Step 2: Endpoint to Record a Request
+Add this route to your Express backend:
+
+js
+Copy
+Edit
+app.post('/api/request-vc', (req, res) => {
+  const { vcId } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  vc.requestCount = (vc.requestCount || 0) + 1;
+  res.json({ success: true, newCount: vc.requestCount });
+});
+🏆 Step 3: Leaderboard Route
+This will return the top 3 most requested/booked:
+
+js
+Copy
+Edit
+app.get('/api/leaderboard', (req, res) => {
+  const topVCs = vcs
+    .sort((a, b) => (b.requestCount || 0) - (a.requestCount || 0))
+    .slice(0, 3);
+  res.json(topVCs);
+});
+🖼 Step 4: Display Thumbnail Count + Leaderboard on Frontend
+📸 VC Thumbnail w/ Count Badge
+html
+Copy
+Edit
+<div id="vc-list"></div>
+
+<script>
+function loadVCs() {
+  fetch('/api/vcs')
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('vc-list');
+      container.innerHTML = data.map(vc => `
+        <div class="vc-card">
+          <img src="${vc.thumbnail}" alt="${vc.name}" width="150" />
+          <p><strong>${vc.name}</strong></p>
+          <p>🔥 Requests: ${vc.requestCount || 0}</p>
+        </div>
+      `).join('');
+    });
+}
+loadVCs();
+</script>
+🏆 Leaderboard Display
+html
+Copy
+Edit
+<div id="leaderboard"></div>
+
+<script>
+function loadLeaderboard() {
+  fetch('/api/leaderboard')
+    .then(res => res.json())
+    .then(data => {
+      const el = document.getElementById('leaderboard');
+      el.innerHTML = `
+        <h3>🔥 Most Requested VCs</h3>
+        <ol>
+          ${data.map(vc => `<li>${vc.name} (${vc.requestCount} requests)</li>`).join('')}
+        </ol>
+      `;
+    });
+}
+loadLeaderboard();
+</script>
+💅 Optional CSS (Replit-Ready)
+html
+Copy
+Edit
+<style>
+  .vc-card {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    width: 160px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+</style>
+✅ Recap
+POST to /api/request-vc every time a founder clicks “Request to Talk”
+
+Show requestCount on each VC’s card
+
+/api/leaderboard returns top 3 VCs for your homepage widget
