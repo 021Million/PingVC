@@ -104,6 +104,18 @@ export interface IStorage {
     requests: number;
     avgScore: number;
   }>>;
+  
+  // User request history tracking
+  getUserRequestHistory(userEmail: string): Promise<Array<{
+    vcId: string;
+    vcType: string;
+    vcName: string;
+    partnerName?: string;
+    requestType: string;
+    amount?: number;
+    createdAt: Date;
+  }>>;
+  getUserVCUnlocks(userEmail: string): Promise<VCUnlock[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -639,6 +651,44 @@ export class DatabaseStorage implements IStorage {
       requests: Number(vc.requests),
       avgScore: Number(vc.avgScore) || 0,
     }));
+  }
+
+  // User request history tracking
+  async getUserRequestHistory(userEmail: string): Promise<Array<{
+    vcId: string;
+    vcType: string;
+    vcName: string;
+    partnerName?: string;
+    requestType: string;
+    amount?: number;
+    createdAt: Date;
+  }>> {
+    const userRequests = await db
+      .select()
+      .from(vcRequests)
+      .where(eq(vcRequests.founderEmail, userEmail))
+      .orderBy(desc(vcRequests.createdAt));
+
+    // Transform the data to include VC names (this would need to be expanded to fetch actual VC data)
+    return userRequests.map(request => ({
+      vcId: request.vcId,
+      vcType: request.vcType,
+      vcName: `VC ${request.vcId}`, // This would be populated with actual VC data
+      partnerName: undefined,
+      requestType: request.requestType,
+      amount: request.amount,
+      createdAt: request.createdAt!,
+    }));
+  }
+
+  async getUserVCUnlocks(userEmail: string): Promise<VCUnlock[]> {
+    const unlocks = await db
+      .select()
+      .from(vcUnlocks)
+      .where(eq(vcUnlocks.email, userEmail))
+      .orderBy(desc(vcUnlocks.createdAt));
+
+    return unlocks;
   }
 }
 

@@ -1761,6 +1761,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user request history (requires authentication)
+  app.get('/api/my-history', async (req: any, res) => {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const requestHistory = await storage.getUserRequestHistory(user.email);
+      const vcUnlocks = await storage.getUserVCUnlocks(user.email);
+
+      res.json({
+        requests: requestHistory,
+        unlocks: vcUnlocks,
+        totalRequests: requestHistory.length,
+        totalUnlocks: vcUnlocks.length,
+      });
+    } catch (error) {
+      console.error("Error fetching user history:", error);
+      res.status(500).json({ message: "Failed to fetch user history" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

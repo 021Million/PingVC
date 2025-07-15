@@ -1,0 +1,111 @@
+Here’s a full Replit-ready backend + frontend implementation of what you need:
+
+✅ Login check
+✅ Authenticated user session
+✅ View a user’s request + booking history after login
+
+🧠 Concept Overview
+You’ll track login using sessions (already used in your Ping Me app), and store:
+
+userRequests → every time they request a VC
+
+userBookings → every time they book a meeting
+
+🧩 Backend Code Additions (Express)
+1. 🔐 Mock Login Endpoint
+(Replace with real auth later)
+
+js
+Copy
+Edit
+app.post('/api/login', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email required' });
+
+  req.session.user = { email };
+  if (!users[email]) users[email] = { requests: [], bookings: [] };
+
+  res.json({ success: true, user: req.session.user });
+});
+2. 🧠 Middleware to Require Login
+js
+Copy
+Edit
+function requireLogin(req, res, next) {
+  if (!req.session.user) return res.status(401).json({ message: 'Not logged in' });
+  next();
+}
+3. 📦 Log a VC Request or Booking
+When a user sends a VC request:
+
+js
+Copy
+Edit
+app.post('/api/request-vc', requireLogin, (req, res) => {
+  const { vcId } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  vc.requestCount = (vc.requestCount || 0) + 1;
+  const user = users[req.session.user.email];
+  user.requests.push({ vcId, date: new Date() });
+
+  res.json({ success: true, newCount: vc.requestCount });
+});
+When a user books (this assumes a separate booking flow):
+
+js
+Copy
+Edit
+app.post('/api/book-vc', requireLogin, (req, res) => {
+  const { vcId } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  const user = users[req.session.user.email];
+  user.bookings.push({ vcId, date: new Date() });
+
+  res.json({ success: true });
+});
+4. 📋 Fetch User History (Requests + Bookings)
+js
+Copy
+Edit
+app.get('/api/my-history', requireLogin, (req, res) => {
+  const user = users[req.session.user.email];
+  res.json({ requests: user.requests, bookings: user.bookings });
+});
+🎨 Frontend: History Page UI (HTML + JS)
+html
+Copy
+Edit
+<h2>My Request & Booking History</h2>
+<div id="history"></div>
+
+<script>
+function loadHistory() {
+  fetch('/api/my-history')
+    .then(res => res.json())
+    .then(data => {
+      const html = `
+        <h3>Requests</h3>
+        <ul>${data.requests.map(r => `<li>${r.vcId} – ${new Date(r.date).toLocaleDateString()}</li>`).join('')}</ul>
+        <h3>Bookings</h3>
+        <ul>${data.bookings.map(b => `<li>${b.vcId} – ${new Date(b.date).toLocaleDateString()}</li>`).join('')}</ul>
+      `;
+      document.getElementById('history').innerHTML = html;
+    })
+    .catch(err => {
+      document.getElementById('history').innerText = 'You must log in first.';
+    });
+}
+loadHistory();
+</script>
+✅ What You Can Do Next
+Hook this into your current session system (you’re already using express-session)
+
+Use real authentication later (e.g., magic link, Google auth)
+
+Expand VC ID → Name display using lookup
+
+Make this prettier using Tailwind or Replit UI library
