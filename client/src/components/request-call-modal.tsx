@@ -114,9 +114,7 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
                   <p className="text-sm font-medium text-orange-800">
                     Unverified Investor
                   </p>
-                  <p className="text-sm text-orange-700">
-                    This investor hasn't been verified by our team yet. We'll facilitate the introduction manually and reach out to them about joining our platform.
-                  </p>
+                  <p className="text-sm text-orange-700">This investor hasn't been verified by our team yet. We'll try to facilitate the introduction manually and reach out to them about joining our platform.</p>
                 </div>
               </div>
             </CardContent>
