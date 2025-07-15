@@ -272,17 +272,17 @@ export function VCDetailPage() {
                         <p className="text-lg text-gray-600 mb-3">
                           {vc.title || "Position"} at {vc.fund || "Fund Name"}
                         </p>
-                        {/* Enhanced Social Links */}
-                        <div className="space-y-2">
+                        {/* Social Links Icons */}
+                        <div className="flex items-center space-x-3">
                           {vc.linkedin && (
                             <a 
                               href={vc.linkedin} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                              className="text-blue-600 hover:text-blue-800 transition-colors"
+                              title="LinkedIn"
                             >
-                              <Linkedin className="h-4 w-4 mr-2" />
-                              <span>LinkedIn</span>
+                              <Linkedin className="h-5 w-5" />
                             </a>
                           )}
                           {(vc.twitter || vc['X Profile']) && (
@@ -290,10 +290,10 @@ export function VCDetailPage() {
                               href={vc.twitter || vc['X Profile']} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                              className="text-gray-600 hover:text-gray-800 transition-colors"
+                              title="X (Twitter)"
                             >
-                              <X className="h-4 w-4 mr-2" />
-                              <span>X (Twitter)</span>
+                              <X className="h-5 w-5" />
                             </a>
                           )}
                           {vc.website && (
@@ -301,10 +301,10 @@ export function VCDetailPage() {
                               href={vc.website} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                              className="text-gray-600 hover:text-gray-800 transition-colors"
+                              title="Website"
                             >
-                              <Globe className="h-4 w-4 mr-2" />
-                              <span>Website</span>
+                              <Globe className="h-5 w-5" />
                             </a>
                           )}
                         </div>
