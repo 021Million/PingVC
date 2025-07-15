@@ -442,7 +442,7 @@ export function VCDetailPage() {
                     setShowRequestModal(true);
                   }
                 }}
-                className="bg-primary hover:bg-primary/90 px-8 py-3 text-lg font-semibold"
+                className="bg-green-600 hover:bg-green-700 px-8 py-3 text-lg font-semibold"
                 size="lg"
               >
                 {isVerified ? "Connect Now" : "Request Call"}
