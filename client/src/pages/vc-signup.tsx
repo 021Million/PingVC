@@ -48,6 +48,7 @@ const vcSignupSchema = insertVCSchema.extend({
 type VCSignupForm = z.infer<typeof vcSignupSchema>;
 
 const VERTICAL_OPTIONS = [
+  "AI/ML",
   "DeFi",
   "RWA", 
   "Stablecoins",
