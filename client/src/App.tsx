@@ -71,6 +71,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Home} />
+          <Route path="/home" component={Home} />
           <Route path="/vc-signup" component={VCSignup} />
           <Route path="/admin" component={Admin} />
           <Route path="/payment-success/:paymentIntentId" component={PaymentSuccess} />
