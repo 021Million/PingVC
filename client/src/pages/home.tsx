@@ -162,6 +162,13 @@ export default function Home() {
             </div>
             
             <div>
+              <h3 className="text-lg font-semibold mb-4">Marketplace</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li><a href="/scout" className="hover:text-white transition-colors">Scout Projects</a></li>
+              </ul>
+            </div>
+            
+            <div>
               <h3 className="text-lg font-semibold mb-4">For VCs</h3>
               <ul className="space-y-2 text-gray-300">
                 <li><a href="/vc-signup" className="hover:text-white transition-colors">Sign up as VC</a></li>
