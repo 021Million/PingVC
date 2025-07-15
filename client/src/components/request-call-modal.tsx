@@ -144,7 +144,7 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
                   id="founderName"
                   value={founderName}
                   onChange={(e) => setFounderName(e.target.value)}
-                  placeholder="John Doe"
+                  placeholder="Elon Musk"
                   required
                 />
               </div>
