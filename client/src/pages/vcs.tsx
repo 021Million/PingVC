@@ -116,7 +116,7 @@ export default function VCs() {
               </p>
 
               {/* Price and Button */}
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between pt-2 pb-8">
                 {isVerified ? (
                   <div className="flex items-center text-primary font-semibold">
                     <DollarSign className="w-4 h-4 mr-1" />
