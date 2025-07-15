@@ -31,6 +31,7 @@ export default function ProjectSetup() {
     dataRoomUrl: "",
     linkedinUrl: "",
     twitterUrl: "",
+    founderTwitterUrl: "",
     websiteUrl: "",
     revenueGenerating: false,
   });
@@ -389,7 +390,7 @@ export default function ProjectSetup() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="linkedinUrl">LinkedIn URL</Label>
                     <Input
@@ -402,11 +403,22 @@ export default function ProjectSetup() {
                   </div>
 
                   <div>
-                    <Label htmlFor="twitterUrl">Twitter URL</Label>
+                    <Label htmlFor="twitterUrl">Company Twitter URL</Label>
                     <Input
                       id="twitterUrl"
                       value={formData.twitterUrl}
                       onChange={(e) => handleInputChange("twitterUrl", e.target.value)}
+                      placeholder="https://twitter.com/yourcompany"
+                      type="url"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="founderTwitterUrl">Founder Twitter URL</Label>
+                    <Input
+                      id="founderTwitterUrl"
+                      value={formData.founderTwitterUrl}
+                      onChange={(e) => handleInputChange("founderTwitterUrl", e.target.value)}
                       placeholder="https://twitter.com/yourhandle"
                       type="url"
                     />

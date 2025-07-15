@@ -1265,6 +1265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         dataRoomUrl: req.body.dataRoomUrl,
         linkedinUrl: req.body.linkedinUrl,
         twitterUrl: req.body.twitterUrl,
+        founderTwitterUrl: req.body.founderTwitterUrl,
         websiteUrl: req.body.websiteUrl,
         revenueGenerating: req.body.revenueGenerating,
       };
@@ -1343,6 +1344,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ecosystem: record.get('Ecosystem') as string,
         vertical: record.get('Vertical') as string,
         twitterUrl: record.get('Twitter URL') as string,
+        founderTwitterUrl: record.get('Founder Twitter URL') as string,
         linkedinUrl: record.get('LinkedIn URL') as string,
         websiteUrl: record.get('Website URL') as string,
         revenueGenerating: record.get('Revenue Generating') as boolean,
@@ -1382,6 +1384,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'Ecosystem': req.body.ecosystem,
         'Vertical': req.body.vertical,
         'Twitter URL': req.body.twitterUrl,
+        'Founder Twitter URL': req.body.founderTwitterUrl,
         'LinkedIn URL': req.body.linkedinUrl,
         'Website URL': req.body.websiteUrl,
         'Revenue Generating': req.body.revenueGenerating,
