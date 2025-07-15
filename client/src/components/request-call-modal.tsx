@@ -158,7 +158,7 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
                   type="email"
                   value={founderEmail}
                   onChange={(e) => setFounderEmail(e.target.value)}
-                  placeholder="john@startup.com"
+                  placeholder="elon@startup.com"
                   required
                 />
               </div>
