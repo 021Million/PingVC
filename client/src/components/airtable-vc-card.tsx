@@ -6,6 +6,7 @@ import { Shield, DollarSign, Users, ExternalLink, Lock, Unlock, Globe, Linkedin,
 import { VCUnlockModal } from "@/components/vc-unlock-modal";
 import { apiRequest } from "@/lib/queryClient";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 
 interface AirtableVCCardProps {
   vc: any;
@@ -108,9 +109,10 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
 
   return (
     <>
-      <Card className="h-full hover:shadow-lg transition-shadow">
-        <CardHeader className="pb-3">
-          <div className="flex items-start gap-3">
+      <Link href={`/investor/${vc.id}`}>
+        <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+          <CardHeader className="pb-3">
+            <div className="flex items-start gap-3">
             {/* Profile Image */}
             <div className="flex-shrink-0">
               {vc.Image && Array.isArray(vc.Image) && vc.Image.length > 0 ? (
@@ -211,7 +213,8 @@ export function AirtableVCCard({ vc, userEmail }: AirtableVCCardProps) {
             renderContactInfo()
           )}
         </CardContent>
-      </Card>
+        </Card>
+      </Link>
 
       <VCUnlockModal
         vc={vc}
