@@ -31,7 +31,7 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
     onSuccess: (data) => {
       toast({
         title: "Request sent successfully!",
-        description: `Our team will reach out to ${data.vcName} and facilitate the introduction.`,
+        description: `Our team will reach out to Curtis Spencer privately to try facilitate the introduction.`,
       });
       onSuccess?.();
       onClose();
