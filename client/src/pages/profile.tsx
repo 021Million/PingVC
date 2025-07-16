@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { 
   User, 
   Building, 
@@ -18,7 +19,9 @@ import {
   Mail,
   History,
   Shield,
-  ExternalLink
+  ExternalLink,
+  LogOut,
+  Trash2
 } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -77,6 +80,30 @@ export default function Profile() {
     onError: (error: any) => {
       toast({
         title: "Error updating profile",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete account mutation
+  const deleteAccountMutation = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("DELETE", "/api/auth/delete-account");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Account deleted",
+        description: "Your account has been permanently deleted.",
+      });
+      // Clear all cached data and redirect to home
+      queryClient.clear();
+      window.location.href = "/";
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error deleting account",
         description: error.message,
         variant: "destructive",
       });
@@ -606,18 +633,69 @@ export default function Profile() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Name</span>
-                      <span className="font-medium">{getUserDisplayName()}</span>
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Name</span>
+                        <span className="font-medium">{getUserDisplayName()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Email</span>
+                        <span className="font-medium">{user?.email}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Account Type</span>
+                        <span className="font-medium capitalize">{user?.userType === 'vc' ? 'VC' : (user?.userType || 'Founder')}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Email</span>
-                      <span className="font-medium">{user?.email}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Account Type</span>
-                      <span className="font-medium capitalize">{user?.userType === 'vc' ? 'VC' : (user?.userType || 'Founder')}</span>
+
+                    <div className="pt-4 border-t">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600">Account Actions</span>
+                          <div className="flex space-x-3">
+                            <Button 
+                              variant="outline" 
+                              onClick={() => logoutMutation.mutate()}
+                              disabled={logoutMutation.isPending}
+                              className="flex items-center"
+                            >
+                              <LogOut className="h-4 w-4 mr-2" />
+                              Sign Out
+                            </Button>
+                            
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  variant="destructive" 
+                                  className="flex items-center"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete Account
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete your account and remove all of your data from our servers.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction 
+                                    onClick={() => deleteAccountMutation.mutate()}
+                                    disabled={deleteAccountMutation.isPending}
+                                    className="bg-red-600 hover:bg-red-700"
+                                  >
+                                    {deleteAccountMutation.isPending ? "Deleting..." : "Delete Account"}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

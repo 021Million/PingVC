@@ -43,6 +43,7 @@ export interface IStorage {
   completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
   updateUserProfile(id: string, profileData: { firstName: string; lastName: string; email?: string }): Promise<User>;
   updateUserApprovalStatus(id: string, isApproved: boolean): Promise<User>;
+  deleteUser(id: string): Promise<void>;
   
   // Password operations
   setUserPassword(id: string, hashedPassword: string): Promise<User>;
@@ -277,6 +278,33 @@ export class DatabaseStorage implements IStorage {
     }
     
     return user;
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    // Get user email for related data cleanup
+    const user = await this.getUser(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Delete user's related data first to maintain referential integrity
+    await db.delete(projectVotes).where(eq(projectVotes.userId, id));
+    await db.delete(vcUnlocks).where(eq(vcUnlocks.email, user.email));
+    await db.delete(vcRequests).where(eq(vcRequests.userEmail, user.email));
+    await db.delete(emailSubmissions).where(eq(emailSubmissions.email, user.email));
+    
+    // Delete founder-related data
+    const userFounder = await db.select({ id: founders.id }).from(founders).where(eq(founders.userId, id));
+    if (userFounder.length > 0) {
+      await db.delete(payments).where(eq(payments.founderId, userFounder[0].id));
+      await db.delete(founders).where(eq(founders.userId, id));
+    }
+    
+    // Delete VC-related data
+    await db.delete(vcs).where(eq(vcs.userId, id));
+    
+    // Finally delete the user
+    await db.delete(users).where(eq(users.id, id));
   }
 
   // VC operations

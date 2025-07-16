@@ -142,4 +142,70 @@ export function setupEmailAuth(app: Express) {
       isAdmin: user.isAdmin,
     });
   });
+
+  // Update profile endpoint
+  app.put('/api/auth/profile', async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const user = req.user as any;
+      const { firstName, lastName, email, newPassword } = req.body;
+
+      // Validate required fields
+      if (!firstName || !lastName) {
+        return res.status(400).json({ message: 'First name and last name are required' });
+      }
+
+      // Update profile with or without password
+      let updatedUser;
+      if (newPassword) {
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+        updatedUser = await storage.updateUserAndPassword(user.id, { firstName, lastName, email }, hashedPassword);
+      } else {
+        updatedUser = await storage.updateUserProfile(user.id, { firstName, lastName, email });
+      }
+
+      res.json({
+        id: updatedUser.id,
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        userType: updatedUser.userType,
+        profileCompleted: updatedUser.profileCompleted,
+        hasSetPassword: updatedUser.hasSetPassword,
+        isAdmin: updatedUser.isAdmin,
+      });
+    } catch (error) {
+      console.error('Update profile error:', error);
+      res.status(500).json({ message: 'Failed to update profile' });
+    }
+  });
+
+  // Delete account endpoint
+  app.delete('/api/auth/delete-account', async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const user = req.user as any;
+      
+      // Delete user from database
+      await storage.deleteUser(user.id);
+      
+      // Log out the user
+      req.logout((err) => {
+        if (err) {
+          console.error('Logout error during account deletion:', err);
+          return res.status(500).json({ message: 'Account deleted but logout failed' });
+        }
+        res.json({ message: 'Account deleted successfully' });
+      });
+    } catch (error) {
+      console.error('Delete account error:', error);
+      res.status(500).json({ message: 'Failed to delete account' });
+    }
+  });
 }
