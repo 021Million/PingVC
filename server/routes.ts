@@ -256,6 +256,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       records.forEach(record => {
         const fields = record.fields;
+        
+        // Normalize array fields to ensure consistent structure and spacing
+        const normalizeToArray = (field: any): string[] => {
+          if (!field) return [];
+          if (Array.isArray(field)) return field;
+          if (typeof field === 'string') {
+            // Handle comma-separated values with proper spacing
+            return field.split(',').map(item => item.trim()).filter(item => item.length > 0);
+          }
+          return [field.toString()];
+        };
+
         const vc = {
           id: record.id,
           name: fields.Name,
@@ -267,13 +279,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           email: fields.Email,
           telegram: fields.Telegram,
           'Meeting/Calendly Link': fields['Meeting/Calendly Link'],
-          'Investment Stage': fields['Investment Stage'],
-          'Primary Sector': fields['Primary Sector'],
+          'Investment Stage': normalizeToArray(fields['Investment Stage']),
+          'Primary Sector': normalizeToArray(fields['Primary Sector']),
           'Investment Thesis': fields['Investment Thesis'],
           Image: fields.Image,
           imageUrl: fields['Image URL'],
-          specialties: fields.Specialties || fields['Primary Sector'] || [],
-          stages: fields['Investment Stage'] || [],
+          specialties: normalizeToArray(fields.Specialties || fields['Primary Sector']),
+          stages: normalizeToArray(fields['Investment Stage']),
           price: fields.Price,
           limit: fields.Limit,
           contactLink: fields['Contact Link'],
@@ -692,6 +704,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       records.forEach(record => {
         const fields = record.fields;
+        // Normalize array fields to ensure consistent structure and spacing
+        const normalizeToArray = (field: any): string[] => {
+          if (!field) return [];
+          if (Array.isArray(field)) return field;
+          if (typeof field === 'string') {
+            // Handle comma-separated values with proper spacing
+            return field.split(',').map(item => item.trim()).filter(item => item.length > 0);
+          }
+          return [field.toString()];
+        };
+
         const vc = {
           id: record.id,
           name: fields.Name,
@@ -704,8 +727,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           telegram: fields.Telegram,
           'Meeting/Calendly Link': fields['Meeting/Calendly Link'],
           'X Profile': fields['X Profile'],
-          'Investment Stage': fields['Investment Stage'],
-          'Primary Sector': fields['Primary Sector'],
+          'Investment Stage': normalizeToArray(fields['Investment Stage']),
+          'Primary Sector': normalizeToArray(fields['Primary Sector']),
           'Investment Thesis': fields['Investment Thesis'],
           'Portfolio Performance': fields['Portfolio Performance'],
           Position: fields.Position,
@@ -717,7 +740,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           'Donate To Charity': fields['Donate To Charity'],
           Image: fields.Image,
           imageUrl: fields['Image URL'],
-          specialties: fields.Specialties || [],
+          specialties: normalizeToArray(fields.Specialties || fields['Primary Sector']),
+          stages: normalizeToArray(fields['Investment Stage']),
           price: fields.Price,
           limit: fields.Limit,
           contactLink: fields['Contact Link'],
@@ -1511,38 +1535,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
       
-      // Fetch from Project Submissions table and only show published projects
-      const records = await base('Project Submissions').select({
-        filterByFormula: "AND({Publishing Status} = 'Published', {Company Name} != '')"
-      }).all();
+      // Fetch from Project Submissions table - get all records to check field structure
+      const records = await base('Project Submissions').select().all();
 
-      const projects = records.map(record => ({
-        id: record.id,
-        fields: {
-          'Company Name': record.get('Company Name') as string,
-          'Description': record.get('Description') as string,
-          'Project Stage': record.get('Project Stage') as string,
-          'Ticker Launched': record.get('Ticker Launched') as string,
-          'DEX Screener URL': record.get('DexScreener URL') as string,
-          'Amount Raising': record.get('Amount Raising') as number,
-          'Valuation': record.get('Valuation') as number,
-          'Ecosystem': record.get('Ecosystem') as string,
-          'Vertical': record.get('Vertical') as string,
-          'Twitter URL': record.get('Twitter URL') as string,
-          'Founder Twitter URL': record.get('Founder Twitter URL') as string,
-          'LinkedIn URL': record.get('LinkedIn URL') as string,
-          'Website URL': record.get('Website URL') as string,
-          'Revenue Generating': record.get('Revenue Generating') as string,
-          'Logo URL': record.get('Logo URL') as string,
-          'Pitch Deck URL': record.get('Pitch Deck URL') as string,
-          'Data Room URL': record.get('Data Room URL') as string,
-          'Traction': record.get('Traction') as string,
-          'Votes': record.get('Votes') as number || 0,
-          'Created': record.get('Submission Date') as string,
-          'Verification Status': record.get('Verification Status') as string || 'under_review',
-          'Verified At': record.get('Verified At') as string
-        }
-      }));
+      // Map records to the expected format for the frontend
+      const projects = records
+        .filter(record => record.get('Company Name')) // Only projects with company names
+        .map(record => ({
+          id: record.id,
+          companyName: record.get('Company Name') as string,
+          description: record.get('Description') as string,
+          projectStage: record.get('Project Stage') as string,
+          tickerLaunched: record.get('Ticker Launched') === 'Yes',
+          dexScreenerUrl: record.get('DexScreener URL') as string,
+          amountRaising: record.get('Amount Raising') as string,
+          valuation: record.get('Valuation') as string,
+          ecosystem: record.get('Ecosystem') as string,
+          vertical: record.get('Vertical') as string,
+          twitterUrl: record.get('Twitter URL') as string,
+          founderTwitterUrl: record.get('Founder Twitter URL') as string,
+          linkedinUrl: record.get('LinkedIn URL') as string,
+          websiteUrl: record.get('Website URL') as string,
+          revenueGenerating: record.get('Revenue Generating') === 'Yes',
+          logoUrl: record.get('Logo URL') as string,
+          pitchDeckUrl: record.get('Pitch Deck URL') as string,
+          dataRoomUrl: record.get('Data Room URL') as string,
+          traction: record.get('Traction') as string,
+          votes: record.get('Votes') as number || 0,
+          createdAt: record.get('Submission Date') as string,
+          verificationStatus: 'verified', // Default to verified for published projects
+        }));
 
       res.json(projects);
     } catch (error) {
