@@ -136,11 +136,7 @@ export function TopVCsLeaderboard() {
                       <span className="font-medium">{vc.requests}</span>
                       <span className="text-gray-500">requests</span>
                     </div>
-                    <div className="flex items-center gap-1 text-green-600">
-                      <Star className="h-4 w-4" />
-                      <span className="font-medium">{vc.avgScore}</span>
-                      <span className="text-gray-500">score</span>
-                    </div>
+                    
                   </div>
                 </div>
               </div>
