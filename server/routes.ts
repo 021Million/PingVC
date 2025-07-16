@@ -169,7 +169,8 @@ async function saveFounderProjectToAirtable(founderData: any, user: any): Promis
       'Submission Type': founderData.isPublished ? 'Published' : 'Draft',
       'Is Published': founderData.isPublished ? 'Yes' : 'No',
       'Is Visible': founderData.isVisible ? 'Yes' : 'No',
-      'Source': 'Project Setup Page'
+      'Source': 'Project Setup Page',
+      'Verification Status': founderData.verificationStatus || 'under_review'
     });
 
     console.log(`✅ Successfully saved founder project ${founderData.companyName} to Airtable`);
@@ -1253,6 +1254,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating founder project:", error);
       res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
+  // Admin routes for project verification
+  app.get('/api/admin/projects', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user?.isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const projects = await storage.getAllProjectsForAdmin();
+      res.json(projects);
+    } catch (error) {
+      console.error("Error fetching admin projects:", error);
+      res.status(500).json({ message: "Failed to fetch projects" });
+    }
+  });
+
+  app.post('/api/admin/projects/:founderId/verify', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user?.isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const founderId = parseInt(req.params.founderId);
+      const { status, notes } = req.body;
+
+      if (!['under_review', 'verified', 'rejected'].includes(status)) {
+        return res.status(400).json({ message: "Invalid verification status" });
+      }
+
+      const updatedProject = await storage.updateProjectVerificationStatus(founderId, status, notes);
+      res.json(updatedProject);
+    } catch (error) {
+      console.error("Error updating verification status:", error);
+      res.status(500).json({ message: "Failed to update verification status" });
     }
   });
 

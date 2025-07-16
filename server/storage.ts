@@ -373,6 +373,8 @@ export class DatabaseStorage implements IStorage {
       .update(founders)
       .set({
         ...projectData,
+        // Set verification status to under_review for new projects or if not already verified
+        verificationStatus: projectData.verificationStatus || 'under_review',
         createdAt: sql`${founders.createdAt}`, // Keep original created date
       })
       .where(eq(founders.id, founderId))
@@ -387,6 +389,32 @@ export class DatabaseStorage implements IStorage {
       .where(eq(founders.isFeatured, true))
       .orderBy(desc(founders.upvotes))
       .limit(10);
+  }
+
+  // Admin methods for verification
+  async updateProjectVerificationStatus(founderId: number, status: 'under_review' | 'verified' | 'rejected', notes?: string): Promise<Founder> {
+    const [founder] = await db
+      .update(founders)
+      .set({
+        verificationStatus: status,
+        verifiedAt: status === 'verified' ? sql`NOW()` : null,
+        verificationNotes: notes || null,
+        updatedAt: sql`NOW()`,
+      })
+      .where(eq(founders.id, founderId))
+      .returning();
+    return founder;
+  }
+
+  async getAllProjectsForAdmin(): Promise<Founder[]> {
+    return await db
+      .select()
+      .from(founders)
+      .where(and(
+        eq(founders.isPublished, true),
+        isNotNull(founders.companyName)
+      ))
+      .orderBy(desc(founders.createdAt));
   }
 
   async getFoundersByRanking(): Promise<Founder[]> {

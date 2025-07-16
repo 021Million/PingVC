@@ -31,6 +31,8 @@ interface ScoutProject {
     'Traction': string;
     'Votes': number;
     'Created': string;
+    'Verification Status'?: string; // "under_review", "verified", "rejected"
+    'Verified At'?: string;
   };
 }
 
@@ -155,6 +157,20 @@ export default function Scout() {
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge variant="secondary">{project.fields.Ecosystem || 'N/A'}</Badge>
                             <Badge variant="outline">{project.fields.Vertical || 'N/A'}</Badge>
+                            {/* Verification Status Badge */}
+                            {project.fields['Verification Status'] === 'verified' ? (
+                              <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                                ✓ Verified
+                              </Badge>
+                            ) : project.fields['Verification Status'] === 'rejected' ? (
+                              <Badge variant="destructive">
+                                ✕ Rejected
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline" className="border-orange-300 text-orange-600">
+                                ⏳ Under Review
+                              </Badge>
+                            )}
                           </div>
                         </div>
                       </div>

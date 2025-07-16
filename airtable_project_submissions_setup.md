@@ -43,6 +43,9 @@ This table captures ALL project setup submissions from the `/project-setup` page
 - **Is Published** (Single select) - "Yes" or "No"
 - **Is Visible** (Single select) - "Yes" or "No"
 - **Source** (Single select) - "Project Setup Page"
+- **Verification Status** (Single select) - "under_review", "verified", "rejected"
+- **Verified At** (Date & time) - When project was verified by admin
+- **Verification Notes** (Long text) - Admin notes about verification decision
 
 ### Field Options:
 
@@ -99,6 +102,11 @@ This table captures ALL project setup submissions from the `/project-setup` page
 - Project Setup Page
 - Profile Page
 - Admin Import
+
+#### **Verification Status Options:**
+- under_review
+- verified 
+- rejected
 
 ## Usage:
 

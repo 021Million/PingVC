@@ -135,6 +135,12 @@ export const founders = pgTable("founders", {
   featuredUntil: timestamp("featured_until"),
   upvotes: integer("upvotes").default(0),
   votes: integer("votes").default(0),
+  
+  // Verification system
+  verificationStatus: varchar("verification_status").default("under_review"), // "under_review", "verified", "rejected"
+  verifiedAt: timestamp("verified_at"),
+  verificationNotes: text("verification_notes"), // Admin notes about verification
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
