@@ -115,6 +115,28 @@ export interface IStorage {
     createdAt: Date;
   }>>;
   getUserVCUnlocks(userEmail: string): Promise<VCUnlock[]>;
+  
+  // Investor-specific activity tracking
+  getInvestorActivity(userId: string): Promise<{
+    requestsReceived: Array<{
+      id: string;
+      founderName: string;
+      founderEmail: string;
+      projectName: string;
+      requestType: string;
+      status: string;
+      createdAt: Date;
+    }>;
+    callsBooked: Array<{
+      id: string;
+      founderName: string;
+      founderEmail: string;
+      projectName: string;
+      amount: number;
+      status: string;
+      createdAt: Date;
+    }>;
+  }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -725,6 +747,92 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(vcUnlocks.createdAt));
 
     return unlocks;
+  }
+
+  async getInvestorActivity(userId: string): Promise<{
+    requestsReceived: Array<{
+      id: string;
+      founderName: string;
+      founderEmail: string;
+      projectName: string;
+      requestType: string;
+      status: string;
+      createdAt: Date;
+    }>;
+    callsBooked: Array<{
+      id: string;
+      founderName: string;
+      founderEmail: string;
+      projectName: string;
+      amount: number;
+      status: string;
+      createdAt: Date;
+    }>;
+  }> {
+    // Get user's VC profiles
+    const userVCProfiles = await db
+      .select()
+      .from(vcs)
+      .where(eq(vcs.userId, userId));
+
+    if (userVCProfiles.length === 0) {
+      return { requestsReceived: [], callsBooked: [] };
+    }
+
+    const vcIds = userVCProfiles.map(vc => vc.id);
+
+    // Get booking requests from VCRequests table
+    const requestsReceived = await db
+      .select({
+        id: vcRequests.id,
+        founderName: vcRequests.founderName,
+        founderEmail: vcRequests.founderEmail,
+        projectName: vcRequests.projectName,
+        requestType: vcRequests.requestType,
+        status: sql`'pending'`.as('status'),
+        createdAt: vcRequests.createdAt,
+      })
+      .from(vcRequests)
+      .where(sql`${vcRequests.vcId}::int = ANY(${vcIds}) AND ${vcRequests.vcType} = 'platform'`)
+      .orderBy(desc(vcRequests.createdAt));
+
+    // Get paid bookings from Payments table
+    const callsBooked = await db
+      .select({
+        id: payments.id,
+        founderName: sql`COALESCE(${founders.founderName}, 'Unknown')`.as('founderName'),
+        founderEmail: sql`COALESCE(${users.email}, 'Unknown')`.as('founderEmail'),
+        projectName: sql`COALESCE(${founders.companyName}, 'Unknown Project')`.as('projectName'),
+        amount: payments.amount,
+        status: payments.status,
+        createdAt: payments.createdAt,
+      })
+      .from(payments)
+      .leftJoin(founders, eq(payments.founderId, founders.id))
+      .leftJoin(users, eq(founders.userId, users.id))
+      .where(sql`${payments.vcId}::int = ANY(${vcIds}) AND ${payments.status} = 'completed'`)
+      .orderBy(desc(payments.createdAt));
+
+    return {
+      requestsReceived: requestsReceived.map(req => ({
+        id: req.id,
+        founderName: req.founderName || 'Unknown',
+        founderEmail: req.founderEmail || 'Unknown',
+        projectName: req.projectName || 'Unknown Project',
+        requestType: req.requestType || 'connection',
+        status: req.status || 'pending',
+        createdAt: req.createdAt,
+      })),
+      callsBooked: callsBooked.map(call => ({
+        id: call.id,
+        founderName: call.founderName || 'Unknown',
+        founderEmail: call.founderEmail || 'Unknown',
+        projectName: call.projectName || 'Unknown Project',
+        amount: call.amount || 0,
+        status: call.status || 'completed',
+        createdAt: call.createdAt,
+      })),
+    };
   }
 }
 

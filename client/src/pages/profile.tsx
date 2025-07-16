@@ -55,6 +55,13 @@ export default function Profile() {
   // Fetch activity history
   const { data: history } = useQuery({
     queryKey: ["/api/my-history"],
+    enabled: user?.userType === 'founder',
+  });
+
+  // Fetch investor activity history
+  const { data: investorActivity } = useQuery({
+    queryKey: ["/api/profile/investor-activity"],
+    enabled: user?.userType === 'vc' || user?.userType === 'angel',
   });
 
   const updateProfileMutation = useMutation({
@@ -429,39 +436,99 @@ export default function Profile() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {history?.requests?.length > 0 || history?.unlocks?.length > 0 ? (
-                  <div className="space-y-4">
-                    {history.requests?.map((request: any) => (
-                      <div key={request.id} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Request to {request.vcName}</p>
-                            <p className="text-sm text-gray-600">
-                              {new Date(request.createdAt).toLocaleDateString()}
-                            </p>
+                {user?.userType === 'founder' ? (
+                  // Founder activity history
+                  history?.requests?.length > 0 || history?.unlocks?.length > 0 ? (
+                    <div className="space-y-4">
+                      {history.requests?.map((request: any) => (
+                        <div key={request.id} className="border rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">Request to {request.vcName}</p>
+                              <p className="text-sm text-gray-600">
+                                {new Date(request.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <Badge variant="outline">Requested</Badge>
                           </div>
-                          <Badge variant="outline">Requested</Badge>
                         </div>
-                      </div>
-                    ))}
-                    {history.unlocks?.map((unlock: any) => (
-                      <div key={unlock.id} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Unlocked {unlock.vcName}</p>
-                            <p className="text-sm text-gray-600">
-                              {new Date(unlock.createdAt).toLocaleDateString()}
-                            </p>
+                      ))}
+                      {history.unlocks?.map((unlock: any) => (
+                        <div key={unlock.id} className="border rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">Unlocked {unlock.vcName}</p>
+                              <p className="text-sm text-gray-600">
+                                {new Date(unlock.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <Badge variant="default">Unlocked</Badge>
                           </div>
-                          <Badge variant="default">Unlocked</Badge>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <History className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600">No activity yet</p>
+                    </div>
+                  )
                 ) : (
-                  <div className="text-center py-8">
-                    <History className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">No activity yet</p>
+                  // Investor activity history
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Requests Received</h3>
+                      {investorActivity?.requestsReceived?.length > 0 ? (
+                        <div className="space-y-3">
+                          {investorActivity.requestsReceived.map((request: any) => (
+                            <div key={request.id} className="border rounded-lg p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-medium">{request.founderName}</p>
+                                  <p className="text-sm text-gray-600">{request.projectName}</p>
+                                  <p className="text-xs text-gray-500">
+                                    {new Date(request.createdAt).toLocaleDateString()}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <Badge variant="outline">{request.status}</Badge>
+                                  <p className="text-xs text-gray-500 mt-1">{request.requestType}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600 text-sm">No requests received yet</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Calls Booked</h3>
+                      {investorActivity?.callsBooked?.length > 0 ? (
+                        <div className="space-y-3">
+                          {investorActivity.callsBooked.map((call: any) => (
+                            <div key={call.id} className="border rounded-lg p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-medium">{call.founderName}</p>
+                                  <p className="text-sm text-gray-600">{call.projectName}</p>
+                                  <p className="text-xs text-gray-500">
+                                    {new Date(call.createdAt).toLocaleDateString()}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-semibold text-green-600">${call.amount}</p>
+                                  <Badge variant="default">{call.status}</Badge>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600 text-sm">No calls booked yet</p>
+                      )}
+                    </div>
                   </div>
                 )}
               </CardContent>
