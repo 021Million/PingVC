@@ -86,15 +86,13 @@ export default function Scout() {
             <h1 className="text-3xl font-bold text-gray-900">Scout Marketplace</h1>
             <p className="text-xl text-gray-600 max-w-3xl">Discover top Web3 startups before the crowd.
             Back the next generation of breakthrough founders.</p>
-            {/* List Project Button - only shown for founders or unauthenticated users */}
-            {(!user || user.userType === 'founder') && (
-              <div className="mt-6">
-                <ListProjectButton variant="large" className="shadow-lg" />
-                <p className="text-sm text-gray-500 mt-2">
-                  {!isAuthenticated ? "Sign in as a founder to list your project" : "Share your project with investors and the community"}
-                </p>
-              </div>
-            )}
+            {/* List Project Button - always show, let the component handle the logic */}
+            <div className="mt-6 mb-4">
+              <ListProjectButton variant="large" className="shadow-lg bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold" />
+              <p className="text-sm text-gray-500 mt-3">
+                {!isAuthenticated ? "Sign in as a founder to list your project" : "Share your project with investors and the community"}
+              </p>
+            </div>
           </div>
         </div>
 
