@@ -496,6 +496,15 @@ export default function ProjectSetup() {
                 >
                   {createPaymentMutation.isPending ? "Processing..." : "Publish to Scout Marketplace ($9)"}
                 </Button>
+                <Link href="/vcs">
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Skip For Now
+                  </Button>
+                </Link>
               </div>
             </form>
           </CardContent>
