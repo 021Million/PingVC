@@ -28,7 +28,7 @@ export default function Landing() {
       <section className="bg-gradient-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Where <span className="text-blue-600">Founders</span> connect with <span className="text-green-600">VCs & Angels</span>
+            Where <span className="text-blue-600">Founders</span> connect with <span className="text-green-600">VCs</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Ping VC helps startup founders access verified VCs and angels, no intros needed.</p>
           
