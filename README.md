@@ -1,3 +1,4 @@
+
 # Ping VC - VC Contact Marketplace
 
 A cutting-edge Web3-powered venture capital marketplace that intelligently connects startup founders with investors through advanced networking and secure blockchain interactions.
@@ -163,3 +164,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Connect with founders. Scale your dealflow. Power Web3.**
+
+# PingVC
+Where Founders meet VCs &amp; Angels
+
