@@ -179,7 +179,7 @@ export default function Profile() {
                     </div>
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
-                      Member since {new Date(user?.createdAt || '').toLocaleDateString()}
+                      Signed up {new Date(user?.createdAt || '').toLocaleDateString()}
                     </div>
                   </div>
                 </div>
