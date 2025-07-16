@@ -320,7 +320,6 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile Header */}
         <Card className="mb-8">
@@ -385,7 +384,7 @@ export default function Profile() {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {user?.userType === 'founder' && <TabsTrigger value="project">My Project</TabsTrigger>}
             {user?.userType === 'vc' && <TabsTrigger value="vcs">My VCs</TabsTrigger>}
-            <TabsTrigger value="history">VC History</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -471,11 +470,21 @@ export default function Profile() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Member Since</span>
-                      <span className="font-medium">{new Date(user?.createdAt || '').toLocaleDateString()}</span>
+                    <div className="flex items-center justify-between py-2 border-b">
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 text-gray-500 mr-2" />
+                        <span className="text-sm font-medium text-gray-700">Member Since</span>
+                      </div>
+                      <span className="text-sm text-gray-600">
+                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        }) : 'Not available'}
+                      </span>
                     </div>
+
+
                     {user?.userType === 'founder' && founderProfile && (
                       <>
                         <div className="flex justify-between">
@@ -1160,28 +1169,7 @@ export default function Profile() {
                 <div className="space-y-6">
                   
 
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="text-center space-y-4">
-                        <Building className="h-8 w-8 text-primary mx-auto" />
-                        <h3 className="font-semibold">Quick Actions</h3>
-                        <div className="space-y-2">
-                          <Link href="/project-setup">
-                            <Button variant="outline" className="w-full">
-                              {founderProfile ? 'Update Project' : 'Set Up Project'}
-                            </Button>
-                          </Link>
-                          {founderProfile && !founderProfile.isPublished && (
-                            <Link href="/project-visibility-payment">
-                              <Button className="w-full">
-                                Publish Project ($9)
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+
                 </div>
               </div>
             </TabsContent>
@@ -1255,7 +1243,7 @@ export default function Profile() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <History className="mr-2 h-5 w-5" />
-                  VC Request History
+                  Request History
                 </CardTitle>
               </CardHeader>
               <CardContent>

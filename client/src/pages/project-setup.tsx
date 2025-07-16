@@ -14,7 +14,7 @@ import confetti from "canvas-confetti";
 import { Header } from "@/components/header";
 import { DragDropUpload } from "@/components/drag-drop-upload";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 
 export default function ProjectSetup() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -38,6 +38,7 @@ export default function ProjectSetup() {
     founderTwitterUrl: "",
     websiteUrl: "",
     revenueGenerating: false,
+    email: "",
   });
   
   const { toast } = useToast();
@@ -169,6 +170,14 @@ export default function ProjectSetup() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-6">
+          <Button variant="ghost" asChild>
+            <Link href="/profile">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Profile
+            </Link>
+          </Button>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Setup Your Project</CardTitle>
@@ -187,6 +196,18 @@ export default function ProjectSetup() {
                     value={formData.companyName}
                     onChange={(e) => handleInputChange("companyName", e.target.value)}
                     placeholder="Enter your company name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="email">Company Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    placeholder="contact@company.com"
                     required
                   />
                 </div>
@@ -467,9 +488,6 @@ export default function ProjectSetup() {
                   className="bg-green-600 hover:bg-green-700"
                 >
                   {createPaymentMutation.isPending ? "Processing..." : "Publish to Scout Marketplace ($9)"}
-                </Button>
-                <Button type="button" variant="outline" asChild>
-                  <Link href="/">Skip for now</Link>
                 </Button>
               </div>
             </form>
