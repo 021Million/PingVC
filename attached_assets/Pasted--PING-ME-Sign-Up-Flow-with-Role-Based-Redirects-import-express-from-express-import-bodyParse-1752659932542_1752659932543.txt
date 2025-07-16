@@ -1,0 +1,68 @@
+// PING ME – Sign-Up Flow with Role-Based Redirects
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import session from 'express-session';
+import stripePackage from 'stripe';
+import axios from 'axios';
+
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(session({
+  secret: 'pingmesecret',
+  resave: false,
+  saveUninitialized: true,
+}));
+
+let users = {}; // email-gated users
+let vcs = [];   // verified VC profiles
+let founders = []; // founder project data
+let bookings = [];
+
+// 1. SIGN-UP PAGE (UI served from frontend, HTML sample below)
+// Endpoint to process role selection and route
+app.post('/api/select-role', (req, res) => {
+  const { role } = req.body;
+  if (!role) return res.status(400).json({ message: 'Role required' });
+
+  if (role === 'vc') return res.json({ redirect: '/vc-signup' });
+  if (role === 'founder') return res.json({ redirect: '/founder-setup' });
+
+  res.status(400).json({ message: 'Invalid role selected' });
+});
+
+// 2. VC SIGN-UP FORM (placeholder route)
+app.post('/api/vc-signup', (req, res) => {
+  const { name, email, firm, stage, donation, price } = req.body;
+  vcs.push({ id: Date.now(), name, email, firm, stage, donation, price, verified: false });
+  res.json({ message: 'VC signup received. We’ll verify you shortly.' });
+});
+
+// 3. FOUNDER PROJECT SETUP (placeholder route)
+app.post('/api/founder-setup', (req, res) => {
+  const { name, project, vertical, traction, socials } = req.body;
+  founders.push({ id: Date.now(), name, project, vertical, traction, socials });
+  res.json({ message: 'Founder profile created.' });
+});
+
+// Example HTML (for /signup)
+app.get('/signup', (req, res) => {
+  res.send(`
+    <html><body>
+      <h2>Are you a Founder or a VC?</h2>
+      <form action="/api/select-role" method="POST">
+        <button type="submit" name="role" value="founder">I'm a Founder</button>
+        <button type="submit" name="role" value="vc">I'm a VC</button>
+      </form>
+    </body></html>
+  `);
+});
+
+// Retain previous endpoints here as needed...
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`PING ME – Role-Based Signup flow active on port ${PORT}`));
