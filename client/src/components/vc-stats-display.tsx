@@ -52,7 +52,7 @@ export function VCStatsDisplay({ vcId, vcType, className = "" }: VCStatsDisplayP
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Flame className={`h-5 w-5 ${isInTop3 ? 'text-yellow-600' : 'text-blue-600'}`} />
-          Founder Demand Signals
+          Investor Popularity
           {isInTop3 && (
             <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
               <Trophy className="h-3 w-3 mr-1" />
@@ -63,21 +63,13 @@ export function VCStatsDisplay({ vcId, vcType, className = "" }: VCStatsDisplayP
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Request Stats */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-2xl font-bold text-blue-600">
-              <Users className="h-5 w-5" />
-              {stats.totalRequests}
-            </div>
-            <p className="text-sm text-gray-600">Requests (30d)</p>
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-2 text-3xl font-bold text-blue-600">
+            <Users className="h-6 w-6" />
+            {stats.totalRequests}
           </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-2xl font-bold text-green-600">
-              <Star className="h-5 w-5" />
-              {stats.avgScore}/100
-            </div>
-            <p className="text-sm text-gray-600">Avg Founder Score</p>
-          </div>
+          <p className="text-sm text-gray-600 font-medium">Connection Requests (30d)</p>
+          <p className="text-xs text-gray-500 mt-1">Shows investor popularity</p>
         </div>
 
         {/* Top Category */}
@@ -106,7 +98,7 @@ export function VCStatsDisplay({ vcId, vcType, className = "" }: VCStatsDisplayP
           />
           {isInTop3 ? (
             <p className="text-xs text-yellow-700 font-medium">
-              🎉 This investor is a Top 3 VC based on founder demand!
+              🎉 This investor is a Top 3 VC based on founder interest!
             </p>
           ) : (
             <p className="text-xs text-gray-600">

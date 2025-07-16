@@ -76,7 +76,6 @@ export function RequestCallModal({ vc, isOpen, onClose, onSuccess }: RequestCall
         vcId: vc.id,
         vcType: 'airtable',
         founderEmail: user.email,
-        founderScore: 65, // Default score for manual requests
         tags: vc['Investment Stage'] ? [vc['Investment Stage']] : ['General'],
         requestType: 'booking_request',
       });

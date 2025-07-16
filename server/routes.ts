@@ -1959,7 +1959,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create VC request tracking entry
   app.post('/api/vc-request', async (req: any, res) => {
     try {
-      const { vcId, vcType, founderEmail, founderId, founderScore, tags, requestType, amount } = req.body;
+      const { vcId, vcType, founderEmail, founderId, tags, requestType, amount } = req.body;
       
       if (!vcId || !vcType || !founderEmail || !requestType) {
         return res.status(400).json({ message: "Missing required fields" });
@@ -1970,7 +1970,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         vcType,
         founderEmail,
         userId: founderId || null,
-        founderScore: founderScore || 50,
+        founderScore: 50, // Keep field for backward compatibility but not used
         tags: tags || [],
         requestType,
         amount: amount || null,

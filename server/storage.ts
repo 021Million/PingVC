@@ -93,7 +93,6 @@ export interface IStorage {
   createVCRequest(request: InsertVCRequest): Promise<VCRequest>;
   getVCStats(vcId: string, vcType: string): Promise<{
     totalRequests: number;
-    avgScore: number;
     topTag: string;
     openToAngel?: boolean;
     donatesToCharity?: boolean;
@@ -102,7 +101,6 @@ export interface IStorage {
     vcId: string;
     vcType: string;
     requests: number;
-    avgScore: number;
   }>>;
   
   // User request history tracking
@@ -579,7 +577,6 @@ export class DatabaseStorage implements IStorage {
 
   async getVCStats(vcId: string, vcType: string): Promise<{
     totalRequests: number;
-    avgScore: number;
     topTag: string;
     openToAngel?: boolean;
     donatesToCharity?: boolean;
@@ -598,9 +595,6 @@ export class DatabaseStorage implements IStorage {
       ));
 
     const totalRequests = recentRequests.length;
-    const avgScore = totalRequests > 0 
-      ? Math.round(recentRequests.reduce((sum, r) => sum + (r.founderScore || 50), 0) / totalRequests)
-      : 0;
 
     // Calculate top tag
     const tagCount: Record<string, number> = {};
@@ -615,7 +609,6 @@ export class DatabaseStorage implements IStorage {
 
     return {
       totalRequests,
-      avgScore,
       topTag,
       openToAngel: false, // Will be populated from Airtable data
       donatesToCharity: false, // Will be populated from Airtable data
@@ -626,7 +619,6 @@ export class DatabaseStorage implements IStorage {
     vcId: string;
     vcType: string;
     requests: number;
-    avgScore: number;
   }>> {
     // Get requests from the last 30 days grouped by VC
     const thirtyDaysAgo = new Date();
@@ -637,19 +629,17 @@ export class DatabaseStorage implements IStorage {
         vcId: vcRequests.vcId,
         vcType: vcRequests.vcType,
         requests: sql<number>`count(*)`,
-        avgScore: sql<number>`round(avg(${vcRequests.founderScore}))`,
       })
       .from(vcRequests)
       .where(gt(vcRequests.createdAt, thirtyDaysAgo))
       .groupBy(vcRequests.vcId, vcRequests.vcType)
-      .orderBy(sql`count(*) desc, round(avg(${vcRequests.founderScore})) desc`)
+      .orderBy(sql`count(*) desc`)
       .limit(10);
 
     return topVCs.map(vc => ({
       vcId: vc.vcId,
       vcType: vc.vcType,
       requests: Number(vc.requests),
-      avgScore: Number(vc.avgScore) || 0,
     }));
   }
 
