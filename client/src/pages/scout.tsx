@@ -84,9 +84,8 @@ export default function Scout() {
         <div className="text-center mb-8">
           <div className="flex flex-col items-center space-y-4">
             <h1 className="text-3xl font-bold text-gray-900">Scout Marketplace</h1>
-            <p className="text-xl text-gray-600 max-w-3xl">
-              Discover and vote for the most promising Web3 startups. Help surface the next generation of breakthrough projects.
-            </p>
+            <p className="text-xl text-gray-600 max-w-3xl">Discover top Web3 startups before the crowd.
+            Back the next generation of breakthrough founders.</p>
             {/* List Project Button - only shown for founders or unauthenticated users */}
             {(!user || user.userType === 'founder') && (
               <div className="mt-6">
