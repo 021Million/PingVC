@@ -43,12 +43,19 @@ export default function ProjectSetup() {
   
   const { toast } = useToast();
 
-  // Redirect to auth if not authenticated
+  // Redirect to auth if not authenticated, or redirect VCs to browse page
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       setLocation('/auth');
+    } else if (!isLoading && user && (user.userType === 'vc' || user.userType === 'angel')) {
+      toast({
+        title: "Access Restricted",
+        description: "Project submission is only available for founders. Browse investor profiles instead.",
+        variant: "destructive",
+      });
+      setLocation('/vcs');
     }
-  }, [isLoading, isAuthenticated, setLocation]);
+  }, [isLoading, isAuthenticated, user, setLocation, toast]);
 
   // Show loading while checking auth
   if (isLoading) {
@@ -63,7 +70,7 @@ export default function ProjectSetup() {
   }
 
   // Show nothing while redirecting
-  if (!isAuthenticated) {
+  if (!isAuthenticated || (user && (user.userType === 'vc' || user.userType === 'angel'))) {
     return null;
   }
 
