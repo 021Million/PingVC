@@ -1,0 +1,143 @@
+// PING ME – FOCUSED FUNNEL VERSION with Calendly Secure Booking Integration
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import session from 'express-session';
+import stripePackage from 'stripe';
+import axios from 'axios';
+
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(session({
+  secret: 'pingmesecret',
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// SIMULATED DATABASE (Use Airtable in production)
+let users = {}; // email-gated users
+let vcs = [];   // verified VC profiles
+let bookings = []; // track confirmed bookings
+
+// EMAIL GATE – only first visit
+function emailGate(req, res, next) {
+  if (req.session.emailEntered) return next();
+  const { email } = req.body;
+  if (!email) return res.status(401).json({ message: 'Email required to continue' });
+  req.session.emailEntered = true;
+  users[email] = { requests: [], bookings: [] };
+  next();
+}
+
+app.post('/api/enter', emailGate, (req, res) => {
+  res.json({ access: true });
+});
+
+// FETCH Verified VCs
+app.get('/api/vcs', (req, res) => {
+  res.json(vcs);
+});
+
+// VC OAuth Connect to Calendly (Admin Only)
+app.post('/api/vc/connect-calendly', async (req, res) => {
+  const { vcId, calendlyToken } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+  vc.calendlyToken = calendlyToken;
+  const userResponse = await axios.get('https://api.calendly.com/users/me', {
+    headers: { Authorization: `Bearer ${calendlyToken}` }
+  });
+  vc.calendlyUri = userResponse.data.resource.uri;
+  res.json({ success: true });
+});
+
+// Unlock + Generate Secure Booking
+app.post('/api/unlock-vc', async (req, res) => {
+  const { vcId } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc || !vc.verified) return res.status(404).json({ message: 'VC not available for booking' });
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [{
+      price_data: {
+        currency: 'usd',
+        product_data: { name: `VC Contact: ${vc.name}` },
+        unit_amount: vc.price || 500,
+      },
+      quantity: 1,
+    }],
+    mode: 'payment',
+    success_url: `${process.env.BASE_URL}/booking-success?vc=${vcId}`,
+    cancel_url: `${process.env.BASE_URL}/vc/${vcId}?canceled=true`,
+  });
+
+  res.json({ url: session.url });
+});
+
+// After payment – Get one-time Calendly booking link
+app.get('/api/book-vc', async (req, res) => {
+  const { vcId, email } = req.query;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc || !vc.calendlyUri) return res.status(404).json({ message: 'Booking not available' });
+
+  try {
+    // fetch available event types
+    const eventTypes = await axios.get(`https://api.calendly.com/event_types?user=${vc.calendlyUri}`, {
+      headers: { Authorization: `Bearer ${vc.calendlyToken}` }
+    });
+    const eventUri = eventTypes.data.collection[0].uri;
+
+    // Create a one-time scheduling link
+    const linkRes = await axios.post('https://api.calendly.com/scheduling_links', {
+      owner: vc.calendlyUri,
+      max_event_count: 1,
+      owner_type: "User",
+      event_type: eventUri
+    }, {
+      headers: { Authorization: `Bearer ${vc.calendlyToken}` }
+    });
+
+    bookings.push({ vcId, email, date: new Date() });
+    users[email].bookings.push({ vcId, date: new Date() });
+
+    res.json({ bookingUrl: linkRes.data.resource.booking_url });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create booking link' });
+  }
+});
+
+// Track request count (from /request-vc)
+app.post('/api/request-vc', (req, res) => {
+  const { vcId, email } = req.body;
+  const vc = vcs.find(v => v.id === vcId);
+  if (!vc) return res.status(404).json({ message: 'VC not found' });
+
+  vc.requestCount = (vc.requestCount || 0) + 1;
+  users[email]?.requests.push({ vcId, date: new Date() });
+  res.json({ success: true, newCount: vc.requestCount });
+});
+
+// Fetch leaderboard
+app.get('/api/leaderboard', (req, res) => {
+  const topVCs = vcs.sort((a, b) => (b.requestCount || 0) - (a.requestCount || 0)).slice(0, 3);
+  res.json(topVCs);
+});
+
+// Logged-in user booking/request history
+app.get('/api/my-history', (req, res) => {
+  const email = req.session.user?.email;
+  if (!email || !users[email]) return res.status(401).json({ message: 'Not logged in' });
+  res.json({ requests: users[email].requests, bookings: users[email].bookings });
+});
+
+// HOMEPAGE CTA: View 6 featured VCs + "View All"
+// BOOKING VIEW: After Stripe success, call /api/book-vc
+// DIRECTORY LOGIC: If VC.verified = true → show "Book Now" else "Request Intro"
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`PING ME – Calendly Secure Booking version live on port ${PORT}`));
