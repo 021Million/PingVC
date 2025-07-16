@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, TrendingUp, Users, Star } from "lucide-react";
+import { useLocation } from "wouter";
 
 export function TopVCsLeaderboard() {
   const { data: topVCs, isLoading } = useQuery({
@@ -11,6 +12,8 @@ export function TopVCsLeaderboard() {
   const { data: airtableData } = useQuery({
     queryKey: ["/api/airtable/vcs"],
   });
+
+  const [, setLocation] = useLocation();
 
   if (isLoading) {
     return (
@@ -115,7 +118,8 @@ export function TopVCsLeaderboard() {
           return (
             <div
               key={`${vc.vcId}-${vc.vcType}`}
-              className={`p-4 rounded-lg border-2 ${getRankColor(position)}`}
+              className={`p-4 rounded-lg border-2 ${getRankColor(position)} cursor-pointer hover:shadow-md transition-shadow`}
+              onClick={() => setLocation(`/vc/${vc.vcId}`)}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
