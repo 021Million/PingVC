@@ -22,6 +22,7 @@ const vcSignupSchema = insertVCSchema.extend({
   sectors: z.array(z.string()).min(1, "Please select at least one sector"),
   stage: z.array(z.string()).min(1, "Please select at least one investment stage"),
   meetingLink: z.string().min(1, "Meeting link is required"),
+  email: z.string().email("Please enter a valid email address"),
   location: z.string().min(1, "Location is required"),
   investmentTag: z.string().min(1, "Investment tag is required"),
   fundDescription: z.string().min(1, "Fund description is required"),
@@ -90,6 +91,7 @@ export default function VCSignup() {
       portfolioPerformance: "",
       position: "",
       meetingLink: "",
+      email: "",
     },
   });
 
@@ -251,6 +253,21 @@ export default function VCSignup() {
                 </div>
 
 
+
+                <div>
+                  <Label htmlFor="email">Email Address *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register("email")}
+                    placeholder="your.email@fund.com"
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                  )}
+                  <p className="text-sm text-gray-500 mt-1">We'll use this to send notifications about your application status</p>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>

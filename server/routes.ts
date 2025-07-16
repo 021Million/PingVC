@@ -1972,30 +1972,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
 }
 
 async function sendVCThankYouEmail(vc: any): Promise<void> {
-  // Note: This is a placeholder for email functionality
-  // In a real implementation, you would integrate with an email service like:
-  // - SendGrid, Mailgun, AWS SES, etc.
-  console.log(`Thank you email would be sent to: ${vc.email}`);
-  console.log(`VC Name: ${vc.partnerName}, Fund: ${vc.fundName}`);
-  console.log(`Email content: Thank you for applying to join Ping VC as a VC. A team member will be in touch with you soon to complete verification.`);
-  
-  // Example implementation (uncomment when you have an email service):
-  /*
-  const emailContent = {
-    to: vc.email,
-    from: 'team@pingme.com',
-    subject: 'Thank you for your VC application - Ping VC',
-    html: `
-      <h2>Thank you for applying, ${vc.partnerName}!</h2>
-      <p>We've received your application to join Ping VC as a VC partner from ${vc.fundName}.</p>
-      <p>Our team will review your application and be in touch with you soon to complete the verification process.</p>
-      <p>In the meantime, feel free to reach out if you have any questions.</p>
-      <p>Best regards,<br>The Ping VC Team</p>
-    `
-  };
-  
-  await emailService.send(emailContent);
-  */
+  try {
+    // Add the VC to Beehiiv newsletter first
+    if (vc.email) {
+      await addToBeehiivNewsletter(vc.email, vc.partnerName);
+      console.log(`✅ Added ${vc.email} to Beehiiv newsletter`);
+    }
+
+    // Send notification to Ping VC team 
+    await sendVCNotificationToPingTeam(vc);
+    
+    console.log(`✅ Successfully processed email notifications for VC: ${vc.partnerName} from ${vc.fundName}`);
+  } catch (error) {
+    console.error("Error sending VC emails:", error);
+    throw error;
+  }
+}
+
+async function sendVCNotificationToPingTeam(vc: any): Promise<void> {
+  try {
+    // For now, log the notification that would be sent to the team
+    // In production, you could send this via email service or Slack webhook
+    console.log(`📧 NEW VC APPLICATION NOTIFICATION:`);
+    console.log(`👤 Name: ${vc.partnerName}`);
+    console.log(`🏢 Fund: ${vc.fundName}`);
+    console.log(`📧 Email: ${vc.email}`);
+    console.log(`💰 Price: $${vc.price / 100}`);
+    console.log(`🎯 Sectors: ${Array.isArray(vc.sectors) ? vc.sectors.join(', ') : vc.sectors}`);
+    console.log(`📈 Stages: ${Array.isArray(vc.stage) ? vc.stage.join(', ') : vc.stage}`);
+    console.log(`🔗 Meeting Link: ${vc.meetingLink}`);
+    console.log(`📍 Location: ${vc.location}`);
+    console.log(`📅 Submitted: ${new Date().toLocaleString()}`);
+    console.log(`🔍 Review required in admin panel`);
+    
+    // You could also send this to a Slack webhook, email service, or notification system
+    // Example: await sendSlackNotification(notificationData);
+    // Example: await sendEmailToTeam(notificationData);
+  } catch (error) {
+    console.error("Error sending team notification:", error);
+    throw error;
+  }
 }
 
 async function generateIntroTemplate(vc: any): Promise<string> {
