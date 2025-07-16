@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUp, ExternalLink, Twitter, Linkedin, Globe, FileText } from "lucide-react";
+import { ArrowUp, ArrowRight, ExternalLink, Twitter, Linkedin, Globe, FileText } from "lucide-react";
 import { Header } from "@/components/header";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -86,9 +86,18 @@ export default function Scout() {
             <h1 className="text-3xl font-bold text-gray-900">Scout Marketplace</h1>
             <p className="text-xl text-gray-600 max-w-3xl">Discover top Web3 startups before the crowd.
             Back the next generation of breakthrough founders.</p>
-            {/* List Project Button - always show, let the component handle the logic */}
+            {/* List Project Button - always visible */}
             <div className="mt-6 mb-4">
-              <ListProjectButton variant="large" className="shadow-lg bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold" />
+              <Button 
+                size="lg" 
+                className="shadow-lg bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold"
+                asChild
+              >
+                <Link href={isAuthenticated ? "/project-setup" : "/auth"}>
+                  List Project Now
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
               <p className="text-sm text-gray-500 mt-3">
                 {!isAuthenticated ? "Sign in as a founder to list your project" : "Share your project with investors and the community"}
               </p>
