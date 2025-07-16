@@ -75,6 +75,8 @@ export const vcs = pgTable("vcs", {
   isActive: boolean("is_active").default(true),
   donateToCharity: boolean("donate_to_charity").default(false),
   charityOfChoice: varchar("charity_of_choice"),
+  isVentureCapital: boolean("is_venture_capital").default(false),
+  isAngel: boolean("is_angel").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -32,6 +32,8 @@ const vcSignupSchema = insertVCSchema.extend({
   position: z.string().min(1, "Position is required"),
   donateToCharity: z.boolean().optional(),
   charityOfChoice: z.string().optional(),
+  isVentureCapital: z.boolean().optional(),
+  isAngel: z.boolean().optional(),
 }).omit({ userId: true, isVerified: true, isActive: true, contactType: true, telegramHandle: true });
 
 type VCSignupForm = z.infer<typeof vcSignupSchema>;
@@ -83,6 +85,8 @@ export default function VCSignup() {
       stage: [],
       donateToCharity: false,
       charityOfChoice: "",
+      isVentureCapital: false,
+      isAngel: false,
       location: "",
       investmentTag: "",
       fundDescription: "",
@@ -101,6 +105,8 @@ export default function VCSignup() {
   const stages = watch("stage") || [];
   const donateToCharity = watch("donateToCharity");
   const charityOfChoice = watch("charityOfChoice");
+  const isVentureCapital = watch("isVentureCapital");
+  const isAngel = watch("isAngel");
 
   const createVCMutation = useMutation({
     mutationFn: async (data: VCSignupForm) => {
@@ -267,6 +273,34 @@ export default function VCSignup() {
                     <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
                   )}
                   <p className="text-sm text-gray-500 mt-1">We'll use this to send notifications about your application status</p>
+                </div>
+
+                {/* Investor Type */}
+                <div>
+                  <Label>Investor Type</Label>
+                  <p className="text-sm text-gray-600 mb-3">Select all that apply to you</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-4 border border-gray-200 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="isVentureCapital"
+                        checked={isVentureCapital}
+                        onCheckedChange={(checked) => setValue("isVentureCapital", checked)}
+                      />
+                      <Label htmlFor="isVentureCapital" className="text-sm font-normal cursor-pointer">
+                        Venture Capital
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="isAngel"
+                        checked={isAngel}
+                        onCheckedChange={(checked) => setValue("isAngel", checked)}
+                      />
+                      <Label htmlFor="isAngel" className="text-sm font-normal cursor-pointer">
+                        Angel Investor
+                      </Label>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

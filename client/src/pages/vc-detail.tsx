@@ -262,6 +262,21 @@ export function VCDetailPage() {
                         <p className="text-lg text-gray-600 mb-3">
                           {vc.title || "Position"} at {vc.fund || "Fund Name"}
                         </p>
+                        
+                        {/* Investor Type Badges */}
+                        <div className="flex items-center space-x-2 mb-3">
+                          {vc.isVentureCapital && (
+                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                              Venture Capital
+                            </Badge>
+                          )}
+                          {vc.isAngel && (
+                            <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                              Angel Investor
+                            </Badge>
+                          )}
+                        </div>
+                        
                         {/* Social Links Icons */}
                         <div className="flex items-center space-x-3">
                           {vc.linkedin && (
