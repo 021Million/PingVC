@@ -179,7 +179,7 @@ export default function Profile() {
                   </h1>
                   <div className="flex items-center space-x-4 mb-3">
                     <Badge variant="outline" className="capitalize">
-                      {user?.userType === 'vc' ? 'VC' : (user?.userType || 'Founder')}
+                      {user?.userType === 'vc' ? 'VC' : user?.userType === 'angel' ? 'Angel' : 'Founder'}
                     </Badge>
                     {user?.isAdmin && (
                       <Badge variant="outline" className="border-purple-200 text-purple-800">
