@@ -36,16 +36,7 @@ export function ListProjectButton({ variant = "default", className = "" }: ListP
         );
       
       default:
-        return (
-          <Button 
-            size="default" 
-            className={`bg-green-600 hover:bg-green-700 text-white ${className}`}
-            onClick={handleClick}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            List Project
-          </Button>
-        );
+        return null;
     }
   };
 
