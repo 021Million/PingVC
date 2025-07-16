@@ -40,6 +40,7 @@ export const users = pgTable("users", {
   userType: varchar("user_type").default("founder"), // 'founder', 'vc', 'angel'
   isAdmin: boolean("is_admin").default(false),
   profileCompleted: boolean("profile_completed").default(false),
+  isApprovedInvestor: boolean("is_approved_investor").default(false), // For VCs/Angels - requires PingVC approval
   authProvider: varchar("auth_provider").default("email"), // 'email' or 'replit'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

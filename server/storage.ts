@@ -42,6 +42,7 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   completeUserProfile(id: string, profileData: { firstName: string; lastName: string }): Promise<User>;
   updateUserProfile(id: string, profileData: { firstName: string; lastName: string; email?: string }): Promise<User>;
+  updateUserApprovalStatus(id: string, isApproved: boolean): Promise<User>;
   
   // Password operations
   setUserPassword(id: string, hashedPassword: string): Promise<User>;
@@ -229,6 +230,23 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db
       .update(users)
       .set(updateData)
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    return user;
+  }
+
+  async updateUserApprovalStatus(id: string, isApproved: boolean): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        isApprovedInvestor: isApproved,
+        updatedAt: new Date(),
+      })
       .where(eq(users.id, id))
       .returning();
     

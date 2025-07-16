@@ -12,6 +12,9 @@ type User = {
   profileCompleted: boolean;
   hasSetPassword: boolean;
   isAdmin?: boolean;
+  isApprovedInvestor?: boolean;
+  createdAt?: string;
+  profileImageUrl?: string;
 };
 
 type AuthContextType = {

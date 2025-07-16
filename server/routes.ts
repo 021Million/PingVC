@@ -547,6 +547,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin routes for investor approval
+  app.put("/api/admin/approve-investor/:userId", isAuthenticated, async (req: any, res) => {
+    try {
+      if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const { userId } = req.params;
+      const { isApproved } = req.body;
+
+      const updatedUser = await storage.updateUserApprovalStatus(userId, isApproved);
+      
+      res.json({ 
+        message: `Investor ${isApproved ? 'approved' : 'rejected'} successfully`,
+        user: updatedUser 
+      });
+    } catch (error: any) {
+      console.error("Investor approval error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Project details route
   app.get('/api/projects/:id', async (req, res) => {
     try {
