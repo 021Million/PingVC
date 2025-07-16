@@ -1502,7 +1502,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Scout projects from Airtable API
+  // Scout projects from Airtable Project Submissions API
   app.get('/api/scout-projects', async (req, res) => {
     try {
       if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
@@ -1510,35 +1510,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-      const records = await base('Scout').select().all();
+      
+      // Fetch from Project Submissions table and only show published projects
+      const records = await base('Project Submissions').select({
+        filterByFormula: "AND({Publishing Status} = 'Published', {Company Name} != '')"
+      }).all();
 
       const projects = records.map(record => ({
         id: record.id,
-        companyName: record.get('Company Name') as string,
-        description: record.get('Description') as string,
-        projectStage: record.get('Project Stage') as string,
-        tickerLaunched: record.get('Ticker Launched') as boolean,
-        dexScreenerUrl: record.get('DEX Screener URL') as string,
-        amountRaising: record.get('Amount Raising') as string,
-        valuation: record.get('Valuation') as string,
-        ecosystem: record.get('Ecosystem') as string,
-        vertical: record.get('Vertical') as string,
-        twitterUrl: record.get('Twitter URL') as string,
-        founderTwitterUrl: record.get('Founder Twitter URL') as string,
-        linkedinUrl: record.get('LinkedIn URL') as string,
-        websiteUrl: record.get('Website URL') as string,
-        revenueGenerating: record.get('Revenue Generating') as boolean,
-        logoUrl: record.get('Logo URL') as string,
-        pitchDeckUrl: record.get('Pitch Deck URL') as string,
-        dataRoomUrl: record.get('Data Room URL') as string,
-        traction: record.get('Traction') as string,
-        votes: record.get('Votes') as number || 0,
-        createdAt: record.get('Created') as string,
+        fields: {
+          'Company Name': record.get('Company Name') as string,
+          'Description': record.get('Description') as string,
+          'Project Stage': record.get('Project Stage') as string,
+          'Ticker Launched': record.get('Ticker Launched') as string,
+          'DEX Screener URL': record.get('DexScreener URL') as string,
+          'Amount Raising': record.get('Amount Raising') as number,
+          'Valuation': record.get('Valuation') as number,
+          'Ecosystem': record.get('Ecosystem') as string,
+          'Vertical': record.get('Vertical') as string,
+          'Twitter URL': record.get('Twitter URL') as string,
+          'Founder Twitter URL': record.get('Founder Twitter URL') as string,
+          'LinkedIn URL': record.get('LinkedIn URL') as string,
+          'Website URL': record.get('Website URL') as string,
+          'Revenue Generating': record.get('Revenue Generating') as string,
+          'Logo URL': record.get('Logo URL') as string,
+          'Pitch Deck URL': record.get('Pitch Deck URL') as string,
+          'Data Room URL': record.get('Data Room URL') as string,
+          'Traction': record.get('Traction') as string,
+          'Votes': record.get('Votes') as number || 0,
+          'Created': record.get('Submission Date') as string,
+          'Verification Status': record.get('Verification Status') as string || 'under_review',
+          'Verified At': record.get('Verified At') as string
+        }
       }));
 
       res.json(projects);
     } catch (error) {
-      console.error('Error fetching Scout projects:', error);
+      console.error('Error fetching Scout projects from Project Submissions:', error);
       res.status(500).json({ error: 'Failed to fetch Scout projects' });
     }
   });
