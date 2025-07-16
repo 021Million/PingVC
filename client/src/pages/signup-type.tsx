@@ -6,17 +6,17 @@ import { Users, Building2, TrendingUp, Shield, CheckCircle, ArrowRight, Star } f
 export default function SignupType() {
   const handleFounderSignup = () => {
     localStorage.setItem('signup_type', 'founder');
-    window.location.href = '/api/login?type=founder';
+    window.location.href = '/auth?defaultType=founder';
   };
 
   const handleVCSignup = () => {
     localStorage.setItem('signup_type', 'vc');
-    window.location.href = '/api/login?type=vc';
+    window.location.href = '/vc-signup';
   };
 
   const handleAngelSignup = () => {
     localStorage.setItem('signup_type', 'angel');
-    window.location.href = '/api/login?type=angel';
+    window.location.href = '/vc-signup';
   };
 
   return (
@@ -198,7 +198,7 @@ export default function SignupType() {
             <p className="text-gray-600 mb-4">Already have an account?</p>
             <Button 
               variant="outline" 
-              onClick={() => window.location.href = '/api/login'}
+              onClick={() => window.location.href = '/auth'}
               className="border-gray-300"
             >
               Sign In

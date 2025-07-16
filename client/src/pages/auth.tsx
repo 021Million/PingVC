@@ -42,6 +42,10 @@ export default function Auth() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  
+  // Get default user type from URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const defaultType = urlParams.get('defaultType') as 'founder' | 'vc' | 'angel' || 'founder';
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -59,7 +63,7 @@ export default function Auth() {
       confirmPassword: '',
       firstName: '',
       lastName: '',
-      userType: 'founder',
+      userType: defaultType,
     },
   });
 
@@ -114,10 +118,18 @@ export default function Auth() {
     onSuccess: (user) => {
       queryClient.setQueryData(['/api/auth/user'], user);
       toast({
-        title: 'Welcome to Ping Me!',
+        title: 'Welcome to Ping VC!',
         description: 'Your account has been created successfully.',
       });
-      setLocation('/');
+      
+      // Redirect based on user type
+      if (user.userType === 'founder') {
+        setLocation('/project-setup');
+      } else if (user.userType === 'vc' || user.userType === 'angel') {
+        setLocation('/vc-signup');
+      } else {
+        setLocation('/');
+      }
     },
     onError: (error: any) => {
       toast({

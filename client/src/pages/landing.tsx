@@ -42,7 +42,7 @@ export default function Landing() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="px-8 py-4 text-lg" asChild>
-              <Link href="/vc-signup">
+              <Link href="/signup">
                 Sign up as VC
               </Link>
             </Button>
@@ -145,7 +145,7 @@ export default function Landing() {
           
           <Button 
             size="lg"
-            onClick={() => window.location.href = '/vc-signup'}
+            onClick={() => window.location.href = '/signup'}
             className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
           >
             Sign up as VC
