@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,12 +9,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import confetti from "canvas-confetti";
 import { Header } from "@/components/header";
 import { DragDropUpload } from "@/components/drag-drop-upload";
+import { useAuth } from "@/hooks/use-auth";
+import { Loader2 } from "lucide-react";
 
 export default function ProjectSetup() {
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
   const [formData, setFormData] = useState({
     companyName: "",
     logoUrl: "",
@@ -37,6 +41,30 @@ export default function ProjectSetup() {
   });
   
   const { toast } = useToast();
+
+  // Redirect to auth if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      setLocation('/auth');
+    }
+  }, [isLoading, isAuthenticated, setLocation]);
+
+  // Show loading while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  // Show nothing while redirecting
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const updateProjectMutation = useMutation({
     mutationFn: async (data: any) => {

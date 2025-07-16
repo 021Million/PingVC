@@ -7,6 +7,7 @@ import { ArrowUp, ExternalLink, Twitter, Linkedin, Globe, FileText } from "lucid
 import { Header } from "@/components/header";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 interface ScoutProject {
   id: string;
@@ -39,6 +40,7 @@ interface ScoutProject {
 export default function Scout() {
   const [selectedEcosystem, setSelectedEcosystem] = useState<string>("all");
   const [selectedVertical, setSelectedVertical] = useState<string>("all");
+  const { isAuthenticated } = useAuth();
 
   const { data: projects = [], isLoading } = useQuery<ScoutProject[]>({
     queryKey: ["/api/scout-projects"],
@@ -304,7 +306,9 @@ export default function Scout() {
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to showcase your project?</h3>
           <p className="text-gray-600 mb-6">Join the Marketplace and get discovered by investors and the Web3 community.</p>
           <Button asChild size="lg">
-            <Link href="/project-setup">Publish Your Project</Link>
+            <Link href={isAuthenticated ? "/project-setup" : "/auth"}>
+              {isAuthenticated ? "Publish Your Project" : "Sign Up to Publish"}
+            </Link>
           </Button>
         </div>
       </div>
