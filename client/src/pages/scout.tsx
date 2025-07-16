@@ -74,7 +74,6 @@ export default function Scout() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -287,9 +286,7 @@ export default function Scout() {
         {/* CTA Section */}
         <div className="bg-white rounded-lg shadow-sm border p-8 mt-12 text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to showcase your project?</h3>
-          <p className="text-gray-600 mb-6">
-            Join the Scout marketplace and get discovered by investors and the Web3 community.
-          </p>
+          <p className="text-gray-600 mb-6">Join the Marketplace and get discovered by investors and the Web3 community.</p>
           <Button asChild size="lg">
             <Link href="/project-setup">Publish Your Project</Link>
           </Button>
