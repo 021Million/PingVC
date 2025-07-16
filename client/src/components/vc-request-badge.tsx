@@ -20,7 +20,7 @@ export function VCRequestBadge({ vcId, vcType }: VCRequestBadgeProps) {
   return (
     <Badge 
       variant="secondary" 
-      className="absolute top-3 right-3 bg-red-100 text-red-800 border-red-200 animate-pulse"
+      className="absolute top-1 right-3 bg-red-100 text-red-800 border-red-200 animate-pulse"
     >
       <Flame className="w-3 h-3 mr-1" />
       {stats.totalRequests} requests
