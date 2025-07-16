@@ -44,34 +44,8 @@ export default function SignupType() {
                   <TrendingUp className="h-10 w-10 text-primary" />
                 </div>
                 <CardTitle className="text-2xl mb-3">I'm a Founder</CardTitle>
-                <p className="text-gray-600">Looking to raise funding and connect with VCs & Angels</p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Verified VCs & Angels</div>
-                      <div className="text-gray-600">Filter by stage, sector, and investment focus</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Get Warm Introductions</div>
-                      <div className="text-gray-600">Pay once to unlock contact info</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Scout Marketplace</div>
-                      <div className="text-gray-600">Feature your project and get community votes</div>
-                    </div>
-                  </div>
-
-                </div>
-                
                 <div className="pt-4">
                   <Button 
                     size="lg" 
@@ -94,33 +68,9 @@ export default function SignupType() {
                   <Building2 className="h-10 w-10 text-green-600" />
                 </div>
                 <CardTitle className="text-2xl mb-3">I'm a VC</CardTitle>
-                <p className="text-gray-600">Get premium dealflow. Earn upside for your time</p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Quality Dealflow</div>
-                      <div className="text-gray-600">Pre-screened founders in your sectors</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Custom Pricing</div>
-                      <div className="text-gray-600">Set your own intro fees (85% revenue share)</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Tailored Dealflow</div>
-                      <div className="text-gray-600">Matched to your thesis, sectors, and stage</div>
-                    </div>
-                  </div>
-
-                </div>
+                
                 
                 <div className="pt-4">
                   <Button 
@@ -147,33 +97,9 @@ export default function SignupType() {
                   <Star className="h-10 w-10 text-purple-600" />
                 </div>
                 <CardTitle className="text-2xl mb-3">I'm an Angel</CardTitle>
-                <p className="text-gray-600">Individual investor looking for quality deals</p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Curated Dealflow</div>
-                      <div className="text-gray-600">Founders pay to connect, no time wasted</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Direct Founder Access</div>
-                      <div className="text-gray-600">Connect directly with startup founders</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm">
-                      <div className="font-medium">Scout Community</div>
-                      <div className="text-gray-600">Vote on emerging projects and trends</div>
-                    </div>
-                  </div>
-
-                </div>
+                
                 
                 <div className="pt-4">
                   <Button 
