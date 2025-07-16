@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 
 interface ListProjectButtonProps {
@@ -10,11 +10,16 @@ interface ListProjectButtonProps {
 
 export function ListProjectButton({ variant = "default", className = "" }: ListProjectButtonProps) {
   const { user, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
 
   // Don't show button for VCs and Angels
   if (user && (user.userType === 'vc' || user.userType === 'angel')) {
     return null;
   }
+
+  const handleClick = () => {
+    setLocation(isAuthenticated ? "/project-setup" : "/auth");
+  };
 
   const getButtonContent = () => {
     switch (variant) {
@@ -23,12 +28,10 @@ export function ListProjectButton({ variant = "default", className = "" }: ListP
           <Button 
             size="lg" 
             className={`fixed bottom-6 right-6 z-50 rounded-full shadow-lg bg-green-600 hover:bg-green-700 text-white px-6 py-6 ${className}`}
-            asChild
+            onClick={handleClick}
           >
-            <Link href={isAuthenticated ? "/project-setup" : "/auth"}>
-              <Plus className="h-6 w-6 mr-2" />
-              List Project
-            </Link>
+            <Plus className="h-6 w-6 mr-2" />
+            List Project
           </Button>
         );
       case "large":
@@ -36,10 +39,10 @@ export function ListProjectButton({ variant = "default", className = "" }: ListP
           <Button 
             size="lg" 
             className={`bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold ${className}`}
-            asChild
+            onClick={handleClick}
           >
-              List Project Now
-              <ArrowRight className="ml-2 h-5 w-5" />
+            List Project Now
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         );
       default:
@@ -47,12 +50,10 @@ export function ListProjectButton({ variant = "default", className = "" }: ListP
           <Button 
             size="default" 
             className={`bg-green-600 hover:bg-green-700 text-white ${className}`}
-            asChild
+            onClick={handleClick}
           >
-            <Link href={isAuthenticated ? "/project-setup" : "/auth"}>
-              <Plus className="h-4 w-4 mr-2" />
-              List Project
-            </Link>
+            <Plus className="h-4 w-4 mr-2" />
+            List Project
           </Button>
         );
     }
