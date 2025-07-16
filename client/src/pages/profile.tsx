@@ -550,7 +550,7 @@ export default function Profile() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Account Type</span>
-                      <span className="font-medium capitalize">{user?.userType || 'Founder'}</span>
+                      <span className="font-medium capitalize">{user?.userType === 'vc' ? 'VC' : (user?.userType || 'Founder')}</span>
                     </div>
                   </div>
                 )}
