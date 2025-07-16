@@ -8,6 +8,7 @@ import { Header } from "@/components/header";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { ListProjectButton } from "@/components/list-project-button";
 
 interface ScoutProject {
   id: string;
@@ -317,14 +318,13 @@ export default function Scout() {
             <>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to showcase your project?</h3>
               <p className="text-gray-600 mb-6">Join the Marketplace and get discovered by investors and the Web3 community.</p>
-              <Button asChild size="lg">
-                <Link href={isAuthenticated && user?.userType === 'founder' ? "/project-setup" : "/auth"}>
-                  {isAuthenticated && user?.userType === 'founder' ? "Publish Your Project" : "Sign Up to Publish"}
-                </Link>
-              </Button>
+              <ListProjectButton variant="large" />
             </>
           )}
         </div>
+
+        {/* Floating Action Button */}
+        <ListProjectButton variant="floating" />
       </div>
     </div>
   );

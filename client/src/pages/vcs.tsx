@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ImprovedHeader } from "@/components/improved-header";
 import { TopVCsLeaderboard } from "@/components/top-vcs-leaderboard";
 import { VCRequestBadge } from "@/components/vc-request-badge";
+import { ListProjectButton } from "@/components/list-project-button";
 
 export default function VCs() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -329,6 +330,9 @@ export default function VCs() {
           )}
         </div>
       </section>
+
+      {/* Floating Action Button */}
+      <ListProjectButton variant="floating" />
     </div>
   );
 }

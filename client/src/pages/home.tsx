@@ -5,6 +5,7 @@ import { CheckCircle, Lock, Calendar, MessageCircle } from "lucide-react";
 
 import { VCCard } from "@/components/vc-card";
 import { AirtableVCCard } from "@/components/airtable-vc-card";
+import { ListProjectButton } from "@/components/list-project-button";
 
 import { ImprovedHeader } from "@/components/improved-header";
 import { useQuery } from "@tanstack/react-query";
@@ -47,7 +48,8 @@ export default function Home() {
           </div>
           
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
+            <ListProjectButton variant="large" />
             <Button 
               size="lg"
               onClick={() => window.location.href = '/vcs'}

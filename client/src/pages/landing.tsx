@@ -5,6 +5,7 @@ import { CheckCircle, Lock, Calendar, MessageCircle, Mail, ArrowRight } from "lu
 import { AirtableVCPreviewCard } from "@/components/airtable-vc-preview-card";
 import { ImprovedHeader } from "@/components/improved-header";
 import { EmailCaptureModal } from "@/components/email-capture-modal";
+import { ListProjectButton } from "@/components/list-project-button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "wouter";
@@ -33,6 +34,7 @@ export default function Landing() {
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <ListProjectButton variant="large" />
             <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg font-semibold" asChild>
               <Link href="/vcs">
                 View All VCs
