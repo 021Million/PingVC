@@ -99,6 +99,55 @@ async function saveVCToAirtable(vcData: any): Promise<boolean> {
   }
 }
 
+// Helper function to save founder project to Airtable
+async function saveFounderProjectToAirtable(founderData: any, user: any): Promise<boolean> {
+  try {
+    if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+      console.log("Airtable not configured, skipping founder project save");
+      return false;
+    }
+
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+    
+    // Save to Founder Projects table
+    await base('Founder Projects').create({
+      'Founder Name': user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.email || 'Unknown',
+      'Founder Email': user?.email,
+      'Project Name': founderData.companyName,
+      'Description': founderData.description,
+      'One Line Description': founderData.oneLineDescription,
+      'Website': founderData.websiteUrl,
+      'Twitter': founderData.twitterUrl,
+      'LinkedIn': founderData.linkedinUrl,
+      'Founder Twitter': founderData.founderTwitterUrl,
+      'Ecosystem': founderData.ecosystem,
+      'Vertical': founderData.vertical,
+      'Project Stage': founderData.projectStage,
+      'Amount Raising': founderData.amountRaising,
+      'Valuation': founderData.valuation,
+      'Traction': founderData.traction,
+      'Revenue Generating': founderData.revenueGenerating ? 'Yes' : 'No',
+      'Ticker Launched': founderData.tickerLaunched ? 'Yes' : 'No',
+      'DexScreener URL': founderData.dexScreenerUrl,
+      'Pitch Deck URL': founderData.pitchDeckUrl,
+      'Data Room URL': founderData.dataRoomUrl,
+      'Logo URL': founderData.logoUrl,
+      'Upvotes': founderData.upvotes || 0,
+      'Is Published': founderData.isPublished ? 'Yes' : 'No',
+      'Is Visible': founderData.isVisible ? 'Yes' : 'No',
+      'Is Featured': founderData.isFeatured ? 'Yes' : 'No',
+      'Submission Date': new Date().toISOString(),
+      'Status': founderData.isPublished ? 'Published' : 'Draft'
+    });
+
+    console.log(`✅ Successfully saved founder project ${founderData.companyName} to Airtable`);
+    return true;
+  } catch (error) {
+    console.error("Error saving founder project to Airtable:", error);
+    return false;
+  }
+}
+
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -945,10 +994,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         if (paymentType === 'project_visibility') {
           // Update founder visibility and published status
-          await storage.updateFounderProject(founderId, { 
+          const updatedFounder = await storage.updateFounderProject(founderId, { 
             isVisible: true, 
             isPublished: true 
           });
+          
+          // Get user data for Airtable
+          const founder = await storage.getFounderById(founderId);
+          const user = founder ? await storage.getUser(founder.userId) : null;
+          
+          // Save to Airtable now that project is published
+          if (updatedFounder && user) {
+            try {
+              await saveFounderProjectToAirtable(updatedFounder, user);
+            } catch (airtableError) {
+              console.error("Error saving published project to Airtable:", airtableError);
+            }
+          }
           
           // Create payment record
           await storage.createPayment({
@@ -1143,8 +1205,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const founder = await storage.getOrCreateFounder(userId);
+      const user = await storage.getUser(userId);
       
       const updatedFounder = await storage.updateFounderProject(founder.id, req.body);
+      
+      // Save to Airtable if the project is published or being published
+      if (updatedFounder.isPublished || updatedFounder.isVisible) {
+        try {
+          await saveFounderProjectToAirtable(updatedFounder, user);
+        } catch (airtableError) {
+          console.error("Error saving founder project to Airtable:", airtableError);
+          // Don't fail the project save if Airtable save fails
+        }
+      }
+      
       res.json(updatedFounder);
     } catch (error) {
       console.error("Error updating founder project:", error);
