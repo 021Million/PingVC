@@ -11,12 +11,12 @@ export default function SignupType() {
 
   const handleVCSignup = () => {
     localStorage.setItem('signup_type', 'vc');
-    window.location.href = '/vc-signup';
+    window.location.href = '/auth?defaultType=vc';
   };
 
   const handleAngelSignup = () => {
     localStorage.setItem('signup_type', 'angel');
-    window.location.href = '/vc-signup';
+    window.location.href = '/auth?defaultType=angel';
   };
 
   return (
