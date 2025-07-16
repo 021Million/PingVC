@@ -62,9 +62,7 @@ export default function Home() {
               variant="outline"
               onClick={() => window.location.href = '/vc-signup'}
               className="border-primary text-primary px-8 py-4 text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
-            >
-              Sign Up
-            </Button>
+            >Sign up as VC</Button>
           </div>
         </div>
       </section>
