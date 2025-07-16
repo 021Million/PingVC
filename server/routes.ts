@@ -109,35 +109,67 @@ async function saveFounderProjectToAirtable(founderData: any, user: any): Promis
 
     const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
     
-    // Save to Founder Projects table
-    await base('Founder Projects').create({
+    // Save to Founder Projects table (for published projects)
+    if (founderData.isPublished || founderData.isVisible) {
+      await base('Founder Projects').create({
+        'Founder Name': user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.email || 'Unknown',
+        'Founder Email': user?.email,
+        'Project Name': founderData.companyName,
+        'Description': founderData.description,
+        'One Line Description': founderData.oneLineDescription,
+        'Website': founderData.websiteUrl,
+        'Twitter': founderData.twitterUrl,
+        'LinkedIn': founderData.linkedinUrl,
+        'Founder Twitter': founderData.founderTwitterUrl,
+        'Ecosystem': founderData.ecosystem,
+        'Vertical': founderData.vertical,
+        'Project Stage': founderData.projectStage,
+        'Amount Raising': founderData.amountRaising,
+        'Valuation': founderData.valuation,
+        'Traction': founderData.traction,
+        'Revenue Generating': founderData.revenueGenerating ? 'Yes' : 'No',
+        'Ticker Launched': founderData.tickerLaunched ? 'Yes' : 'No',
+        'DexScreener URL': founderData.dexScreenerUrl,
+        'Pitch Deck URL': founderData.pitchDeckUrl,
+        'Data Room URL': founderData.dataRoomUrl,
+        'Logo URL': founderData.logoUrl,
+        'Upvotes': founderData.upvotes || 0,
+        'Is Published': founderData.isPublished ? 'Yes' : 'No',
+        'Is Visible': founderData.isVisible ? 'Yes' : 'No',
+        'Is Featured': founderData.isFeatured ? 'Yes' : 'No',
+        'Submission Date': new Date().toISOString(),
+        'Status': founderData.isPublished ? 'Published' : 'Draft'
+      });
+    }
+
+    // Also save to Project Submissions table (for ALL submissions including drafts)
+    await base('Project Submissions').create({
       'Founder Name': user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.email || 'Unknown',
       'Founder Email': user?.email,
-      'Project Name': founderData.companyName,
+      'User ID': user?.id,
+      'Company Name': founderData.companyName,
       'Description': founderData.description,
-      'One Line Description': founderData.oneLineDescription,
-      'Website': founderData.websiteUrl,
-      'Twitter': founderData.twitterUrl,
-      'LinkedIn': founderData.linkedinUrl,
-      'Founder Twitter': founderData.founderTwitterUrl,
+      'Logo URL': founderData.logoUrl,
+      'Website URL': founderData.websiteUrl,
+      'Project Stage': founderData.projectStage,
+      'Twitter URL': founderData.twitterUrl,
+      'LinkedIn URL': founderData.linkedinUrl,
+      'Founder Twitter URL': founderData.founderTwitterUrl,
+      'Pitch Deck URL': founderData.pitchDeckUrl,
+      'Data Room URL': founderData.dataRoomUrl,
       'Ecosystem': founderData.ecosystem,
       'Vertical': founderData.vertical,
-      'Project Stage': founderData.projectStage,
+      'Ticker Launched': founderData.tickerLaunched ? 'Yes' : 'No',
+      'DexScreener URL': founderData.dexScreenerUrl,
+      'Revenue Generating': founderData.revenueGenerating ? 'Yes' : 'No',
       'Amount Raising': founderData.amountRaising,
       'Valuation': founderData.valuation,
       'Traction': founderData.traction,
-      'Revenue Generating': founderData.revenueGenerating ? 'Yes' : 'No',
-      'Ticker Launched': founderData.tickerLaunched ? 'Yes' : 'No',
-      'DexScreener URL': founderData.dexScreenerUrl,
-      'Pitch Deck URL': founderData.pitchDeckUrl,
-      'Data Room URL': founderData.dataRoomUrl,
-      'Logo URL': founderData.logoUrl,
-      'Upvotes': founderData.upvotes || 0,
+      'Submission Date': new Date().toISOString(),
+      'Submission Type': founderData.isPublished ? 'Published' : 'Draft',
       'Is Published': founderData.isPublished ? 'Yes' : 'No',
       'Is Visible': founderData.isVisible ? 'Yes' : 'No',
-      'Is Featured': founderData.isFeatured ? 'Yes' : 'No',
-      'Submission Date': new Date().toISOString(),
-      'Status': founderData.isPublished ? 'Published' : 'Draft'
+      'Source': 'Project Setup Page'
     });
 
     console.log(`✅ Successfully saved founder project ${founderData.companyName} to Airtable`);
@@ -1209,14 +1241,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const updatedFounder = await storage.updateFounderProject(founder.id, req.body);
       
-      // Save to Airtable if the project is published or being published
-      if (updatedFounder.isPublished || updatedFounder.isVisible) {
-        try {
-          await saveFounderProjectToAirtable(updatedFounder, user);
-        } catch (airtableError) {
-          console.error("Error saving founder project to Airtable:", airtableError);
-          // Don't fail the project save if Airtable save fails
-        }
+      // Save to Airtable for all project submissions (including drafts)
+      try {
+        await saveFounderProjectToAirtable(updatedFounder, user);
+      } catch (airtableError) {
+        console.error("Error saving founder project to Airtable:", airtableError);
+        // Don't fail the project save if Airtable save fails
       }
       
       res.json(updatedFounder);
