@@ -37,7 +37,7 @@ export default function Landing() {
             <ListProjectButton variant="large" />
             <Button size="lg" className="bg-primary text-white px-8 py-4 text-lg font-semibold" asChild>
               <Link href="/vcs">
-                View All VCs
+                View All Investors
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -110,7 +110,7 @@ export default function Landing() {
                 size="lg"
                 className="bg-primary text-white px-8 py-4 text-lg font-semibold hover:bg-indigo-700 transition-colors"
               >
-                View All VCs
+                View All Investors
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -169,7 +169,7 @@ export default function Landing() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Platform</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/vcs" className="hover:text-white transition-colors">View All VCs</a></li>
+                <li><a href="/vcs" className="hover:text-white transition-colors">View All Investors</a></li>
                 <li><a href="/requests" className="hover:text-white transition-colors">Request Page</a></li>
               </ul>
             </div>
