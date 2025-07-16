@@ -83,7 +83,7 @@ export default function Scout() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex flex-col items-center space-y-4">
-            <h1 className="text-3xl font-bold text-gray-900">Scout Marketplace</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Marketplace</h1>
             <p className="text-xl text-gray-600 max-w-3xl">Discover top Web3 startups before the crowd.
             Back the next generation of breakthrough founders.</p>
             {/* List Project Button - always visible */}
