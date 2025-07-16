@@ -82,10 +82,21 @@ export default function Scout() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Scout Marketplace</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover and vote for the most promising Web3 startups. Help surface the next generation of breakthrough projects.
-          </p>
+          <div className="flex flex-col items-center space-y-4">
+            <h1 className="text-3xl font-bold text-gray-900">Scout Marketplace</h1>
+            <p className="text-xl text-gray-600 max-w-3xl">
+              Discover and vote for the most promising Web3 startups. Help surface the next generation of breakthrough projects.
+            </p>
+            {/* List Project Button - only shown for founders or unauthenticated users */}
+            {(!user || user.userType === 'founder') && (
+              <div className="mt-6">
+                <ListProjectButton variant="large" className="shadow-lg" />
+                <p className="text-sm text-gray-500 mt-2">
+                  {!isAuthenticated ? "Sign in as a founder to list your project" : "Share your project with investors and the community"}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Filters */}
