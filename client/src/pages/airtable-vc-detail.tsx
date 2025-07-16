@@ -28,13 +28,18 @@ import {
 import { FaLinkedin } from "react-icons/fa";
 import { VCUnlockModal } from "@/components/vc-unlock-modal";
 import { ImprovedHeader } from "@/components/improved-header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 
 export default function AirtableVCDetail() {
   const { id } = useParams();
   const [, setLocation] = useLocation();
   const [showUnlockModal, setShowUnlockModal] = useState(false);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   // Fetch all Airtable VCs and find the one with matching ID
   const { data: airtableData, isLoading } = useQuery({

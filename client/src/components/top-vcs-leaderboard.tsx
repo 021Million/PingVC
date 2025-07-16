@@ -119,7 +119,7 @@ export function TopVCsLeaderboard() {
             <div
               key={`${vc.vcId}-${vc.vcType}`}
               className={`p-4 rounded-lg border-2 ${getRankColor(position)} cursor-pointer hover:shadow-md transition-shadow`}
-              onClick={() => setLocation(`/vc/${vc.vcId}`)}
+              onClick={() => setLocation(vc.vcType === "airtable" ? `/investor/${vc.vcId}` : `/vc/${vc.vcId}`)}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
