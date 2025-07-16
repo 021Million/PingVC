@@ -34,17 +34,7 @@ export function ListProjectButton({ variant = "default", className = "" }: ListP
             List Project
           </Button>
         );
-      case "large":
-        return (
-          <Button 
-            size="lg" 
-            className={`bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold ${className}`}
-            onClick={handleClick}
-          >
-            List Project Now
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        );
+      
       default:
         return (
           <Button 
